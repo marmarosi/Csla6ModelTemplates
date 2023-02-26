@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Csla" Version="6.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Csla6ModelTemplates.Contracts\Csla6ModelTemplates.Contracts.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.CslaExtensions\Csla6ModelTemplates.CslaExtensions.csproj" />
+  </ItemGroup>
+
+</Project>

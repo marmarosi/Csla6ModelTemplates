@@ -1,0 +1,27 @@
+{
+  "DalSettings": {
+    "Layers": {
+      "MySQL": {
+        "ConnectionString": "server=127.0.0.1;uid=cslamodel;pwd=CSLA+Secret;database=CSLA_Models",
+        "DalManagerType": "CslaModelTemplates.Dal.MySql.MySqlManager, CslaModelTemplates.Dal.MySql"
+      },
+      "Oracle": {
+        "ConnectionString": "Data Source=localhost:1521/XE;User Id=C##CSLAMODEL;Password=CSLA7Secret;",
+        "DalManagerType": "CslaModelTemplates.Dal.Oracle.OracleManager, CslaModelTemplates.Dal.Oracle"
+      },
+      "PostgreSQL": {
+        "ConnectionString": "Host=localhost;Database=CSLA_Models;Username=cslamodel;Password=CSLA+Secret",
+        "DalManagerType": "CslaModelTemplates.Dal.PostgreSql.PostgreSqlManager, CslaModelTemplates.Dal.PostgreSql"
+      },
+      "SQLite": {
+        "ConnectionString": "Data Source=sqlite.db;",
+        "DalManagerType": "CslaModelTemplates.Dal.Sqlite.SqliteManager, CslaModelTemplates.Dal.Sqlite"
+      },
+      "SQLServer": {
+        "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=CSLA_Models;Trusted_Connection=True;MultipleActiveResultSets=true",
+        "DalManagerType": "CslaModelTemplates.Dal.SqlServer.SqlServerManager, CslaModelTemplates.Dal.SqlServer"
+      }
+    },
+    "ActiveLayer": "SQLServer"
+  }
+}
