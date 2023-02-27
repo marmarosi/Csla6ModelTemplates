@@ -1,12 +1,19 @@
 namespace Csla6ModelTemplates.Contracts.Simple.View
 {
     /// <summary>
-    /// Represents the criteria of the read-only team object.
+    /// Represents the criteria of the read-only team model.
     /// </summary>
     [Serializable]
     public class SimpleTeamViewParams
     {
         public string TeamId { get; set; }
+
+        public SimpleTeamViewParams(
+            string teamId
+            )
+        {
+            TeamId= teamId;
+        }
 
         public SimpleTeamViewCriteria Decode()
         {

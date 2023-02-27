@@ -2,6 +2,7 @@ using Csla.Configuration;
 using Csla6ModelTemplates.Dal.SqlServer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,8 +32,9 @@ builder.Services.AddSwaggerGen(o =>
 });
 
 // Configure EF database.
-builder.Services.AddDbContext<SqlServerContext>( options => 
-    options.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=CSLA_Models;Trusted_Connection=True;MultipleActiveResultSets=true")
+
+builder.Services.AddDbContext<SqlServerContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"))
 );
 
 // Configure data access layer.

@@ -32,14 +32,14 @@ namespace Csla6ModelTemplates.Dal
             IServiceCollection services
             )
         {
-            DalSettings settings = configuration.GetSection(Section).Get<DalSettings>();
-            Configure(settings);
+            //DalSettings settings = configuration.GetSection(Section).Get<DalSettings>();
+            //Configure(settings);
 
-            foreach (KeyValuePair<string, Type> dalType in DalTypes)
-            {
-                IDalManager dalManager = Activator.CreateInstance(dalType.Value) as IDalManager;
-                dalManager.AddDalContext(configuration, services);
-            }
+            //foreach (KeyValuePair<string, Type> dalType in DalTypes)
+            //{
+            //    IDalManager dalManager = Activator.CreateInstance(dalType.Value) as IDalManager;
+            //    dalManager.AddDalContext(configuration, services);
+            //}
         }
 
         /// <summary>
@@ -95,26 +95,26 @@ namespace Csla6ModelTemplates.Dal
 
         #region Managers
 
-        /// <summary>
-        /// Gets the data access manager of the active layer.
-        /// </summary>
-        /// <returns>The data access manager object.</returns>
-        public static IDalManager GetManager()
-        {
-            return GetManager(ActiveLayer);
-        }
+        ///// <summary>
+        ///// Gets the data access manager of the active layer.
+        ///// </summary>
+        ///// <returns>The data access manager object.</returns>
+        //public static IDalManager GetManager()
+        //{
+        //    return GetManager(ActiveLayer);
+        //}
 
-        /// <summary>
-        /// Gets the data access manager with the specified name.
-        /// </summary>
-        /// <param name="dalName">The name of the data access layer.</param>
-        /// <returns>The data access manager object.</returns>
-        public static IDalManager GetManager(
-            string dalName
-            )
-        {
-            return Activator.CreateInstance(DalTypes[dalName]) as IDalManager;
-        }
+        ///// <summary>
+        ///// Gets the data access manager with the specified name.
+        ///// </summary>
+        ///// <param name="dalName">The name of the data access layer.</param>
+        ///// <returns>The data access manager object.</returns>
+        //public static IDalManager GetManager(
+        //    string dalName
+        //    )
+        //{
+        //    return Activator.CreateInstance(DalTypes[dalName]) as IDalManager;
+        //}
 
         /// <summary>
         /// CHecks whether the reason of the exception is a deadlock.
@@ -123,18 +123,18 @@ namespace Csla6ModelTemplates.Dal
         /// <returns>True when the reason is a deadlock; otherwise false;</returns>
         public static bool HasDeadlock(Exception ex)
         {
-            IDalManager dalManager = GetManager();
-            if (dalManager.HasDeadlock(ex))
-                return true;
+            //IDalManager dalManager = GetManager();
+            //if (dalManager.HasDeadlock(ex))
+            //    return true;
 
-            foreach (KeyValuePair<string, Type> dalType in DalTypes)
-            {
-                if (dalType.Key == ActiveLayer)
-                    continue;
-                dalManager = GetManager(dalType.Key);
-                if (dalManager.HasDeadlock(ex))
-                    return true;
-            }
+            //foreach (KeyValuePair<string, Type> dalType in DalTypes)
+            //{
+            //    if (dalType.Key == ActiveLayer)
+            //        continue;
+            //    dalManager = GetManager(dalType.Key);
+            //    if (dalManager.HasDeadlock(ex))
+            //        return true;
+            //}
             return false;
         }
 

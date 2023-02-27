@@ -3,13 +3,25 @@ using Csla6ModelTemplates.Dal.Exceptions;
 using Csla6ModelTemplates.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace Csla6ModelTemplates.Dal.SqlServer.Simple
+namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
 {
     /// <summary>
     /// Implements the data access functions of the read-only team model.
     /// </summary>
-    public partial class SimpleDal : ISimpleTeamViewDal
+    [DalImplementation]
+    public partial class SimpleTeamViewDal : DalBase<SqlServerContext>, ISimpleTeamViewDal
     {
+        /// <summary>
+        /// Instantiates the data access object.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        public SimpleTeamViewDal(
+            SqlServerContext dbContext
+            )
+        {
+            DbContext = dbContext;
+        }
+
         /// <summary>
         /// Gets the specified team view.
         /// </summary>
@@ -20,7 +32,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple
             )
         {
             // Get the specified team.
-            SimpleTeamViewDao team = Context.Teams
+            SimpleTeamViewDao team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
                  )

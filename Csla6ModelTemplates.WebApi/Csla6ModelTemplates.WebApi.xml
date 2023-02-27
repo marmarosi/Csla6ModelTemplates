@@ -38,11 +38,19 @@
             </summary>
             <param name="logger">The application logging service.</param>
         </member>
-        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeamView(Csla6ModelTemplates.Contracts.Simple.View.SimpleTeamViewParams,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.View.SimpleTeamView})">
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeamList(Csla6ModelTemplates.Contracts.Simple.List.SimpleTeamListCriteria,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.List.SimpleTeamList})">
+            <summary>
+            Gets a list of teams.
+            </summary>
+            <param name="criteria">The criteria of the team list.</param>
+            <param name="portal">The data portal of the collection.</param>
+            <returns>The requested team list.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeamView(System.String,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.View.SimpleTeamView})">
             <summary>
             Gets the specified team details to display.
             </summary>
-            <param name="criteria">The criteria of the team view.</param>
+            <param name="id">The identifier of the team.</param>
             <param name="portal">The data portal of the model.</param>
             <returns>The requested team view.</returns>
         </member>

@@ -1,15 +1,15 @@
 using Csla;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.View;
+using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Simple.View
+namespace Csla6ModelTemplates.Models.Simple.List
 {
     /// <summary>
-    /// Represents a read-only team object.
+    /// Represents an item in a read-only team collection.
     /// </summary>
     [Serializable]
-    public class SimpleTeamView : ReadOnlyModel<SimpleTeamView>
+    public class SimpleTeamListItem : ReadOnlyModel<SimpleTeamListItem>
     {
         #region Properties
 
@@ -20,25 +20,25 @@ namespace Csla6ModelTemplates.Models.Simple.View
             private set => LoadProperty(TeamKeyProperty, value);
         }
 
-        public static readonly PropertyInfo<string> TeamIdProperty = RegisterProperty<string>(nameof(TeamId), RelationshipTypes.PrivateField);
+        public static readonly PropertyInfo<string> TeamIdProperty = RegisterProperty<string>(c => c.TeamId, RelationshipTypes.PrivateField);
         public string TeamId
         {
-            get => GetProperty(TeamIdProperty, KeyHash.Encode(ID.Team, TeamKey));
-            private set => TeamKey = KeyHash.Decode(ID.Team, value);
+            get { return GetProperty(TeamIdProperty, KeyHash.Encode(ID.Team, TeamKey)); }
+            private set { TeamKey = KeyHash.Decode(ID.Team, value); }
         }
 
-        public static readonly PropertyInfo<string> TeamCodeProperty = RegisterProperty<string>(nameof(TeamCode));
+        public static readonly PropertyInfo<string> TeamCodeProperty = RegisterProperty<string>(c => c.TeamCode);
         public string TeamCode
         {
-            get => GetProperty(TeamCodeProperty);
-            private set => LoadProperty(TeamCodeProperty, value);
+            get { return GetProperty(TeamCodeProperty); }
+            private set { LoadProperty(TeamCodeProperty, value); }
         }
 
-        public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(nameof(TeamName));
+        public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(c => c.TeamName);
         public string TeamName
         {
-            get => GetProperty(TeamNameProperty);
-            private set => LoadProperty(TeamNameProperty, value);
+            get { return GetProperty(TeamNameProperty); }
+            private set { LoadProperty(TeamNameProperty, value); }
         }
 
         #endregion
@@ -71,16 +71,13 @@ namespace Csla6ModelTemplates.Models.Simple.View
 
         #region Data Access
 
-        [Fetch]
-        private void Fetch(
-            SimpleTeamViewCriteria criteria,
-            [Inject] ISimpleTeamViewDal dal
+        [FetchChild]
+        protected void Fetch(
+            SimpleTeamListItemDao dao
             )
         {
             // Set values from data access object.
-            var dao = dal.GetView(criteria);
             Csla.Data.DataMapper.Map(dao, this);
-            //BusinessRules.CheckRules();
         }
 
         #endregion
