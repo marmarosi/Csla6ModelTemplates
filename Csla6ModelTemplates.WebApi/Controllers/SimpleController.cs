@@ -1,6 +1,8 @@
 using Csla;
+using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.Contracts.Simple.View;
+using Csla6ModelTemplates.Models.Simple.Edit;
 using Csla6ModelTemplates.Models.Simple.List;
 using Csla6ModelTemplates.Models.Simple.View;
 using Microsoft.AspNetCore.Mvc;
@@ -83,5 +85,130 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         }
 
         #endregion
+
+        #region New
+
+        /// <summary>
+        /// Gets a new team to edit.
+        /// </summary>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>The new team.</returns>
+        [HttpGet("new")]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<SimpleTeamDto>> GetNewTeam(
+            [FromServices] IDataPortal<SimpleTeam> portal
+            )
+        {
+            try
+            {
+                SimpleTeam team = await portal.CreateAsync();
+                return Ok(team.ToDto());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Read
+
+        /// <summary>
+        /// Gets the specified team to edit.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>The requested team.</returns>
+        [HttpGet("fetch")]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<SimpleTeamDto>> GetTeam(
+            [FromQuery] SimpleTeamParams criteria,
+            [FromServices] IDataPortal<SimpleTeam> portal
+            )
+        {
+            try
+            {
+                SimpleTeam team = await portal.FetchAsync(criteria);
+                return Ok(team.ToDto());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Create
+
+        /// <summary>
+        /// Creates a new team.
+        /// </summary>
+        /// <param name="dto">The data transer object of the team.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>The created team.</returns>
+        [HttpPost]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status201Created)]
+        public async Task<ActionResult<SimpleTeamDto>> CreateTeam(
+            [FromBody] SimpleTeamDto dto,
+            [FromServices] IDataPortal<SimpleTeam> portal
+            )
+        {
+            try
+            {
+                return await Call<SimpleTeamDto>.RetryOnDeadlock(async () =>
+                {
+                    SimpleTeam team = await SimpleTeam.FromDto(dto, portal);
+                    if (team.IsValid)
+                    {
+                        team = await team.SaveAsync();
+                    }
+                    return Created(Uri, team.ToDto());
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Update
+
+        /// <summary>
+        /// Updates the specified team.
+        /// </summary>
+        /// <param name="dto">The data transer object of the team.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>The updated team.</returns>
+        [HttpPut]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<SimpleTeamDto>> UpdateTeam(
+            [FromBody] SimpleTeamDto dto,
+            [FromServices] IDataPortal<SimpleTeam> portal
+            )
+        {
+            try
+            {
+                return await Call<SimpleTeamDto>.RetryOnDeadlock(async () =>
+                {
+                    SimpleTeam team = await SimpleTeam.FromDto(dto, portal);
+                    if (team.IsSavable)
+                    {
+                        team = await team.SaveAsync();
+                    }
+                    return Ok(team.ToDto());
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -23,25 +23,6 @@ namespace Csla6ModelTemplates.Models.Simple.List
 
         #endregion
 
-        #region Factory Methods
-
-        //private SimpleTeamList()
-        //{ /* require use of factory methods */ }
-
-        ///// <summary>
-        ///// Gets a read-only team collection that match the criteria..
-        ///// </summary>
-        ///// <param name="criteria">The criteria of the read-only team collection.</param>
-        ///// <returns>The requested read-only team collection.</returns>
-        //public static async Task<SimpleTeamList> Get(
-        //    SimpleTeamListCriteria criteria
-        //    )
-        //{
-        //    return await DataPortal.FetchAsync<SimpleTeamList>(criteria);
-        //}
-
-        #endregion
-
         #region Data Access
 
         [Fetch]

@@ -54,5 +54,63 @@
             <param name="portal">The data portal of the model.</param>
             <returns>The requested team view.</returns>
         </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetNewTeam(Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
+            <summary>
+            Gets a new team to edit.
+            </summary>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The new team.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeam(Csla6ModelTemplates.Contracts.Simple.Edit.SimpleTeamParams,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
+            <summary>
+            Gets the specified team to edit.
+            </summary>
+            <param name="criteria">The criteria of the team.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The requested team.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.CreateTeam(Csla6ModelTemplates.Contracts.Simple.Edit.SimpleTeamDto,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
+            <summary>
+            Creates a new team.
+            </summary>
+            <param name="dto">The data transer object of the team.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The created team.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.UpdateTeam(Csla6ModelTemplates.Contracts.Simple.Edit.SimpleTeamDto,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
+            <summary>
+            Updates the specified team.
+            </summary>
+            <param name="dto">The data transer object of the team.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The updated team.</returns>
+        </member>
+        <member name="T:Csla6ModelTemplates.WebApi.Run">
+            <summary>
+            Provides method to execute a function and handle deadlock.
+            </summary>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Run.RetryOnDeadlock(System.Func{System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.ActionResult}},System.Int32)">
+            <summary>
+            Executes a function, and retries when it fails due to deadlock.
+            </summary>
+            <param name="businessMethod">The function to execute.</param>
+            <param name="maxRetries">The number of attempts, defaults to 3.</param>
+            <returns>The result of the action.</returns>
+        </member>
+        <member name="T:Csla6ModelTemplates.WebApi.Call`1">
+            <summary>
+            Provides method to execute a function and handle deadlock.
+            </summary>
+            <typeparam name="T">The type of the action result.</typeparam>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Call`1.RetryOnDeadlock(System.Func{System.Threading.Tasks.Task{Microsoft.AspNetCore.Mvc.ActionResult{`0}}},System.Int32)">
+            <summary>
+            Executes a function, and retries when it fails due to deadlock.
+            </summary>
+            <param name="businessMethod">The function to execute.</param>
+            <param name="maxRetries">The number of attempts, defaults to 3.</param>
+            <returns>The result of the action.</returns>
+        </member>
     </members>
 </doc>
