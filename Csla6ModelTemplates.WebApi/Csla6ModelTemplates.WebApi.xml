@@ -102,6 +102,14 @@
             <param name="portal">The data portal of the model.</param>
             <returns>The updated team set.</returns>
         </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.RenameTeamCommand(Csla6ModelTemplates.Contracts.Simple.Command.RenameTeamDto,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Command.RenameTeam})">
+            <summary>
+            Renames the specified team.
+            </summary>
+            <param name="dto">The data transer object of the rename team command.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>True when the team was renamed; otherwise false.</returns>
+        </member>
         <member name="T:Csla6ModelTemplates.WebApi.Run">
             <summary>
             Provides method to execute a function and handle deadlock.

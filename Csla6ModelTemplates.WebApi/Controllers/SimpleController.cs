@@ -1,8 +1,10 @@
 using Csla;
+using Csla6ModelTemplates.Contracts.Simple.Command;
 using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.Contracts.Simple.View;
+using Csla6ModelTemplates.Models.Simple.Command;
 using Csla6ModelTemplates.Models.Simple.Edit;
 using Csla6ModelTemplates.Models.Simple.List;
 using Csla6ModelTemplates.Models.Simple.Set;
@@ -270,6 +272,34 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                     }
                     return Ok(team.ToDto());
                 });
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Rename
+
+        /// <summary>
+        /// Renames the specified team.
+        /// </summary>
+        /// <param name="dto">The data transer object of the rename team command.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>True when the team was renamed; otherwise false.</returns>
+        [HttpPatch]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
+        public async Task<ActionResult<bool>> RenameTeamCommand(
+            [FromBody] RenameTeamDto dto,
+            [FromServices] IDataPortal<RenameTeam> portal
+            )
+        {
+            try
+            {
+                RenameTeam command = await portal.ExecuteAsync(dto);
+                return Ok(command.Result);
             }
             catch (Exception ex)
             {
