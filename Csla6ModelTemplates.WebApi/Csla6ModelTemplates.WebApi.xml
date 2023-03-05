@@ -61,7 +61,7 @@
             <param name="portal">The data portal of the model.</param>
             <returns>The new team.</returns>
         </member>
-        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeam(Csla6ModelTemplates.Contracts.Simple.Edit.SimpleTeamParams,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeam(System.String,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Edit.SimpleTeam})">
             <summary>
             Gets the specified team to edit.
             </summary>
@@ -84,6 +84,23 @@
             <param name="dto">The data transer object of the team.</param>
             <param name="portal">The data portal of the model.</param>
             <returns>The updated team.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.GetTeamSet(Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetCriteria,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Set.SimpleTeamSet})">
+            <summary>
+            Gets the specified team set to edit.
+            </summary>
+            <param name="criteria">The criteria of the team set.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The requested team set.</returns>
+        </member>
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.UpdateTeamSet(Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetCriteria,System.Collections.Generic.List{Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetItemDto},Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Set.SimpleTeamSet})">
+            <summary>
+            Updates the specified team set.
+            </summary>
+            <param name="criteria">The criteria of the team set.</param>
+            <param name="dto">The data transer objects of the team set.</param>
+            <param name="portal">The data portal of the model.</param>
+            <returns>The updated team set.</returns>
         </member>
         <member name="T:Csla6ModelTemplates.WebApi.Run">
             <summary>

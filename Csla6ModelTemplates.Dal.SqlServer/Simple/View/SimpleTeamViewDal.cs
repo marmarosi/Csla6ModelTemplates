@@ -11,6 +11,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
     [DalImplementation]
     public partial class SimpleTeamViewDal : DalBase<SqlServerContext>, ISimpleTeamViewDal
     {
+        #region Constructor
+
         /// <summary>
         /// Instantiates the data access object.
         /// </summary>
@@ -22,12 +24,16 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
             DbContext = dbContext;
         }
 
+        #endregion Constructor
+
+        #region Fetch
+
         /// <summary>
         /// Gets the specified team view.
         /// </summary>
         /// <param name="criteria">The criteria of the team.</param>
         /// <returns>The requested team view.</returns>
-        public SimpleTeamViewDao GetView(
+        public SimpleTeamViewDao Fetch(
             SimpleTeamViewCriteria criteria
             )
         {
@@ -50,5 +56,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
 
             return team;
         }
+
+        #endregion Fetch
     }
 }

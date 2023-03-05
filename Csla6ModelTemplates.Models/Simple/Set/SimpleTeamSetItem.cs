@@ -1,18 +1,19 @@
 using Csla;
+using Csla.Core;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Simple.Edit
+namespace Csla6ModelTemplates.Models.Simple.Set
 {
     /// <summary>
-    /// Represents an editable team object.
+    /// Represents an editable child object.
     /// </summary>
     [Serializable]
-    [ValidationResourceType(typeof(ValidationText), ObjectName = "SimpleTeam")]
-    public class SimpleTeam : EditableModel<SimpleTeam, SimpleTeamDto>
+    [ValidationResourceType(typeof(ValidationText), ObjectName = "SimpleTeamSetItem")]
+    public class SimpleTeamSetItem : EditableModel<SimpleTeamSetItem, SimpleTeamSetItemDto>
     {
         #region Properties
 
@@ -80,7 +81,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeam),
+        //        typeof(SimpleTeamSetItem),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -95,10 +96,10 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         /// <summary>
         /// Updates an editable team from the data transfer object.
         /// </summary>
-        /// <param name="data">The data transfer object.</param>
+        /// <param name="dto">The data transfer objects.</param>
         public override async Task Update(
-                SimpleTeamDto dto
-                )
+            SimpleTeamSetItemDto dto
+            )
         {
             //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
             TeamCode = dto.TeamCode;
@@ -113,29 +114,24 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         #region Factory Methods
 
         /// <summary>
-        /// Rebuilds an editable team instance from the data transfer object.
+        /// Creates an editable team instance from the data transfer object.
         /// </summary>
+        /// <param name="parent">The parent collection.</param>
         /// <param name="dto">The data transfer object.</param>
-        /// <returns>The rebuilt editable team instance.</returns>
-        public static async Task<SimpleTeam> FromDto(
-            SimpleTeamDto dto,
-            IDataPortal<SimpleTeam> portal
+        /// <returns>The new editable team instance.</returns>
+        internal static new async Task<SimpleTeamSetItem> Create(
+            IParent parent,
+            SimpleTeamSetItemDto dto
             )
         {
-            long? teamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            SimpleTeam team = teamKey.HasValue ?
-                await portal.FetchAsync(new SimpleTeamCriteria(teamKey.Value)) :
-                await portal.CreateAsync();
-            await team.Update(dto);
-            return team;
+            return await Create(parent, dto);
         }
 
         #endregion
 
         #region Data Access
 
-        //[Create]
-        //[RunLocal]
+        //[CreateChild]
         //private void Create()
         //{
         //    // Load default values.
@@ -144,16 +140,14 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         //    BusinessRules.CheckRules();
         //}
 
-        [Fetch]
+        [FetchChild]
         private void Fetch(
-            SimpleTeamCriteria criteria,
-            [Inject] ISimpleTeamDal dal
+            SimpleTeamSetItemDao dao
             )
         {
-            // Load values from persistent storage.
-            SimpleTeamDao dao = dal.Fetch(criteria);
             using (BypassPropertyChecks)
             {
+                // Set values from data access object.
                 TeamKey = dao.TeamKey;
                 TeamCode = dao.TeamCode;
                 TeamName = dao.TeamName;
@@ -161,10 +155,10 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             }
         }
 
-        private SimpleTeamDao CreateDao()
+        private SimpleTeamSetItemDao CreateDao()
         {
             // Build the data access object.
-            return new SimpleTeamDao
+            return new SimpleTeamSetItemDao
             {
                 TeamKey = TeamKey,
                 TeamCode = TeamCode,
@@ -173,16 +167,15 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             };
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
-        [Insert]
-        protected void Insert(
-            [Inject] ISimpleTeamDal dal
+        [InsertChild]
+        private void Insert(
+            [Inject] ISimpleTeamSetItemDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamDao dao = CreateDao();
+                SimpleTeamSetItemDao dao = CreateDao();
                 dal.Insert(dao);
 
                 // Set new data.
@@ -191,16 +184,15 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             }
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
-        [Update]
-        protected void Update(
-            [Inject] ISimpleTeamDal dal
+        [UpdateChild]
+        private void Update(
+            [Inject] ISimpleTeamSetItemDal dal
             )
         {
             // Update values in persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamDao dao = CreateDao();
+                SimpleTeamSetItemDao dao = CreateDao();
                 dal.Update(dao);
 
                 // Set new data.
@@ -208,26 +200,17 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             }
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
-        [DeleteSelf]
-        protected void DeleteSelf(
-            [Inject] ISimpleTeamDal dal
-            )
-        {
-            if (TeamKey.HasValue)
-                using (BypassPropertyChecks)
-                    Delete(new SimpleTeamCriteria(TeamKey.Value), dal);
-        }
-
-        [Transactional(TransactionalTypes.TransactionScope)]
-        [Delete]
-        private void Delete(
-            SimpleTeamCriteria criteria,
-            [Inject] ISimpleTeamDal dal
+        [DeleteSelfChild]
+        private void DeleteSelf(
+            [Inject] ISimpleTeamSetItemDal dal
             )
         {
             // Delete values from persistent storage.
-            dal.Delete(criteria);
+            if (TeamKey.HasValue)
+            {
+                SimpleTeamSetItemCriteria criteria = new SimpleTeamSetItemCriteria(TeamKey.Value);
+                dal.Delete(criteria);
+            }
         }
 
         #endregion

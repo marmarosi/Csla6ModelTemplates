@@ -20,10 +20,10 @@ namespace Csla6ModelTemplates.Models.Simple.View
             private set => LoadProperty(TeamKeyProperty, value);
         }
 
-        public static readonly PropertyInfo<string> TeamIdProperty = RegisterProperty<string>(nameof(TeamId), RelationshipTypes.PrivateField);
+        public static readonly PropertyInfo<long?> TeamIdProperty = RegisterProperty<long?>(nameof(TeamId), RelationshipTypes.PrivateField);
         public string TeamId
         {
-            get => GetProperty(TeamIdProperty, KeyHash.Encode(ID.Team, TeamKey));
+            get => KeyHash.Encode(ID.Team, TeamKey);
             private set => TeamKey = KeyHash.Decode(ID.Team, value);
         }
 
@@ -78,9 +78,8 @@ namespace Csla6ModelTemplates.Models.Simple.View
             )
         {
             // Set values from data access object.
-            var dao = dal.GetView(criteria);
+            SimpleTeamViewDao dao = dal.Fetch(criteria);
             Csla.Data.DataMapper.Map(dao, this);
-            //BusinessRules.CheckRules();
         }
 
         #endregion

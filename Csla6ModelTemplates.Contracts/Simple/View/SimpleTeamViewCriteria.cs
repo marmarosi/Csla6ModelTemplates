@@ -12,7 +12,7 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
             string teamId
             )
         {
-            TeamId= teamId;
+            TeamId = teamId;
         }
 
         public SimpleTeamViewCriteria Decode()

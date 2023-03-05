@@ -1,13 +1,12 @@
-using Csla6ModelTemplates.Contracts.Simple.List;
-using Microsoft.EntityFrameworkCore;
+using Csla6ModelTemplates.Contracts.Simple.Set;
 
-namespace Csla6ModelTemplates.Dal.SqlServer.Simple.List
+namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
 {
     /// <summary>
-    /// Implements the data access functions of the read-only team collection.
+    /// Implements the data access functions of the editable team collection.
     /// </summary>
     [DalImplementation]
-    public class SimpleTeamListDal : DalBase<SqlServerContext>, ISimpleTeamListDal
+    public class SimpleTeamSetDal : DalBase<SqlServerContext>, ISimpleTeamSetDal
     {
         #region Constructor
 
@@ -15,7 +14,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.List
         /// Instantiates the data access object.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public SimpleTeamListDal(
+        public SimpleTeamSetDal(
             SqlServerContext dbContext
             )
         {
@@ -27,26 +26,27 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.List
         #region Fetch
 
         /// <summary>
-        /// Gets the specified teams.
+        /// Gets the specified team set.
         /// </summary>
-        /// <param name="criteria">The criteria of the team list.</param>
-        /// <returns>The requested team items.</returns>
-        public List<SimpleTeamListItemDao> Fetch(
-            SimpleTeamListCriteria criteria
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <returns>The requested team set.</returns>
+        public List<SimpleTeamSetItemDao> Fetch(
+            SimpleTeamSetCriteria criteria
             )
         {
-            List<SimpleTeamListItemDao> list = DbContext.Teams
+            // Get the specified team set.
+            List<SimpleTeamSetItemDao> list = DbContext.Teams
                 .Where(e =>
                     criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName)
                 )
-                .Select(e => new SimpleTeamListItemDao
+                .Select(e => new SimpleTeamSetItemDao
                 {
                     TeamKey = e.TeamKey,
                     TeamCode = e.TeamCode,
-                    TeamName = e.TeamName
+                    TeamName = e.TeamName,
+                    Timestamp = e.Timestamp
                 })
                 .OrderBy(o => o.TeamName)
-                .AsNoTracking()
                 .ToList();
 
             return list;

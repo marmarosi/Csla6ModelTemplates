@@ -35,7 +35,7 @@ namespace Csla6ModelTemplates.Models.Simple.List
             // Load values from persistent storage.
             using (LoadListMode)
             {
-                List<SimpleTeamListItemDao> list = dal.GetList(criteria);
+                List<SimpleTeamListItemDao> list = dal.Fetch(criteria);
                 foreach (var item in list)
                     Add(childPortal.FetchChild(item));
             }

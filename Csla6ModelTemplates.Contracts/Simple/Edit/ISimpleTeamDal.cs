@@ -5,7 +5,7 @@ namespace Csla6ModelTemplates.Contracts.Simple.Edit
     /// </summary>
     public interface ISimpleTeamDal
     {
-        SimpleTeamDao Get(SimpleTeamCriteria criteria);
+        SimpleTeamDao Fetch(SimpleTeamCriteria criteria);
         void Insert(SimpleTeamDao dao);
         void Update(SimpleTeamDao dao);
         void Delete(SimpleTeamCriteria criteria);

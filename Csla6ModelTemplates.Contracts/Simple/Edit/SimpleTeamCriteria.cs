@@ -8,12 +8,16 @@ namespace Csla6ModelTemplates.Contracts.Simple.Edit
     {
         public string TeamId { get; set; }
 
+        public SimpleTeamParams(
+            string teamId
+            )
+        {
+            TeamId = teamId;
+        }
+
         public SimpleTeamCriteria Decode()
         {
-            return new SimpleTeamCriteria
-            {
-                TeamKey = KeyHash.Decode(ID.Team, TeamId) ?? 0
-            };
+            return new SimpleTeamCriteria(KeyHash.Decode(ID.Team, TeamId) ?? 0);
         }
     }
 
@@ -24,8 +28,6 @@ namespace Csla6ModelTemplates.Contracts.Simple.Edit
     public class SimpleTeamCriteria
     {
         public long TeamKey { get; set; }
-
-        public SimpleTeamCriteria() { }
 
         public SimpleTeamCriteria(
             long teamKey
