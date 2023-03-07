@@ -2,7 +2,6 @@ using Csla.Configuration;
 using Csla6ModelTemplates.Dal.SqlServer;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
