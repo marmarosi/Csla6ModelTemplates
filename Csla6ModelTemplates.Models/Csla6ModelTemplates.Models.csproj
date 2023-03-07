@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Csla" Version="6.2.2" />
+    <PackageReference Include="PropertyCopier" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

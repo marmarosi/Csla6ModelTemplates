@@ -183,6 +183,9 @@
   <data name="SimpleTeamSetItem_NotFound" xml:space="preserve">
     <value>The team with code {0} has not been found.</value>
   </data>
+  <data name="SimpleTeamSetItem_NotFoundKey" xml:space="preserve">
+    <value>The requested team has not been found.</value>
+  </data>
   <data name="SimpleTeamSetItem_TeamCodeExists" xml:space="preserve">
     <value>Team with code {0} already exists.</value>
   </data>

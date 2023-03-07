@@ -19,7 +19,7 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
         {
             return new SimpleTeamViewCriteria
             {
-                TeamKey = KeyHash.Decode(ID.Team, TeamId) ?? 0
+                TeamKey = KeyHash.Decode(ID.Team, TeamId)
             };
         }
     }
@@ -30,6 +30,6 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
     [Serializable]
     public class SimpleTeamViewCriteria
     {
-        public long TeamKey { get; set; }
+        public long? TeamKey { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Csla;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.CslaExtensions.Models;
@@ -77,7 +78,7 @@ namespace Csla6ModelTemplates.Models.Simple.List
             )
         {
             // Set values from data access object.
-            Csla.Data.DataMapper.Map(dao, this);
+            DataMapper.Map(dao, this);
         }
 
         #endregion

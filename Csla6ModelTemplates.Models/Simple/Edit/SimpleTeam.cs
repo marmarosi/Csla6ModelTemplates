@@ -1,9 +1,11 @@
 using Csla;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
+using PropertyCopier;
 
 namespace Csla6ModelTemplates.Models.Simple.Edit
 {
@@ -100,6 +102,11 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
                 SimpleTeamDto dto
                 )
         {
+            Copy.
+            var copier = new PropertyCopier.Copier();
+            copier.IgnoreProperty<SimpleTeamDto, this > (t => t.TeamKey);
+            var dto = copier.From(SimpleTeamDto).To<this> ();
+
             //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
             TeamCode = dto.TeamCode;
             TeamName = dto.TeamName;
@@ -134,15 +141,14 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         #region Data Access
 
-        //[Create]
-        //[RunLocal]
-        //private void Create()
-        //{
-        //    // Load default values.
-        //    // Omit this override if you have no defaults to set.
-        //    LoadProperty(TeamCodeProperty, "");
-        //    BusinessRules.CheckRules();
-        //}
+        [Create]
+        [RunLocal]
+        private void Create()
+        {
+            // Load default values.
+            //LoadProperty(TeamCodeProperty, "");
+            //BusinessRules.CheckRules();
+        }
 
         [Fetch]
         private void Fetch(
@@ -153,24 +159,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             // Load values from persistent storage.
             SimpleTeamDao dao = dal.Fetch(criteria);
             using (BypassPropertyChecks)
-            {
-                TeamKey = dao.TeamKey;
-                TeamCode = dao.TeamCode;
-                TeamName = dao.TeamName;
-                Timestamp = dao.Timestamp;
-            }
-        }
-
-        private SimpleTeamDao CreateDao()
-        {
-            // Build the data access object.
-            return new SimpleTeamDao
-            {
-                TeamKey = TeamKey,
-                TeamCode = TeamCode,
-                TeamName = TeamName,
-                Timestamp = Timestamp
-            };
+                DataMapper.Map(dao, this);
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]
@@ -182,7 +171,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamDao dao = CreateDao();
+                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
                 dal.Insert(dao);
 
                 // Set new data.
@@ -200,7 +189,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             // Update values in persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamDao dao = CreateDao();
+                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
                 dal.Update(dao);
 
                 // Set new data.

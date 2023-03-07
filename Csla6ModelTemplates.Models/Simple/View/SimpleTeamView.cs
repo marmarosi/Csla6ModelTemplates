@@ -1,4 +1,5 @@
 using Csla;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.View;
 using Csla6ModelTemplates.CslaExtensions.Models;
@@ -79,7 +80,7 @@ namespace Csla6ModelTemplates.Models.Simple.View
         {
             // Set values from data access object.
             SimpleTeamViewDao dao = dal.Fetch(criteria);
-            Csla.Data.DataMapper.Map(dao, this);
+            DataMapper.Map(dao, this);
         }
 
         #endregion

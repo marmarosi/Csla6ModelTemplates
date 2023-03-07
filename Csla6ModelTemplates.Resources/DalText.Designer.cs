@@ -322,6 +322,15 @@ namespace Csla6ModelTemplates.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested team has not been found..
+        /// </summary>
+        public static string SimpleTeamSetItem_NotFoundKey {
+            get {
+                return ResourceManager.GetString("SimpleTeamSetItem_NotFoundKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Team with code {0} already exists..
         /// </summary>
         public static string SimpleTeamSetItem_TeamCodeExists {

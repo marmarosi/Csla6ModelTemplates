@@ -13,10 +13,10 @@ namespace Csla6ModelTemplates.Contracts.Simple.Command
     /// </summary>
     public class RenameTeamDao : RenameTeamData
     {
-        public long TeamKey { get; set; }
+        public long? TeamKey { get; set; }
 
         public RenameTeamDao(
-            long teamKey,
+            long? teamKey,
             string teamName
             )
         {

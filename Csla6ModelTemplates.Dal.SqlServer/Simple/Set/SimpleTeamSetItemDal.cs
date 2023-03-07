@@ -130,7 +130,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
                 .AsNoTracking()
                 .FirstOrDefault();
             if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFound.With(team.TeamCode));
+                throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFoundKey);
 
             // Check or delete references
             //int dependents = 0;
