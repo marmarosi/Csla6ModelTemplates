@@ -122,7 +122,6 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <summary>
         /// Gets the specified team to edit.
         /// </summary>
-        /// <param name="criteria">The criteria of the team.</param>
         /// <param name="portal">The data portal of the model.</param>
         /// <returns>The requested team.</returns>
         [HttpGet("{id}")]

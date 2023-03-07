@@ -26,23 +26,23 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             return new Copy(source);
         }
 
-        public Copy IncludeProperties(
-            string[] properties
+        public Copy Keep(
+            params string[] propertyNames
             )
         {
-            whiteList.AddRange(properties);
+            whiteList.AddRange(propertyNames);
             return this;
         }
 
-        public Copy ExcludeProperties(
-            string[] properties
+        public Copy Omit(
+            params string[] propertyNames
             )
         {
-            blackList.AddRange(properties);
+            blackList.AddRange(propertyNames);
             return this;
         }
 
-        public T ToNewInstanceOf<T>() where T: class
+        public T ToNew<T>() where T: class
         {
             var target = Activator.CreateInstance<T>();
             return (T)ToPropertiesOf(target);

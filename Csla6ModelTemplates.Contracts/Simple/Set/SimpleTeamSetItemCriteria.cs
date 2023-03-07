@@ -6,10 +6,10 @@ namespace Csla6ModelTemplates.Contracts.Simple.Set
     [Serializable]
     public class SimpleTeamSetItemCriteria
     {
-        public long TeamKey { get; set; }
+        public long? TeamKey { get; set; }
 
         public SimpleTeamSetItemCriteria(
-            long teamKey
+            long? teamKey
             )
         {
             TeamKey = teamKey;

@@ -5,7 +5,6 @@ using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
-using PropertyCopier;
 
 namespace Csla6ModelTemplates.Models.Simple.Edit
 {
@@ -94,26 +93,26 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         #region Business Methods
 
-        /// <summary>
-        /// Updates an editable team from the data transfer object.
-        /// </summary>
-        /// <param name="data">The data transfer object.</param>
-        public override async Task Update(
-                SimpleTeamDto dto
-                )
-        {
-            Copy.
-            var copier = new PropertyCopier.Copier();
-            copier.IgnoreProperty<SimpleTeamDto, this > (t => t.TeamKey);
-            var dto = copier.From(SimpleTeamDto).To<this> ();
+        ///// <summary>
+        ///// Updates an editable team from the data transfer object.
+        ///// </summary>
+        ///// <param name="data">The data transfer object.</param>
+        //public override async Task Update(
+        //        SimpleTeamDto dto
+        //        )
+        //{
+        //    Copy.
+        //    var copier = new PropertyCopier.Copier();
+        //    copier.IgnoreProperty<SimpleTeamDto, this > (t => t.TeamKey);
+        //    var dto = copier.From(SimpleTeamDto).To<this> ();
 
-            //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            TeamCode = dto.TeamCode;
-            TeamName = dto.TeamName;
-            //Timestamp = dto.Timestamp;
+        //    //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
+        //    TeamCode = dto.TeamCode;
+        //    TeamName = dto.TeamName;
+        //    //Timestamp = dto.Timestamp;
 
-            await base.Update(dto);
-        }
+        //    await base.Update(dto);
+        //}
 
         #endregion
 
@@ -133,7 +132,12 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             SimpleTeam team = teamKey.HasValue ?
                 await portal.FetchAsync(new SimpleTeamCriteria(teamKey.Value)) :
                 await portal.CreateAsync();
-            await team.Update(dto);
+
+            Copy.PropertiesFrom(dto)
+                .Omit("TeamKey", "Timestamp")
+                .ToPropertiesOf(team);
+
+            team.BusinessRules.CheckRules();
             return team;
         }
 
@@ -197,15 +201,13 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             }
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [DeleteSelf]
         protected void DeleteSelf(
             [Inject] ISimpleTeamDal dal
             )
         {
-            if (TeamKey.HasValue)
-                using (BypassPropertyChecks)
-                    Delete(new SimpleTeamCriteria(TeamKey.Value), dal);
+            using (BypassPropertyChecks)
+                Delete(new SimpleTeamCriteria(TeamKey), dal);
         }
 
         [Transactional(TransactionalTypes.TransactionScope)]

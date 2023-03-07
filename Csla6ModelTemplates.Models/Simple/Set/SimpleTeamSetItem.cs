@@ -1,5 +1,6 @@
 using Csla;
 using Csla.Core;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
@@ -145,26 +146,9 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             SimpleTeamSetItemDao dao
             )
         {
+            // Set values from data access object.
             using (BypassPropertyChecks)
-            {
-                // Set values from data access object.
-                TeamKey = dao.TeamKey;
-                TeamCode = dao.TeamCode;
-                TeamName = dao.TeamName;
-                Timestamp = dao.Timestamp;
-            }
-        }
-
-        private SimpleTeamSetItemDao CreateDao()
-        {
-            // Build the data access object.
-            return new SimpleTeamSetItemDao
-            {
-                TeamKey = TeamKey,
-                TeamCode = TeamCode,
-                TeamName = TeamName,
-                Timestamp = Timestamp
-            };
+                DataMapper.Map(dao, this);
         }
 
         [InsertChild]
@@ -175,7 +159,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamSetItemDao dao = CreateDao();
+                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamSetItemDao>();
                 dal.Insert(dao);
 
                 // Set new data.
@@ -192,7 +176,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             // Update values in persistent storage.
             using (BypassPropertyChecks)
             {
-                SimpleTeamSetItemDao dao = CreateDao();
+                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamSetItemDao>();
                 dal.Update(dao);
 
                 // Set new data.
@@ -208,7 +192,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             // Delete values from persistent storage.
             if (TeamKey.HasValue)
             {
-                SimpleTeamSetItemCriteria criteria = new SimpleTeamSetItemCriteria(TeamKey.Value);
+                SimpleTeamSetItemCriteria criteria = new SimpleTeamSetItemCriteria(TeamKey);
                 dal.Delete(criteria);
             }
         }
