@@ -1,9 +1,16 @@
-﻿using Csla;
+using Csla;
+using Csla.Configuration;
 using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.Dal.SqlServer;
+using Csla6ModelTemplates.Dal.SqlServer.Simple.List;
 using Csla6ModelTemplates.Models.Simple.List;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -15,16 +22,32 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         //private readonly ITestOutputHelper output;
         //private readonly IDataPortal<SimpleTeamList> portal;
         //private readonly TestApplication app;
+        private readonly ApplicationContext appContext;
 
-        //public SimpleTeamList_Tests(
-        //    ITestOutputHelper output,
-        //    IDataPortal<SimpleTeamList> portal
-        //    )
-        //{
-        //    this.output = output;
-        //    this.portal = portal;
-        //    app = new TestApplication();
-        //}
+        public SimpleTeamList_Tests(
+            //ITestOutputHelper output,
+            //IDataPortal<SimpleTeamList> portal
+            )
+        {
+            //this.output = output;
+            //this.portal = portal;
+            //app = new TestApplication();
+
+            var services = new ServiceCollection();
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("SharedSettings.json", true, true)
+                .AddJsonFile("appsettings.json", true, true) // use appsettings.json in current folder
+                .AddEnvironmentVariables();
+            IConfiguration configuration = builder.Build();
+            services.AddDbContext<SqlServerContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("SQLServer"))
+            );
+            services.AddCsla();
+            services.AddScoped<ISimpleTeamListDal, SimpleTeamListDal>();
+            var sp = services.BuildServiceProvider();
+            appContext = sp.GetRequiredService<ApplicationContext>();
+        }
 
         [Fact]
         public async Task GetTeamList_ReturnsAList()
@@ -41,8 +64,9 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
 
             // Act
             SimpleTeamListCriteria criteria = new SimpleTeamListCriteria { TeamName = "9" };
+            var portal = appContext.CreateInstanceDI<DataPortal<SimpleTeamList>>();
             ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(
-                criteria, setup.GetPortal<SimpleTeamList>());
+                criteria, portal);
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;

@@ -31,7 +31,6 @@ builder.Services.AddSwaggerGen(o =>
 });
 
 // Configure EF database.
-
 builder.Services.AddDbContext<SqlServerContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"))
 );

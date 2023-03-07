@@ -1,9 +1,10 @@
-﻿using Csla;
+using Csla;
 using Csla.Configuration;
 using Csla.DataPortalClient;
 using Csla6ModelTemplates.Dal;
 using Csla6ModelTemplates.Dal.SqlServer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace Csla6ModelTemplates.WebApiTests
         private readonly IServiceCollection _serviceCollection = new ServiceCollection();
         private readonly IServiceProvider _serviceProvider;
         //private readonly IDataPortalFactory _dataPortalFactory;
+        private readonly ApplicationContext _applicationContext;
 
         private SetupService()
         {
@@ -29,6 +31,11 @@ namespace Csla6ModelTemplates.WebApiTests
 
             // Initializes a new instance of ServiceProvider class.
             _serviceProvider = _serviceCollection.BuildServiceProvider();
+
+            // Configure EF database.
+            _serviceCollection.AddDbContext<SqlServerContext>(options =>
+                options.UseSqlServer(configuration.GetConnectionString("SQLServer"))
+            );
 
             // Configure CSLA.
             _serviceCollection.AddHttpContextAccessor();
@@ -42,6 +49,7 @@ namespace Csla6ModelTemplates.WebApiTests
                 )
             );
             //_dataPortalFactory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+            //_applicationContext = _serviceProvider.GetRequiredService<ApplicationContext>();
 
             //// Configure data access layers.
             //DalFactory.Configure(configuration, _serviceCollection);
@@ -64,8 +72,11 @@ namespace Csla6ModelTemplates.WebApiTests
 
         public IDataPortal<T> GetPortal<T>() where T: class
         {
-            var _dataPortalFactory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
-            return _dataPortalFactory.GetPortal<T>();
+            //var _dataPortalFactory = _serviceProvider.GetRequiredService<IDataPortalFactory>();
+            //return _dataPortalFactory.GetPortal<T>();
+            //--var _dataPortal = _applicationContext.CreateInstanceDI<DataPortal<T>>();
+            var _dataPortal = _applicationContext.CreateInstance<DataPortal<T>>();
+            return _dataPortal;
         }
 
         private IConfiguration GetConfig()
