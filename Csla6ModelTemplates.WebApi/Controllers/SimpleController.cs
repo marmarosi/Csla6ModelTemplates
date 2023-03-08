@@ -122,6 +122,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <summary>
         /// Gets the specified team to edit.
         /// </summary>
+        /// <param name="id">The identifier of the team.</param>
         /// <param name="portal">The data portal of the model.</param>
         /// <returns>The requested team.</returns>
         [HttpGet("{id}")]
@@ -205,6 +206,37 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                         team = await team.SaveAsync();
                     }
                     return Ok(team.ToDto());
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Delete
+
+        /// <summary>
+        /// Deletes the specified team.
+        /// </summary>
+        /// <param name="id">The identifier of the team.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> DeleteTeam(
+            string id,
+            [FromServices] IDataPortal<SimpleTeam> portal
+            )
+        {
+            try
+            {
+                var criteria = new SimpleTeamParams(id);
+                return await Run.RetryOnDeadlock(async () =>
+                {
+                    await portal.DeleteAsync(criteria.Decode());
+                    return NoContent();
                 });
             }
             catch (Exception ex)

@@ -19,10 +19,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             var sut = new SimpleController(logger);
 
             // Act
-            SimpleTeamListCriteria criteria = new SimpleTeamListCriteria { TeamName = "9" };
-            var portal = setup.GetPortal<SimpleTeamList>();
             ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(
-                criteria, portal);
+                new SimpleTeamListCriteria { TeamName = "9" },
+                setup.GetPortal<SimpleTeamList>()
+                );
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;

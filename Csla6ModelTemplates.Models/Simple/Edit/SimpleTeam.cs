@@ -212,7 +212,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         [Transactional(TransactionalTypes.TransactionScope)]
         [Delete]
-        private void Delete(
+        protected void Delete(
             SimpleTeamCriteria criteria,
             [Inject] ISimpleTeamDal dal
             )
