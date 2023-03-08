@@ -4,26 +4,22 @@ namespace Csla6ModelTemplates.Dal
 {
     public class DalIndex
     {
-        protected Assembly DalAssembly;
-        private Dictionary<Type, Type> DalTypes;
+        public readonly Dictionary<Type, Type> DalTypes = new Dictionary<Type, Type>();
 
-        protected DalIndex() { }
-
-        public Dictionary<Type, Type> GetDalItems()
+        public DalIndex(
+            Assembly dalAssembly
+            )
         {
-            if (DalTypes == null)
-            {
-                DalTypes = new Dictionary<Type, Type>();
-                LookUpDalTypes();
-            }
-            return DalTypes;
+            LookUpDalTypes(dalAssembly);
         }
 
-        private void LookUpDalTypes()
+        private void LookUpDalTypes(
+            Assembly dalAssembly
+            )
         {
-            ArgumentNullException.ThrowIfNull(DalAssembly, "DalAssembly");
+            ArgumentNullException.ThrowIfNull(dalAssembly);
 
-            foreach (Type type in DalAssembly.GetTypes())
+            foreach (Type type in dalAssembly.GetTypes())
             {
                 if (type.GetCustomAttributes(typeof(DalImplementationAttribute), false).Length > 0)
                 {

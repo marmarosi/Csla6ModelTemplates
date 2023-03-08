@@ -1,52 +1,23 @@
 using Csla6ModelTemplates.Dal.SqlServer.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.Configuration;
 
 namespace Csla6ModelTemplates.Dal.SqlServer
 {
     /// <summary>
     /// Represents a session with the database.
     /// </summary>
-    public class SqlServerContext : DbContextBase
+    public class SqlServerContext : DbContext //DbContextBase
     {
         #region Constructors
 
-        /// <summary>
-        /// Creates a new instance of the class.
-        /// </summary>
         public SqlServerContext(
-            IConfiguration configuration
-            ) : base()
-        {
-            //ConnectionString = DalFactory.GetConnectionString(DAL.SQLServer);
-            ConnectionString = configuration.GetConnectionString("SQLServer");
-            SubscribeStateChangeEvents();
-        }
-
-        /// <summary>
-        /// Creates a new instance of the class.
-        /// </summary>
-        /// <param name="dalName">The name of the data access layer.</param>
-        public SqlServerContext(
-            string dalName
-            ) : base(dalName)
-        {
-            SubscribeStateChangeEvents();
-        }
+            DbContextOptions<SqlServerContext> options
+            )
+            : base(options)
+        { }
 
         #endregion
-
-        /// <summary>
-        /// Configure the database to be used for this context.
-        /// </summary>
-        /// <param name="optionsBuilder">The builder used to create or modify options for this context.</param>
-        protected override void OnConfiguring(
-            DbContextOptionsBuilder optionsBuilder
-            )
-        {
-            optionsBuilder.UseSqlServer(ConnectionString);
-        }
 
         #region Auto update timestamps
 
@@ -56,15 +27,15 @@ namespace Csla6ModelTemplates.Dal.SqlServer
             ChangeTracker.StateChanged += OnEntityStateChanged;
         }
 
-        void OnEntityStateChanged(object sender, EntityStateChangedEventArgs e)
-        {
-            ProcessLastModified(e.Entry);
-        }
-
         void OnEntityTracked(object sender, EntityTrackedEventArgs e)
         {
             if (!e.FromQuery)
                 ProcessLastModified(e.Entry);
+        }
+
+        void OnEntityStateChanged(object sender, EntityStateChangedEventArgs e)
+        {
+            ProcessLastModified(e.Entry);
         }
 
         void ProcessLastModified(EntityEntry entry)

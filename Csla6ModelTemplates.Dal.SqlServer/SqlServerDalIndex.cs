@@ -2,11 +2,15 @@ using System.Reflection;
 
 namespace Csla6ModelTemplates.Dal.SqlServer
 {
-    public class SqlServerDalIndex : DalIndex
+    public static class SqlServerDalIndex
     {
-        public SqlServerDalIndex()
+        public static Dictionary<Type, Type> Items
         {
-            DalAssembly = Assembly.GetExecutingAssembly();
+            get
+            {
+                var dalindex = new DalIndex(Assembly.GetExecutingAssembly());
+                return dalindex.DalTypes;
+            }
         }
     }
 }

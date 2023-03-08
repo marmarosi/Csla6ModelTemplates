@@ -1,23 +1,19 @@
 using Csla.Configuration;
-using Csla6ModelTemplates.Dal.SqlServer;
+using Csla6ModelTemplates.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddCors(options =>
-{
+builder.Services.AddCors(options => {
     options.AddPolicy(
         "Csla6ModelTemplatesPolicy",
-        builder =>
-        {
-            builder
+        builder => builder
             .AllowAnyOrigin()
             .AllowAnyHeader()
-            .AllowAnyMethod();
-        });
+            .AllowAnyMethod()
+        );
 });
 
 builder.Services.AddControllers();
@@ -30,18 +26,8 @@ builder.Services.AddSwaggerGen(o =>
     o.IncludeXmlComments(xmlPath, true);
 });
 
-// Configure EF database.
-builder.Services.AddDbContext<SqlServerContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("SQLServer"))
-);
-
 // Configure data access layer.
-var dalIndex = new SqlServerDalIndex();
-var dalTypes = dalIndex.GetDalItems();
-foreach (var dalType in dalTypes)
-{
-    builder.Services.AddScoped(dalType.Key, dalType.Value);
-}
+builder.Services.AddSqlServerDal();
 
 // If using Kestrel:
 builder.Services.Configure<KestrelServerOptions>(options =>
