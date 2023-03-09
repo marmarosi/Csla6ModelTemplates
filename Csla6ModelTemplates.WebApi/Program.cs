@@ -54,6 +54,8 @@ builder.Services.AddCsla(o => o
 
 var app = builder.Build();
 
+app.RunSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
