@@ -124,7 +124,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
         #region Folder helpers
 
         private static void CreateFolderLevel(
-            SqlServerContext ctx,
+            SqlServerContext context,
             int level,
             long? parentKey,
             long? rootKey,
@@ -141,13 +141,13 @@ namespace Csla6ModelTemplates.Dal.SqlServer
                     folderOrder,
                     parentPath
                     );
-                ctx.Folders.Add(folder);
-                ctx.SaveChanges();
+                context.Folders.Add(folder);
+                context.SaveChanges();
 
                 if (level == 1)
                 {
                     folder.RootKey = folder.FolderKey;
-                    ctx.SaveChanges();
+                    context.SaveChanges();
                 }
 
                 if (level < 4)
@@ -156,7 +156,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
                         ? folderOrder.ToString()
                         : $"{parentPath}.{folderOrder}";
                     CreateFolderLevel(
-                        ctx,
+                        context,
                         level + 1,                      // level
                         folder.FolderKey,               // parentKey
                         rootKey ?? folder.FolderKey,    // teamKey

@@ -64,8 +64,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
                 foreach (var targetProperty in targetProperties)
                 {
-                    if (sourceProperty.Name == targetProperty.Name &&
-                        sourceProperty.PropertyType == targetProperty.PropertyType
+                    if (sourceProperty.Name == targetProperty.Name /* &&
+                        sourceProperty.PropertyType == targetProperty.PropertyType */
                         )
                     {
                         targetProperty.SetValue(target, sourceProperty.GetValue(source));

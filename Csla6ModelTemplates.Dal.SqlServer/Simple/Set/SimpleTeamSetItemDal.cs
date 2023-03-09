@@ -144,7 +144,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
                 .ToList();
             foreach (Player player in players)
                 DbContext.Players.Remove(player);
-            DbContext.SaveChanges();
 
             // Delete the team.
             DbContext.Teams.Remove(team);

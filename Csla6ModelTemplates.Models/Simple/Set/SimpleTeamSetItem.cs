@@ -50,8 +50,8 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             set { SetProperty(TeamNameProperty, value); }
         }
 
-        public static readonly PropertyInfo<DateTime?> TimestampProperty = RegisterProperty<DateTime?>(nameof(Timestamp));
-        public DateTime? Timestamp
+        public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
+        public DateTimeOffset? Timestamp
         {
             get { return GetProperty(TimestampProperty); }
             private set { LoadProperty(TimestampProperty, value); }

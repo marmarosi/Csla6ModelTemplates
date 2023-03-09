@@ -49,8 +49,8 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             set { SetProperty(TeamNameProperty, value); }
         }
 
-        public static readonly PropertyInfo<DateTime?> TimestampProperty = RegisterProperty<DateTime?>(nameof(Timestamp));
-        public DateTime? Timestamp
+        public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
+        public DateTimeOffset? Timestamp
         {
             get { return GetProperty(TimestampProperty); }
             private set { LoadProperty(TimestampProperty, value); }
@@ -133,11 +133,9 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
                 await portal.FetchAsync(new SimpleTeamCriteria(teamKey.Value)) :
                 await portal.CreateAsync();
 
-            Copy.PropertiesFrom(dto)
-                .Omit("TeamKey", "Timestamp")
-                .ToPropertiesOf(team);
-
+            Copy.PropertiesFrom(dto).ToPropertiesOf(team);
             team.BusinessRules.CheckRules();
+
             return team;
         }
 
@@ -147,11 +145,12 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         [Create]
         [RunLocal]
-        private void Create()
+        private Task CreateAsync()
         {
             // Load default values.
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
+            return Task.CompletedTask;
         }
 
         [Fetch]

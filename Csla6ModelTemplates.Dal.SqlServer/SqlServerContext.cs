@@ -1,6 +1,5 @@
 using Csla6ModelTemplates.Dal.SqlServer.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Csla6ModelTemplates.Dal.SqlServer
 {
@@ -21,31 +20,37 @@ namespace Csla6ModelTemplates.Dal.SqlServer
 
         #region Auto update timestamps
 
-        void SubscribeStateChangeEvents()
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
         {
-            ChangeTracker.Tracked += OnEntityTracked;
-            ChangeTracker.StateChanged += OnEntityStateChanged;
-        }
+            var insertedEntries = this.ChangeTracker.Entries()
+                               .Where(x => x.State == EntityState.Added)
+                               .Select(x => x.Entity);
 
-        void OnEntityTracked(object sender, EntityTrackedEventArgs e)
-        {
-            if (!e.FromQuery)
-                ProcessLastModified(e.Entry);
-        }
-
-        void OnEntityStateChanged(object sender, EntityStateChangedEventArgs e)
-        {
-            ProcessLastModified(e.Entry);
-        }
-
-        void ProcessLastModified(EntityEntry entry)
-        {
-            if (entry.State == EntityState.Modified || entry.State == EntityState.Added)
+            foreach (var insertedEntry in insertedEntries)
             {
-                var property = entry.Metadata.FindProperty("Timestamp");
-                if (property != null && property.ClrType == typeof(DateTime))
-                    entry.CurrentValues[property] = DateTime.UtcNow;
+                var auditableEntity = insertedEntry as Timestamped;
+                //If the inserted object is an Auditable. 
+                if (auditableEntity != null)
+                {
+                    auditableEntity.Timestamp = DateTimeOffset.UtcNow;
+                }
             }
+
+            var modifiedEntries = this.ChangeTracker.Entries()
+                       .Where(x => x.State == EntityState.Modified)
+                       .Select(x => x.Entity);
+
+            foreach (var modifiedEntry in modifiedEntries)
+            {
+                //If the inserted object is an Auditable. 
+                var auditableEntity = modifiedEntry as Timestamped;
+                if (auditableEntity != null)
+                {
+                    auditableEntity.Timestamp = DateTimeOffset.UtcNow;
+                }
+            }
+
+            return base.SaveChanges(acceptAllChangesOnSuccess);
         }
 
         #endregion
@@ -74,9 +79,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer
             modelBuilder.Entity<Team>()
                 .HasIndex(e => e.TeamCode)
                 .IsUnique();
-            modelBuilder.Entity<Team>()
-                .Property(e => e.Timestamp)
-                .HasDefaultValue(DateTime.Now);
 
             #endregion
 
@@ -92,9 +94,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer
 
             modelBuilder.Entity<Folder>()
                 .HasIndex(e => new { e.ParentKey, e.FolderOrder });
-            modelBuilder.Entity<Folder>()
-                .Property(e => e.Timestamp)
-                .HasDefaultValue(DateTime.Now);
 
             #endregion
 
@@ -103,9 +102,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer
             modelBuilder.Entity<Group>()
                 .HasIndex(e => e.GroupCode)
                 .IsUnique();
-            modelBuilder.Entity<Group>()
-                .Property(e => e.Timestamp)
-                .HasDefaultValue(DateTime.Now);
 
             #endregion
 
@@ -114,9 +110,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer
             modelBuilder.Entity<Person>()
                 .HasIndex(e => e.PersonCode)
                 .IsUnique();
-            modelBuilder.Entity<Person>()
-                .Property(e => e.Timestamp)
-                .HasDefaultValue(DateTime.Now);
 
             #endregion
 

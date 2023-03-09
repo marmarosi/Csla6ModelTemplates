@@ -51,7 +51,6 @@ namespace Csla6ModelTemplates.WebApi.Controllers
             try
             {
                 SimpleTeamList list = await portal.FetchAsync(criteria);
-                var id = list[0].TeamId;
                 return Ok(list.ToDto<SimpleTeamListItemDto>());
             }
             catch (Exception ex)
