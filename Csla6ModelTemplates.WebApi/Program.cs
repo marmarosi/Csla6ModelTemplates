@@ -1,6 +1,9 @@
-using Csla.Configuration;
+﻿using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +19,24 @@ builder.Services.AddCors(options => {
         );
 });
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o =>
 {
+    o.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Version = "v1",
+            Title = "CSLA 6 REST API",
+            Description = string.Format("CSLA 6 model templates used in REST API ● Version {0}",
+                Assembly
+                    .GetEntryAssembly()
+                    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    .InformationalVersion
+            )
+        }
+    );
     string xmlFile = $"{builder.Environment.ApplicationName}.xml";
     string xmlPath = Path.Combine(builder.Environment.ContentRootPath, xmlFile);
     o.IncludeXmlComments(xmlPath, true);
@@ -52,6 +68,8 @@ builder.Services.AddCsla(o => o
     )
 );
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 app.RunSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
@@ -60,36 +78,7 @@ app.RunSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
-
-    /* ----------------------------------- //
-
-    app.MapGet(
-        "/endpoint/simple/{teamId}",
-        [SwaggerOperation(
-            Summary = "Gets the specified team details to display.",
-            Description = "Gets the specified team details to display.<br>" +
-                "Criteria:<br>{<br>" +
-                "&nbsp;&nbsp;&nbsp;&nbsp;teamId: string<br>" +
-                "}<br>" +
-                "Result: SimpleTeamViewDto",
-            OperationId = "SimpleTeam.View",
-            Tags = new[] { "Simple Endpoints" })]
-        async (string teamId, IDataPortal<SimpleTeamView> portal) =>
-        {
-            var criteria = new SimpleTeamViewParams { TeamId = teamId };
-            var team = await portal.FetchAsync(criteria.Decode());
-            return Results.Ok(team);
-        })
-    //.WithGroupName("Team")
-    //.WithName("Get simple team view")
-    .Produces<SimpleTeamView>(contentType: "application/json")
-    //.WithDisplayName("Display name")
-    //.WithMetadata(new { Summary: "Summary"})
-    .WithTags("Simple Endpoints")
-    //.WithSummary("")
-    ;
-    // ----------------------------------- */
+    app.UseSwaggerUI(o => o.DocExpansion(DocExpansion.None));
 }
 
 app.UseHttpsRedirection();

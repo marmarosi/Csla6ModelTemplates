@@ -11,6 +11,21 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Command
     [DalImplementation]
     public class RenameTeamDal : DalBase<SqlServerContext>, IRenameTeamDal
     {
+        #region Constructor
+
+        /// <summary>
+        /// Instantiates the data access object.
+        /// </summary>
+        /// <param name="context">The database context.</param>
+        public RenameTeamDal(
+            SqlServerContext dbContext
+            )
+        {
+            DbContext = dbContext;
+        }
+
+        #endregion Constructor
+
         #region Execute
 
         /// <summary>
