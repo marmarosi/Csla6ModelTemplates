@@ -6,15 +6,20 @@ namespace Csla6ModelTemplates.Dal.SqlServer
     /// <summary>
     /// Represents a session with the database.
     /// </summary>
-    public class SqlServerContext : DbContext //DbContextBase
+    public class SqlServerContext : DbContext, ITransactionOptions
     {
         #region Constructors
 
+        public bool IsTest { get; private set; }
+
         public SqlServerContext(
-            DbContextOptions<SqlServerContext> options
+            DbContextOptions<SqlServerContext> options,
+            ITransactionOptions transactionOptions
             )
             : base(options)
-        { }
+        {
+            IsTest = transactionOptions?.IsTest ?? false;
+        }
 
         #endregion
 

@@ -24,9 +24,9 @@ namespace Csla6ModelTemplates.Dal
                 if (type.GetCustomAttributes(typeof(DalImplementationAttribute), false).Length > 0)
                 {
                     Type[] interfaces = type.GetInterfaces();
-                    if (interfaces.Length == 1)
+                    if (interfaces.Length == 2)
                     {
-                        DalTypes.Add(interfaces[0], type);
+                        DalTypes.Add(interfaces[1], type);
                     }
                 }
             }

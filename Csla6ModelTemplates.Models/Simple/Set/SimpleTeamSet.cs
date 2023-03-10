@@ -1,6 +1,7 @@
 using Csla;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.Dal;
 
 namespace Csla6ModelTemplates.Models.Simple.Set
 {
@@ -81,11 +82,16 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         }
 
         [Update]
-        [Transactional(TransactionalTypes.TransactionScope)]
-        protected void Update()
+        protected void Update(
+            [Inject] ISimpleTeamSetDal dal
+            )
         {
             // Update values in persistent storage.
-            base.Child_Update();
+            using (var transaction = dal.BeginTransaction())
+            {
+                base.Child_Update();
+                dal.Commit(transaction);
+            }
         }
 
         #endregion

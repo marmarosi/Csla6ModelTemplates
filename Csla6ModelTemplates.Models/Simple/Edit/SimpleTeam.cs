@@ -165,38 +165,44 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
                 DataMapper.Map(dao, this);
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [Insert]
         protected void Insert(
             [Inject] ISimpleTeamDal dal
             )
         {
             // Insert values into persistent storage.
-            using (BypassPropertyChecks)
+            using (var transaction = dal.BeginTransaction())
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
-                dal.Insert(dao);
+                using (BypassPropertyChecks)
+                {
+                    var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
+                    dal.Insert(dao);
 
-                // Set new data.
-                TeamKey = dao.TeamKey;
-                Timestamp = dao.Timestamp;
+                    // Set new data.
+                    TeamKey = dao.TeamKey;
+                    Timestamp = dao.Timestamp;
+                }
+                dal.Commit(transaction);
             }
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [Update]
         protected void Update(
             [Inject] ISimpleTeamDal dal
             )
         {
             // Update values in persistent storage.
-            using (BypassPropertyChecks)
+            using (var transaction = dal.BeginTransaction())
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
-                dal.Update(dao);
+                using (BypassPropertyChecks)
+                {
+                    var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
+                    dal.Update(dao);
 
-                // Set new data.
-                Timestamp = dao.Timestamp;
+                    // Set new data.
+                    Timestamp = dao.Timestamp;
+                }
+                dal.Commit(transaction);
             }
         }
 
@@ -209,7 +215,6 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
                 Delete(new SimpleTeamCriteria(TeamKey), dal);
         }
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [Delete]
         protected void Delete(
             SimpleTeamCriteria criteria,
@@ -217,7 +222,11 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             )
         {
             // Delete values from persistent storage.
-            dal.Delete(criteria);
+            using (var transaction = dal.BeginTransaction())
+            {
+                dal.Delete(criteria);
+                dal.Commit(transaction);
+            }
         }
 
         #endregion

@@ -152,6 +152,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             SimpleTeamCriteria criteria
             )
         {
+            int count = 0;
+
             // Get the specified team.
             Team team = DbContext.Teams
                 .Where(e =>
@@ -163,16 +165,27 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             if (team == null)
                 throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
 
-            // Check or delete references
+            // Check references.
             //int dependents = 0;
 
             //dependents = DbContext.Others.Count(e => e.TeamKey == criteria.TeamKey);
             //if (dependents > 0)
             //    throw new DeleteFailedException(DalText.SimpleTeam_Delete_Others);
 
+            // Delete references.
+            var players = DbContext.Players
+                .Where(e => e.TeamKey == criteria.TeamKey)
+                .ToList();
+            foreach (var player in players)
+                DbContext.Players.Remove(player);
+
+            count = DbContext.SaveChanges();
+            if (count != players.Count)
+                throw new DeleteFailedException(DalText.SimpleTeam_Delete_Players);
+
             // Delete the team.
             DbContext.Teams.Remove(team);
-            int count = DbContext.SaveChanges();
+            count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.SimpleTeam_DeleteFailed);
         }

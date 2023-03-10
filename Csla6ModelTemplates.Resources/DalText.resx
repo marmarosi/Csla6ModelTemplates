@@ -177,6 +177,9 @@
   <data name="SimpleTeamSetItem_DeleteFailed" xml:space="preserve">
     <value>Deleting the team with code {0} has failed.</value>
   </data>
+  <data name="SimpleTeamSetItem_Delete_Players" xml:space="preserve">
+    <value>Deleting the players of team with code {0} has failed.</value>
+  </data>
   <data name="SimpleTeamSetItem_InsertFailed" xml:space="preserve">
     <value>Creating the new team with code {0} has failed.</value>
   </data>
@@ -218,6 +221,9 @@
   </data>
   <data name="SimpleTeam_Delete_Others" xml:space="preserve">
     <value>Cannot delete the team because others belong to it.</value>
+  </data>
+  <data name="SimpleTeam_Delete_Players" xml:space="preserve">
+    <value>Deleting the team payers has failed.</value>
   </data>
   <data name="SimpleTeam_InsertFailed" xml:space="preserve">
     <value>Creating the new team has failed.</value>

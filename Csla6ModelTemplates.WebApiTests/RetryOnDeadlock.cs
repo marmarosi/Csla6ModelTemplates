@@ -3,24 +3,38 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Transactions;
 
 namespace Csla6ModelTemplates.WebApiTests
 {
-    internal static class RUN
+    internal static class Wait
     {
+        private static readonly Random random = new Random(DateTime.Now.Millisecond);
+
         internal const int MAX_RETRIES = 2;
         internal const int MIN_DELAY_MS = 100;
         internal const int MAX_DELAY_MS = 200;
+
+        internal static int RandomTime()
+        {
+            return random.Next(Wait.MIN_DELAY_MS, Wait.MAX_DELAY_MS);
+        }    
     }
 
+    /// <summary>
+    /// Provides methods to handle dead lock errors.
+    /// </summary>
     public static class Run
     {
-        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
-
+        /// <summary>
+        /// Executes a business method, and retries to run it again
+        /// when it fails with dead lock error.
+        /// </summary>
+        /// <param name="businessMethod">The business method to run.</param>
+        /// <param name="maxRetries">The number of trials, the default value is 2.</param>
+        /// <returns>The result of the business method or an exception.</returns>
         public async static Task<ActionResult> RetryOnDeadlock(
             Func<Task<ActionResult>> businessMethod,
-            int maxRetries = RUN.MAX_RETRIES
+            int maxRetries = Wait.MAX_RETRIES
             )
         {
             var retryCount = 0;
@@ -28,19 +42,14 @@ namespace Csla6ModelTemplates.WebApiTests
 
             while (retryCount < maxRetries)
             {
-                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    result = await businessMethod();
-                    scope.Dispose();
-                }
+                result = await businessMethod();
 
                 if (result is OkObjectResult &&
                     (result as OkObjectResult).Value is DeadlockError)
                 {
-                    Console.Beep(170, 1500);
                     retryCount++;
                     result = null;
-                    Thread.Sleep(_random.Next(RUN.MIN_DELAY_MS, RUN.MAX_DELAY_MS));
+                    Thread.Sleep(Wait.RandomTime());
                 }
                 else
                     break;
@@ -50,13 +59,21 @@ namespace Csla6ModelTemplates.WebApiTests
         }
     }
 
+    /// <summary>
+    /// Provides methods to handle dead lock errors.
+    /// </summary>
     public static class Call<T> where T : class
     {
-        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
-
+        /// <summary>
+        /// Executes a business method, and retries to run it again
+        /// when it fails with dead lock error.
+        /// </summary>
+        /// <param name="businessMethod">The business method to run.</param>
+        /// <param name="maxRetries">The number of trials, the default value is 2.</param>
+        /// <returns>The result of the business method or an exception.</returns>
         public async static Task<ActionResult<T>> RetryOnDeadlock(
             Func<Task<ActionResult<T>>> businessMethod,
-            int maxRetries = RUN.MAX_RETRIES
+            int maxRetries = Wait.MAX_RETRIES
             )
         {
             var retryCount = 0;
@@ -64,17 +81,14 @@ namespace Csla6ModelTemplates.WebApiTests
 
             while (retryCount < maxRetries)
             {
-                using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-                {
-                    result = await businessMethod();
-                }
+                result = await businessMethod();
 
                 if (result.Result is ObjectResult &&
                     (result.Result as ObjectResult).Value is DeadlockError)
                 {
                     retryCount++;
                     result = null;
-                    Thread.Sleep(_random.Next(RUN.MIN_DELAY_MS, RUN.MAX_DELAY_MS));
+                    Thread.Sleep(Wait.RandomTime());
                 }
                 else
                     break;
