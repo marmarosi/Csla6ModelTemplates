@@ -2,6 +2,7 @@ using Csla;
 using Csla.Core;
 using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -157,7 +158,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 var cslaProperty = cslaProperties.Find(pi => pi.Name == dtoProperty.Name);
                 if (cslaProperty != null)
                 {
-                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto>) + "`1") != null)
+                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`1") != null)
                     {
                         var cslaBase = GetProperty(cslaProperty);
                         object value = cslaProperty.Type
@@ -208,16 +209,17 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// <param name="parent">The parent collection.</param>
         /// <param name="dto">The data transfer object.</param>
         /// <returns>The new editable model instance.</returns>
-/*        public static async Task<T> Create(
+        public static async Task<T> CreateAsync(
             IParent parent,
-            Dto dto
+            Dto dto,
+            IDataPortal<T> portal
             )
         {
-            T item = await Task.Run(() => DataPortal.CreateChild<T>());
+            T item = await Task.Run(() => portal.CreateAsync());
             (item as EditableModel<T, Dto>).SetParent(parent);
             await (item as EditableModel<T, Dto>).Update(dto);
             return item;
-        }*/
+        }
 
         #endregion
     }

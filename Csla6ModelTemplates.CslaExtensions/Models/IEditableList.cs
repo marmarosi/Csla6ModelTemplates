@@ -1,3 +1,4 @@
+using Csla;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,7 +8,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     /// Defines the helper functions of editable lists.
     /// </summary>
     /// <typeparam name="Dto">The type of the data access object.</typeparam>
-    public interface IEditableList<Dto>
+    public interface IEditableList<Dto, C>
         where Dto : class
     {
         /// <summary>
@@ -29,6 +30,6 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="idName">The name of the identifier property.</param>
-        Task Update(List<Dto> list, string idName);
+        Task Update(List<Dto> list, string idName, IDataPortal<C> portal);
     }
 }

@@ -288,14 +288,15 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         public async Task<ActionResult<List<SimpleTeamSetItemDto>>> UpdateTeamSet(
             [FromQuery] SimpleTeamSetCriteria criteria,
             [FromBody] List<SimpleTeamSetItemDto> dto,
-            [FromServices] IDataPortal<SimpleTeamSet> portal
+            [FromServices] IDataPortal<SimpleTeamSet> portal,
+            [FromServices] IDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             try
             {
                 return await Call<List<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    SimpleTeamSet team = await SimpleTeamSet.FromDto(criteria, dto, portal);
+                    SimpleTeamSet team = await SimpleTeamSet.FromDto(criteria, dto, portal, itemPortal);
                     if (team.IsSavable)
                     {
                         team = await team.SaveAsync();

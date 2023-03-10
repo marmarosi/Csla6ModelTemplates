@@ -1,4 +1,5 @@
 using Csla;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +13,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     /// <typeparam name="T">The type of the business collection.</typeparam>
     /// <typeparam name="C">The type of the business objects in the collection.</typeparam>
     [Serializable]
-    public abstract class EditableList<T, C, Dto> : BusinessListBase<T, C>, IEditableList<Dto>
-        where T : BusinessListBase<T, C>, IEditableList<Dto>
+    public abstract class EditableList<T, C, Dto> : BusinessListBase<T, C>, IEditableList<Dto, C>
+        where T : BusinessListBase<T, C>, IEditableList<Dto, C>
         where C : EditableModel<C, Dto>
         where Dto: class
     {
@@ -99,7 +100,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// <param name="idName">The name of the identifier property.</param>
         public async Task Update(
             List<Dto> list,
-            string idName
+            string idName,
+            IDataPortal<C> portal
             )
         {
             List<int> indeces = Enumerable.Range(0, list.Count).ToList();
@@ -119,11 +121,22 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 }
             }
             foreach (int index in indeces)
+            {
+                var t = typeof(EditableModel<C, Dto>);
+                var m = t.GetMethod("Create");
                 Items.Add(await (
                     typeof(EditableModel<C, Dto>)
                     .GetMethod("Create")
                     .Invoke(null, new object[] { this, list[index] })
                     as Task<C>));
+            }
+            //foreach (int index in indeces)
+            //    Items.Add(
+            //        typeof(EditableModel<C, Dto>)
+            //        .GetMethod("Create")
+            //        .Invoke(null, new object[] { this, list[index] })
+            //        as C
+            //        );
         }
 
         private string GetValue(

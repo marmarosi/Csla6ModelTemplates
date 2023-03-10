@@ -2,6 +2,7 @@ using Csla;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.Dal;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Csla6ModelTemplates.Models.Simple.Set
 {
@@ -34,10 +35,11 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         internal async Task Update(
-            List<SimpleTeamSetItemDto> list
+            List<SimpleTeamSetItemDto> list,
+            IDataPortal<SimpleTeamSetItem> portal
             )
         {
-            await Update(list, "TeamId");
+            await Update(list, "TeamId", portal);
         }
 
         #endregion
@@ -53,11 +55,12 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         public static async Task<SimpleTeamSet> FromDto(
             SimpleTeamSetCriteria criteria,
             List<SimpleTeamSetItemDto> list,
-            IDataPortal<SimpleTeamSet> portal
+            IDataPortal<SimpleTeamSet> portal,
+            IDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             SimpleTeamSet set = await portal.FetchAsync(criteria);
-            await set.Update(list);
+            await set.Update(list, itemPortal);
             return set;
         }
 
