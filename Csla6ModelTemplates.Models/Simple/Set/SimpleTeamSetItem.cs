@@ -92,54 +92,28 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #endregion
 
-        #region Business Methods
+        #region Data Access
 
-        /// <summary>
-        /// Updates an editable team from the data transfer object.
-        /// </summary>
-        /// <param name="dto">The data transfer objects.</param>
-        public override async Task Update(
-            SimpleTeamSetItemDto dto
-            )
+        [CreateChild]
+        private Task CreateAsync()
         {
-            //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            TeamCode = dto.TeamCode;
-            TeamName = dto.TeamName;
-            //Timestamp = dto.Timestamp;
-
-            await base.Update(dto);
+            // Load default values.
+            // Omit this override if you have no defaults to set.
+            //LoadProperty(TeamCodeProperty, "");
+            //BusinessRules.CheckRules();
+            return Task.CompletedTask;
         }
 
-        #endregion
-
-        #region Factory Methods
-
-        /// <summary>
-        /// Creates an editable team instance from the data transfer object.
-        /// </summary>
-        /// <param name="parent">The parent collection.</param>
-        /// <param name="dto">The data transfer object.</param>
-        /// <returns>The new editable team instance.</returns>
-        internal static new async Task<SimpleTeamSetItem> Create(
+        [CreateChild]
+        private void Create(
             IParent parent,
             SimpleTeamSetItemDto dto
             )
         {
-            return await Create(parent, dto);
+            // Set values from data transfer object.
+            SetParent(parent);
+            FromDto(dto);
         }
-
-        #endregion
-
-        #region Data Access
-
-        //[CreateChild]
-        //private void Create()
-        //{
-        //    // Load default values.
-        //    // Omit this override if you have no defaults to set.
-        //    LoadProperty(TeamCodeProperty, "");
-        //    BusinessRules.CheckRules();
-        //}
 
         [FetchChild]
         private void Fetch(

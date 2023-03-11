@@ -1,7 +1,6 @@
 using Csla;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
-using Csla6ModelTemplates.Dal;
 
 namespace Csla6ModelTemplates.Models.Simple.Set
 {
@@ -27,21 +26,6 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #endregion
 
-        #region Business Methods
-
-        /// <summary>
-        /// Rebuilds an editable team collection from the data transfer objects.
-        /// </summary>
-        /// <param name="list">The list of data transfer objects.</param>
-        internal async Task Update(
-            List<SimpleTeamSetItemDto> list
-            )
-        {
-            await Update(list, "TeamId");
-        }
-
-        #endregion
-
         #region Factory Methods
 
         /// <summary>
@@ -49,15 +33,18 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         /// </summary>
         /// <param name="criteria">The criteria of the editable team collection.</param>
         /// <param name="dto">The data transfer object.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <param name="itemPortal">The data portal of items.</param>
         /// <returns>The rebuilt editable team instance.</returns>
         public static async Task<SimpleTeamSet> FromDto(
             SimpleTeamSetCriteria criteria,
-            List<SimpleTeamSetItemDto> list,
-            IDataPortal<SimpleTeamSet> portal
+            List<SimpleTeamSetItemDto> dto,
+            IDataPortal<SimpleTeamSet> portal,
+            IChildDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             SimpleTeamSet set = await portal.FetchAsync(criteria);
-            await set.Update(list);
+            set.UpdateById(dto, "TeamId", itemPortal);
             return set;
         }
 

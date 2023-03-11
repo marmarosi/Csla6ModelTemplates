@@ -100,13 +100,14 @@
             <param name="portal">The data portal of the model.</param>
             <returns>The requested team set.</returns>
         </member>
-        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.UpdateTeamSet(Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetCriteria,System.Collections.Generic.List{Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetItemDto},Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Set.SimpleTeamSet})">
+        <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.UpdateTeamSet(Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetCriteria,System.Collections.Generic.List{Csla6ModelTemplates.Contracts.Simple.Set.SimpleTeamSetItemDto},Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Set.SimpleTeamSet},Csla.IChildDataPortal{Csla6ModelTemplates.Models.Simple.Set.SimpleTeamSetItem})">
             <summary>
             Updates the specified team set.
             </summary>
             <param name="criteria">The criteria of the team set.</param>
             <param name="dto">The data transer objects of the team set.</param>
-            <param name="portal">The data portal of the model.</param>
+            <param name="portal">The data portal of the collection.</param>
+            <param name="itemPortal">The data portal of items.</param>
             <returns>The updated team set.</returns>
         </member>
         <member name="M:Csla6ModelTemplates.WebApi.Controllers.SimpleController.RenameTeamCommand(Csla6ModelTemplates.Contracts.Simple.Command.RenameTeamDto,Csla.IDataPortal{Csla6ModelTemplates.Models.Simple.Command.RenameTeam})">

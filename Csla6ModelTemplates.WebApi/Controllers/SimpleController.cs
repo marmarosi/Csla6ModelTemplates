@@ -281,21 +281,23 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="dto">The data transer objects of the team set.</param>
-        /// <param name="portal">The data portal of the model.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <param name="itemPortal">The data portal of items.</param>
         /// <returns>The updated team set.</returns>
         [HttpPut("set")]
         [ProducesResponseType(typeof(List<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<SimpleTeamSetItemDto>>> UpdateTeamSet(
             [FromQuery] SimpleTeamSetCriteria criteria,
             [FromBody] List<SimpleTeamSetItemDto> dto,
-            [FromServices] IDataPortal<SimpleTeamSet> portal
+            [FromServices] IDataPortal<SimpleTeamSet> portal,
+            [FromServices] IChildDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             try
             {
                 return await Call<List<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    SimpleTeamSet team = await SimpleTeamSet.FromDto(criteria, dto, portal);
+                    SimpleTeamSet team = await SimpleTeamSet.FromDto(criteria, dto, portal, itemPortal);
                     if (team.IsSavable)
                     {
                         team = await team.SaveAsync();
