@@ -7,7 +7,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.Set
     {
         public string TeamCode { get; set; }
         public string TeamName { get; set; }
-        public DateTime? Timestamp { get; set; }
+        public DateTimeOffset? Timestamp { get; set; }
     }
 
     /// <summary>
