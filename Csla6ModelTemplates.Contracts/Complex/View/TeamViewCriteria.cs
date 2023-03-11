@@ -8,6 +8,13 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     {
         public string TeamId { get; set; }
 
+        public TeamViewParams(
+            string teamId
+            )
+        {
+            TeamId = teamId;
+        }
+
         public TeamViewCriteria Decode()
         {
             return new TeamViewCriteria

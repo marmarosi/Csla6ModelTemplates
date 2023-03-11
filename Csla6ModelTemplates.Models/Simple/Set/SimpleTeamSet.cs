@@ -63,7 +63,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         private void Fetch(
             SimpleTeamSetCriteria criteria,
             [Inject] ISimpleTeamSetDal dal,
-            [Inject] IChildDataPortal<SimpleTeamSetItem> childPortal
+            [Inject] IChildDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             // Load values from persistent storage.
@@ -71,7 +71,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             {
                 List<SimpleTeamSetItemDao> list = dal.Fetch(criteria);
                 foreach (SimpleTeamSetItemDao item in list)
-                    Add(childPortal.FetchChild(item));
+                    Add(itemPortal.FetchChild(item));
             }
         }
 

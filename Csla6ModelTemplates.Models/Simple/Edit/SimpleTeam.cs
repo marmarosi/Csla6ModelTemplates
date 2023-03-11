@@ -36,8 +36,8 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         [MaxLength(10)]
         public string TeamCode
         {
-            get { return GetProperty(TeamCodeProperty); }
-            set { SetProperty(TeamCodeProperty, value); }
+            get => GetProperty(TeamCodeProperty);
+            set => SetProperty(TeamCodeProperty, value);
         }
 
         public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(nameof(TeamName));
@@ -45,15 +45,15 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         [MaxLength(100)]
         public string TeamName
         {
-            get { return GetProperty(TeamNameProperty); }
-            set { SetProperty(TeamNameProperty, value); }
+            get => GetProperty(TeamNameProperty);
+            set => SetProperty(TeamNameProperty, value);
         }
 
         public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
         public DateTimeOffset? Timestamp
         {
-            get { return GetProperty(TimestampProperty); }
-            private set { LoadProperty(TimestampProperty, value); }
+            get =>  GetProperty(TimestampProperty);
+            private set => LoadProperty(TimestampProperty, value);
         }
 
         #endregion
@@ -70,11 +70,13 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         //    BusinessRules.AddRule(new Required(TeamNameProperty));
 
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.WriteProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()

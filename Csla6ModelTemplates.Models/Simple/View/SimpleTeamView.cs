@@ -49,11 +49,13 @@ namespace Csla6ModelTemplates.Models.Simple.View
         //protected override void AddBusinessRules()
         //{
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()

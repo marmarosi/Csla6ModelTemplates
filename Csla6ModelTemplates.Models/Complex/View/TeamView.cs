@@ -1,16 +1,16 @@
 using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.Contracts.Complex.View;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Simple.List
+namespace Csla6ModelTemplates.Models.Complex.View
 {
     /// <summary>
-    /// Represents an item in a read-only team collection.
+    /// Represents a read-only team object.
     /// </summary>
     [Serializable]
-    public class SimpleTeamListItem : ReadOnlyModel<SimpleTeamListItem>
+    public class TeamView : ReadOnlyModel<TeamView>
     {
         #region Properties
 
@@ -42,6 +42,13 @@ namespace Csla6ModelTemplates.Models.Simple.List
             private set => LoadProperty(TeamNameProperty, value);
         }
 
+        public static readonly PropertyInfo<PlayerViews> PlayersProperty = RegisterProperty<PlayerViews>(nameof(Players));
+        public PlayerViews Players
+        {
+            get => GetProperty(PlayersProperty);
+            private set => LoadProperty(PlayersProperty, value);
+        }
+
         #endregion
 
         #region Business Rules
@@ -62,7 +69,7 @@ namespace Csla6ModelTemplates.Models.Simple.List
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamView),
+        //        typeof(TeamView),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -74,13 +81,17 @@ namespace Csla6ModelTemplates.Models.Simple.List
 
         #region Data Access
 
-        [FetchChild]
-        protected void Fetch(
-            SimpleTeamListItemDao dao
+        [Fetch]
+        private void Fetch(
+            TeamViewCriteria criteria,
+            [Inject] ITeamViewDal dal,
+            [Inject] IChildDataPortal<PlayerViews> itemPortal
             )
         {
-            // Set values from data access object.
-            DataMapper.Map(dao, this);
+            // Load values from persistent storage.
+            TeamViewDao dao = dal.Fetch(criteria);
+            DataMapper.Map(dao, this, "Players");
+            Players = itemPortal.FetchChild(dao.Players);
         }
 
         #endregion

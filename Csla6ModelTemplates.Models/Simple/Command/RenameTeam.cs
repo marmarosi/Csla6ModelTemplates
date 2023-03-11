@@ -31,15 +31,15 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(c => c.TeamName);
         public string TeamName
         {
-            get { return ReadProperty(TeamNameProperty); }
-            private set { LoadProperty(TeamNameProperty, value); }
+            get => ReadProperty(TeamNameProperty);
+            private set => LoadProperty(TeamNameProperty, value);
         }
 
         public static readonly PropertyInfo<bool> ResultProperty = RegisterProperty<bool>(c => c.Result);
         public bool Result
         {
-            get { return ReadProperty(ResultProperty); }
-            private set { LoadProperty(ResultProperty, value); }
+            get => ReadProperty(ResultProperty);
+            private set => LoadProperty(ResultProperty, value);
         }
 
         #endregion

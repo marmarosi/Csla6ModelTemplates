@@ -16,4 +16,11 @@
     <ProjectReference Include="..\Csla6ModelTemplates.Dal\Csla6ModelTemplates.Dal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Complex\Command\" />
+    <Folder Include="Complex\Edit\" />
+    <Folder Include="Complex\List\" />
+    <Folder Include="Complex\Set\" />
+  </ItemGroup>
+
 </Project>
