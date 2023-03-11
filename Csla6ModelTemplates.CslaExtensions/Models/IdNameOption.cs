@@ -12,7 +12,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     {
         #region Business Methods
 
-        private string _hashid;
+        private readonly string _hashid;
 
         public static readonly PropertyInfo<string> IdProperty = RegisterProperty<string>(c => c.Id, RelationshipTypes.PrivateField);
         private long? Key = null;

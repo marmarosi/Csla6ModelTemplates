@@ -252,7 +252,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Gets the specified team set to edit.
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
-        /// <param name="portal">The data portal of the model.</param>
+        /// <param name="portal">The data portal of the collection.</param>
         /// <returns>The requested team set.</returns>
         [HttpGet("set")]
         [ProducesResponseType(typeof(List<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
@@ -263,8 +263,8 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         {
             try
             {
-                SimpleTeamSet set = await portal.FetchAsync(criteria);
-                return Ok(set.ToDto());
+                SimpleTeamSet teams = await portal.FetchAsync(criteria);
+                return Ok(teams.ToDto());
             }
             catch (Exception ex)
             {
@@ -297,12 +297,12 @@ namespace Csla6ModelTemplates.WebApi.Controllers
             {
                 return await Call<List<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    SimpleTeamSet team = await SimpleTeamSet.FromDto(criteria, dto, portal, itemPortal);
-                    if (team.IsSavable)
+                    SimpleTeamSet teams = await SimpleTeamSet.FromDto(criteria, dto, portal, itemPortal);
+                    if (teams.IsSavable)
                     {
-                        team = await team.SaveAsync();
+                        teams = await teams.SaveAsync();
                     }
-                    return Ok(team.ToDto());
+                    return Ok(teams.ToDto());
                 });
             }
             catch (Exception ex)

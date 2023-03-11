@@ -69,7 +69,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Validations
                             ? (T)context.InputPropertyValues[PrimaryProperty]
                             : PrimaryProperty.DefaultValue != null
                                 ? (T)PrimaryProperty.DefaultValue
-                                : default(T);
+                                : default;
 
             var result = value.CompareTo(Zero);
             if (result == 0)

@@ -52,6 +52,13 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #region Data Access
 
+        [Create]
+        [RunLocal]
+        private void Create()
+        {
+            // Load default values.
+        }
+
         [Fetch]
         private void Fetch(
             SimpleTeamSetCriteria criteria,

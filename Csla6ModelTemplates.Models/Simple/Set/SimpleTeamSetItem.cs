@@ -94,15 +94,14 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #region Data Access
 
-        [CreateChild]
-        private Task CreateAsync()
-        {
-            // Load default values.
-            // Omit this override if you have no defaults to set.
-            //LoadProperty(TeamCodeProperty, "");
-            //BusinessRules.CheckRules();
-            return Task.CompletedTask;
-        }
+        //[CreateChild]
+        //private void Create()
+        //{
+        //    // Load default values.
+        //    // Omit this override if you have no defaults to set.
+        //    //LoadProperty(TeamCodeProperty, "");
+        //    //BusinessRules.CheckRules();
+        //}
 
         [CreateChild]
         private void Create(

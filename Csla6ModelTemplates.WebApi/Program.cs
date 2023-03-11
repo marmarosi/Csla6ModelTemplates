@@ -1,5 +1,6 @@
-﻿using Csla.Configuration;
+using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -44,6 +45,7 @@ builder.Services.AddSwaggerGen(o =>
 
 // Configure data access layer.
 builder.Services.AddSqlServerDal();
+builder.Services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
 
 // If using Kestrel:
 builder.Services.Configure<KestrelServerOptions>(options =>

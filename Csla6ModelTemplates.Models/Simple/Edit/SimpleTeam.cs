@@ -118,12 +118,11 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         [Create]
         [RunLocal]
-        private Task CreateAsync()
+        private void Create()
         {
             // Load default values.
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
-            return Task.CompletedTask;
         }
 
         [Fetch]
