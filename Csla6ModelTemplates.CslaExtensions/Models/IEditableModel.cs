@@ -34,6 +34,6 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// Updates an editable model from the data transfer object.
         /// </summary>
         /// <param name="dto">The data transfer object.</param>
-        Task Update(Dto dto);
+        void FromDto(Dto dto);
     }
 }

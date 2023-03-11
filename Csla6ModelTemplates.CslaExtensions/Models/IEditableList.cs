@@ -1,6 +1,4 @@
 using Csla;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -22,14 +20,15 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="keyName">The name of the key property.</param>
-        /// <returns></returns>
-        //Task Update(List<Dto> list, string keyName);
+        /// <param name="itemPortal">The data portal of the items.</param>
+        void UpdateByKey(List<Dto> list, string keyName, IChildDataPortal<C> itemPortal);
 
         /// <summary>
         /// Updates an editable collection from the data transfer objects.
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="idName">The name of the identifier property.</param>
-        Task Update(List<Dto> list, string idName, IDataPortal<C> portal);
+        /// <param name="itemPortal">The data portal of the items.</param>
+        void UpdateById(List<Dto> list, string idName, IChildDataPortal<C> itemPortal);
     }
 }

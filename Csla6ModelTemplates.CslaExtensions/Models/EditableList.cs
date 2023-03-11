@@ -1,9 +1,4 @@
 using Csla;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -41,105 +36,87 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Update (Key)
-
-        ///// <summary>
-        ///// Updates an editable collection from the data transfer objects.
-        ///// </summary>
-        ///// <typeparam name="D">The type of the data transfer objects.</typeparam>
-        ///// <param name="list">The list of data transfer objects.</param>
-        ///// <param name="keyName">The name of the key property.</param>
-        //public async Task Update(
-        //    List<Dto> list,
-        //    string keyName
-        //    )
-        //{
-        //    List<int> indeces = Enumerable.Range(0, list.Count).ToList();
-        //    for (int i = Items.Count - 1; i > -1; i--)
-        //    {
-        //        C item = Items[i];
-        //        long? keyValue = GetValue(item, keyName);
-        //        Predicate<Dto> match = (Dto o) => GetValue(o, keyName) == keyValue;
-        //        Dto dto = list.Find(match);
-
-        //        if (dto == null)
-        //            RemoveItem(i);
-        //        else
-        //        {
-        //            await item.Update(dto);
-        //            indeces.Remove(list.IndexOf(dto));
-        //        }
-        //    }
-        //    foreach (int index in indeces)
-        //        Items.Add(await (
-        //            typeof(EditableModel<C, Dto>)
-        //            .GetMethod("Create")
-        //            .MakeGenericMethod(typeof(Dto))
-        //            .Invoke(null, new object[] { this, list[index] })
-        //            as Task<C>));
-        //}
-
-        //private long? GetValue(
-        //    object something,
-        //    string propertyName
-        //    )
-        //{
-        //    return something.GetType()
-        //        .GetProperty(propertyName)
-        //        .GetValue(something) as long?;
-        //}
-
-        #endregion
-
-        #region Update (ID)
+        #region Update by Key
 
         /// <summary>
         /// Updates an editable collection from the data transfer objects.
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
-        /// <param name="idName">The name of the identifier property.</param>
-        public async Task Update(
+        /// <param name="keyName">The name of the key property.</param>
+        /// <param name="itemPortal">The data portal of the items.</param>
+        public void UpdateByKey(
             List<Dto> list,
-            string idName,
-            IDataPortal<C> portal
+            string keyName,
+            IChildDataPortal<C> itemPortal
             )
         {
             List<int> indeces = Enumerable.Range(0, list.Count).ToList();
             for (int i = Items.Count - 1; i > -1; i--)
             {
                 C item = Items[i];
-                string idValue = GetValue(item, idName);
-                bool match(Dto o) => GetValue(o, idName) == idValue;
+                long? keyValue = GetKeyValue(item, keyName);
+                Predicate<Dto> match = (Dto o) => GetKeyValue(o, keyName) == keyValue;
                 Dto dto = list.Find(match);
 
                 if (dto == null)
                     RemoveItem(i);
                 else
                 {
-                    await item.Update(dto);
+                    item.FromDto(dto);
                     indeces.Remove(list.IndexOf(dto));
                 }
             }
             foreach (int index in indeces)
-            {
-                var t = typeof(EditableModel<C, Dto>);
-                var m = t.GetMethod("Create");
-                Items.Add(await (
-                    typeof(EditableModel<C, Dto>)
-                    .GetMethod("Create")
-                    .Invoke(null, new object[] { this, list[index] })
-                    as Task<C>));
-            }
-            //foreach (int index in indeces)
-            //    Items.Add(
-            //        typeof(EditableModel<C, Dto>)
-            //        .GetMethod("Create")
-            //        .Invoke(null, new object[] { this, list[index] })
-            //        as C
-            //        );
+                Items.Add(itemPortal.CreateChild(this, list[index]));
         }
 
-        private string GetValue(
+        private long? GetKeyValue(
+            object something,
+            string propertyName
+            )
+        {
+            return something.GetType()
+                .GetProperty(propertyName)
+                .GetValue(something) as long?;
+        }
+
+        #endregion
+
+        #region Update by ID
+
+        /// <summary>
+        /// Updates an editable collection from the data transfer objects.
+        /// </summary>
+        /// <param name="list">The list of data transfer objects.</param>
+        /// <param name="idName">The name of the identifier property.</param>
+        /// <param name="itemPortal">The data portal of the items.</param>
+        public void UpdateById(
+            List<Dto> list,
+            string idName,
+            IChildDataPortal<C> itemPortal
+            )
+        {
+            List<int> indeces = Enumerable.Range(0, list.Count).ToList();
+            for (int i = Items.Count - 1; i > -1; i--)
+            {
+                C item = Items[i];
+                string idValue = GeIdtValue(item, idName);
+                bool match(Dto o) => GeIdtValue(o, idName) == idValue;
+                Dto dto = list.Find(match);
+
+                if (dto == null)
+                    RemoveItem(i);
+                else
+                {
+                    item.FromDto(dto);
+                    indeces.Remove(list.IndexOf(dto));
+                }
+            }
+            foreach (int index in indeces)
+                Items.Add(itemPortal.CreateChild(this, list[index]));
+        }
+
+        private string GeIdtValue(
             object something,
             string propertyName
             )

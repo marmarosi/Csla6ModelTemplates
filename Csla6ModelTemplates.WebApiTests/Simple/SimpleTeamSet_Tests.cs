@@ -1,12 +1,9 @@
-﻿using Csla6ModelTemplates.Contracts.Simple.Set;
-using Csla6ModelTemplates.Models.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.Models.Simple.Set;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -59,7 +56,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             SimpleTeamSetItemDto pristine = null;
             SimpleTeamSetItemDto pristineNew = null;
             string deletedId = null;
-            ActionResult<List<SimpleTeamSetItemDto>> actionResult =
+            /*ActionResult<List<SimpleTeamSetItemDto>>*/ var actionResult =
                 await Call<List<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
                     SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };

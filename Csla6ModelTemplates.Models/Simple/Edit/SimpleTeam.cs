@@ -91,31 +91,6 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         #endregion
 
-        #region Business Methods
-
-        ///// <summary>
-        ///// Updates an editable team from the data transfer object.
-        ///// </summary>
-        ///// <param name="data">The data transfer object.</param>
-        //public override async Task Update(
-        //        SimpleTeamDto dto
-        //        )
-        //{
-        //    Copy.
-        //    var copier = new PropertyCopier.Copier();
-        //    copier.IgnoreProperty<SimpleTeamDto, this > (t => t.TeamKey);
-        //    var dto = copier.From(SimpleTeamDto).To<this> ();
-
-        //    //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-        //    TeamCode = dto.TeamCode;
-        //    TeamName = dto.TeamName;
-        //    //Timestamp = dto.Timestamp;
-
-        //    await base.Update(dto);
-        //}
-
-        #endregion
-
         #region Factory Methods
 
         /// <summary>
@@ -133,9 +108,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
                 await portal.FetchAsync(new SimpleTeamCriteria(teamKey.Value)) :
                 await portal.CreateAsync();
 
-            Copy.PropertiesFrom(dto).ToPropertiesOf(team);
-            team.BusinessRules.CheckRules();
-
+            team.FromDto(dto);
             return team;
         }
 

@@ -92,44 +92,6 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #endregion
 
-        #region Business Methods
-
-        /// <summary>
-        /// Updates an editable team from the data transfer object.
-        /// </summary>
-        /// <param name="dto">The data transfer objects.</param>
-        public override async Task Update(
-            SimpleTeamSetItemDto dto
-            )
-        {
-            //TeamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            TeamCode = dto.TeamCode;
-            TeamName = dto.TeamName;
-            //Timestamp = dto.Timestamp;
-
-            await base.Update(dto);
-        }
-
-        #endregion
-
-        #region Factory Methods
-
-        /// <summary>
-        /// Creates an editable team instance from the data transfer object.
-        /// </summary>
-        /// <param name="parent">The parent collection.</param>
-        /// <param name="dto">The data transfer object.</param>
-        /// <returns>The new editable team instance.</returns>
-        internal static async Task<SimpleTeamSetItem> Create(
-            IParent parent,
-            SimpleTeamSetItemDto dto
-            )
-        {
-            return await Create(parent, dto);
-        }
-
-        #endregion
-
         #region Data Access
 
         [CreateChild]
@@ -140,6 +102,17 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
             return Task.CompletedTask;
+        }
+
+        [CreateChild]
+        private void Create(
+            IParent parent,
+            SimpleTeamSetItemDto dto
+            )
+        {
+            // Set values from data transfer object.
+            SetParent(parent);
+            FromDto(dto);
         }
 
         [FetchChild]

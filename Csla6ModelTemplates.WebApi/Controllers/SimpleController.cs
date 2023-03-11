@@ -281,7 +281,8 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="dto">The data transer objects of the team set.</param>
-        /// <param name="portal">The data portal of the model.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <param name="itemPortal">The data portal of items.</param>
         /// <returns>The updated team set.</returns>
         [HttpPut("set")]
         [ProducesResponseType(typeof(List<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
@@ -289,7 +290,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
             [FromQuery] SimpleTeamSetCriteria criteria,
             [FromBody] List<SimpleTeamSetItemDto> dto,
             [FromServices] IDataPortal<SimpleTeamSet> portal,
-            [FromServices] IDataPortal<SimpleTeamSetItem> itemPortal
+            [FromServices] IChildDataPortal<SimpleTeamSetItem> itemPortal
             )
         {
             try

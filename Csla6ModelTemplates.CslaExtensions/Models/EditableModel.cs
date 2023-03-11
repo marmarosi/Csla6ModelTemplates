@@ -2,14 +2,9 @@ using Csla;
 using Csla.Core;
 using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -184,41 +179,18 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Update
+        #region FromDto
 
-        /// <summary>
-        /// Updates an editable model from the data transfer object.
-        /// </summary>
-        /// <param name="dto">The data transfer object.</param>
-        public virtual async Task Update(
+        ///// <summary>
+        ///// Updates an editable model from the data transfer object.
+        ///// </summary>
+        ///// <param name="dto">The data transfer object.</param>
+        public virtual void FromDto(
             Dto dto
             )
         {
+            Copy.PropertiesFrom(dto).ToPropertiesOf(this);
             BusinessRules.CheckRules();
-            await Task.CompletedTask;
-        }
-
-        #endregion
-
-        #region Create
-
-        /// <summary>
-        /// Creates an editable model instance from the data transfer object.
-        /// </summary>
-        /// <typeparam name="D">The type of the data transfer object.</typeparam>
-        /// <param name="parent">The parent collection.</param>
-        /// <param name="dto">The data transfer object.</param>
-        /// <returns>The new editable model instance.</returns>
-        public static async Task<T> CreateAsync(
-            IParent parent,
-            Dto dto,
-            IDataPortal<T> portal
-            )
-        {
-            T item = await Task.Run(() => portal.CreateAsync());
-            (item as EditableModel<T, Dto>).SetParent(parent);
-            await (item as EditableModel<T, Dto>).Update(dto);
-            return item;
         }
 
         #endregion
