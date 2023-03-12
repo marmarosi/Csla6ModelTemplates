@@ -83,7 +83,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             // Update values in persistent storage.
             using (var transaction = dal.BeginTransaction())
             {
-                base.Child_Update();
+                Child_Update();
                 dal.Commit(transaction);
             }
         }

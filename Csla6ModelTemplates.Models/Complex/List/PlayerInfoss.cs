@@ -1,14 +1,14 @@
 using Csla;
-using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Complex.View
+namespace Csla6ModelTemplates.Models.Complex.List
 {
     /// <summary>
-    /// Represents a read-only player collection.
+    /// Represents a read-only player info collection.
     /// </summary>
     [Serializable]
-    public class PlayerViews : ReadOnlyList<PlayerViews, PlayerView>
+    public class PlayerInfoss : ReadOnlyList<PlayerInfoss, PlayerInfo>
     {
         #region Business Rules
 
@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.Models.Complex.View
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(PlayerViews),
+        //        typeof(PlayerInfos),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -30,12 +30,12 @@ namespace Csla6ModelTemplates.Models.Complex.View
 
         [FetchChild]
         private void Fetch(
-            List<PlayerViewDao> list,
-            [Inject] IChildDataPortal<PlayerView> itemPortal
+            List<PlayerInfoDao> list,
+            [Inject] IChildDataPortal<PlayerInfo> itemPortal
             )
         {
             // Load values from persistent storage.
-            foreach (PlayerViewDao item in list)
+            foreach (PlayerInfoDao item in list)
                 Items.Add(itemPortal.FetchChild(item));
         }
 

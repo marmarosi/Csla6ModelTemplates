@@ -1,5 +1,7 @@
 using Csla;
+using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.Models.Complex.List;
 using Csla6ModelTemplates.Models.Complex.View;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +25,34 @@ namespace Csla6ModelTemplates.WebApi.Controllers
             ILogger<ComplexController> logger
             ) : base(logger)
         { }
+
+        #endregion
+
+        #region List
+
+        /// <summary>
+        /// Gets a list of teams.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team list.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <returns>The requested team list.</returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(List<TeamListItemDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<TeamListItemDto>>> GetTeamList(
+            [FromQuery] TeamListCriteria criteria,
+            [FromServices] IDataPortal<TeamList> portal
+            )
+        {
+            try
+            {
+                TeamList list = await portal.FetchAsync(criteria);
+                return Ok(list.ToDto<TeamListItemDto>());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
 
         #endregion
 

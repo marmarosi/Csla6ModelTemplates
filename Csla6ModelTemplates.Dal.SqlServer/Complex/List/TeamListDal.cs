@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.List
                     TeamKey = e.TeamKey,
                     TeamCode = e.TeamCode,
                     TeamName = e.TeamName,
-                    Players = e.Players.Select(i => new PlayerListItemDao
+                    Players = e.Players.Select(i => new PlayerInfoDao
                     {
                         PlayerKey = i.PlayerKey,
                         PlayerCode = i.PlayerCode,

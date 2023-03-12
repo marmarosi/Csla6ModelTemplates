@@ -1,14 +1,14 @@
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Simple.List
+namespace Csla6ModelTemplates.Models.Complex.List
 {
     /// <summary>
     /// Represents a read-only team collection.
     /// </summary>
     [Serializable]
-    public class SimpleTeamList : ReadOnlyList<SimpleTeamList, SimpleTeamListItem>
+    public class TeamList : ReadOnlyList<TeamList, TeamListItem>
     {
         #region Business Rules
 
@@ -16,8 +16,11 @@ namespace Csla6ModelTemplates.Models.Simple.List
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamList),
-        //        new IsInRole(AuthorizationActions.GetObject, "Manager")
+        //        typeof(TeamList),
+        //        new IsInRole(
+        //            AuthorizationActions.GetObject,
+        //            "Manager"
+        //            )
         //        );
         //}
 
@@ -27,15 +30,15 @@ namespace Csla6ModelTemplates.Models.Simple.List
 
         [Fetch]
         private void Fetch(
-            SimpleTeamListCriteria criteria,
-            [Inject] ISimpleTeamListDal dal,
-            [Inject] IChildDataPortal<SimpleTeamListItem> itemPortal
+            TeamListCriteria criteria,
+            [Inject] ITeamListDal dal,
+            [Inject] IChildDataPortal<TeamListItem> itemPortal
             )
         {
             // Load values from persistent storage.
             using (LoadListMode)
             {
-                List<SimpleTeamListItemDao> list = dal.Fetch(criteria);
+                List<TeamListItemDao> list = dal.Fetch(criteria);
                 foreach (var item in list)
                     Add(itemPortal.FetchChild(item));
             }
