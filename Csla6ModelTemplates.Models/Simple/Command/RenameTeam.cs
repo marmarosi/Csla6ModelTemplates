@@ -68,7 +68,6 @@ namespace Csla6ModelTemplates.Models.Simple.Command
 
         #region Data Access
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [Execute]
         private void Execute(
             RenameTeamDto dto,
@@ -78,8 +77,13 @@ namespace Csla6ModelTemplates.Models.Simple.Command
             // Execute the command.
             TeamId = dto.TeamId;
             TeamName = dto.TeamName;
-            RenameTeamDao dao = new RenameTeamDao(TeamKey ?? 0, TeamName);
-            dal.Execute(dao);
+            Validate();
+
+            using (var transaction = dal.BeginTransaction())
+            {
+                RenameTeamDao dao = new RenameTeamDao(TeamKey ?? 0, TeamName);
+                dal.Execute(dao);
+            }
 
             // Set new data.
             Result = true;

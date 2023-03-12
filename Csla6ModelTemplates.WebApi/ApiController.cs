@@ -8,12 +8,6 @@ namespace Csla6ModelTemplates.WebApi
     /// </summary>
     public class ApiController : ControllerBase
     {
-        private const int MAX_RETRIES = 1;
-        private const int MIN_DELAY_MS = 100;
-        private const int MAX_DELAY_MS = 200;
-
-        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
-
         internal ILogger Logger { get; set; }
 
         /// <summary>
@@ -50,9 +44,9 @@ namespace Csla6ModelTemplates.WebApi
             ObjectResult result = null;
 
             // Check validation exception.
-            if (exception is ValidationException)
+            if (exception is ValidationException vException)
                 // Status code 422 = Unprocesssable Entity
-                return StatusCode(422, new ValidationError((ValidationException)exception));
+                return StatusCode(422, new ValidationError(vException));
 
             // Check deadlock exception.
             DeadlockError deadlock = DeadlockError.CheckException(exception);

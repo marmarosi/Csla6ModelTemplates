@@ -5,6 +5,6 @@ namespace Csla6ModelTemplates.Contracts.Complex.Command
     /// </summary>
     public interface ICountTeamsDal
     {
-        List<CountTeamsListItemDao> Execute(CountTeamsCriteria criteria);
+        List<CountTeamsResultDao> Execute(CountTeamsCriteria criteria);
     }
 }

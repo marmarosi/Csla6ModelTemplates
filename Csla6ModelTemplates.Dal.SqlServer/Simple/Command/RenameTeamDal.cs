@@ -38,10 +38,9 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Command
         {
             // Get the specified team.
             Team team = DbContext.Teams
-                .Where(e =>
-                    e.TeamKey == dao.TeamKey
-                )
+                .Where(e => e.TeamKey == dao.TeamKey)
                 .FirstOrDefault();
+
             if (team == null)
                 throw new DataNotFoundException(DalText.RenameTeam_NotFound);
 

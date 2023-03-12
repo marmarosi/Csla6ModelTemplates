@@ -1,6 +1,8 @@
 using Csla;
+using Csla6ModelTemplates.Contracts.Complex.Command;
 using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.Models.Complex.Command;
 using Csla6ModelTemplates.Models.Complex.List;
 using Csla6ModelTemplates.Models.Complex.View;
 using Microsoft.AspNetCore.Mvc;
@@ -76,6 +78,34 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                 var criteria = new TeamViewParams(id);
                 var team = await portal.FetchAsync(criteria.Decode());
                 return Ok(team.ToDto<TeamViewDto>());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Command
+
+        /// <summary>
+        /// Counts the teams grouped by the number of their items.
+        /// </summary>
+        /// <param name="criteria">The criteria of the count teams by item count command.</param>
+        /// <param name="portal">The data portal of the model.</param>
+        /// <returns>The list of the team counts.</returns>
+        [HttpPatch]
+        [ProducesResponseType(typeof(List<CountTeamsResultDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<CountTeamsResultDto>>> CountTeamsCommand(
+            [FromBody] CountTeamsCriteria criteria,
+            [FromServices] IDataPortal<CountTeams> portal
+            )
+        {
+            try
+            {
+                CountTeams command = await portal.ExecuteAsync(criteria);
+                return Ok(command.Results.ToDto<CountTeamsResultDto>());
             }
             catch (Exception ex)
             {

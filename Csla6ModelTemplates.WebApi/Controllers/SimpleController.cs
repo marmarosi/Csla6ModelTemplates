@@ -313,7 +313,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
-        #region Rename
+        #region Command
 
         /// <summary>
         /// Renames the specified team.

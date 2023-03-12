@@ -32,7 +32,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Command
         /// Counts the teams grouped by the number of their players.
         /// </summary>
         /// <param name="criteria">The criteria of the command.</param>
-        public List<CountTeamsListItemDao> Execute(
+        public List<CountTeamsResultDao> Execute(
             CountTeamsCriteria criteria
             )
         {
@@ -45,10 +45,10 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Command
                 .AsNoTracking()
                 .ToList();
 
-            List<CountTeamsListItemDao> list = counts
+            List<CountTeamsResultDao> list = counts
                 .GroupBy(
                     e => e.Count,
-                    (key, grp) => new CountTeamsListItemDao
+                    (key, grp) => new CountTeamsResultDao
                     {
                         ItemCount = key,
                         CountOfTeams = grp.Count()

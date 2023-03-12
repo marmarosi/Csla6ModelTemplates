@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Complex\Command\" />
     <Folder Include="Complex\Edit\" />
     <Folder Include="Complex\Set\" />
   </ItemGroup>
