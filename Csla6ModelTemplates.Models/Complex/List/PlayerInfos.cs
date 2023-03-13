@@ -8,7 +8,7 @@ namespace Csla6ModelTemplates.Models.Complex.List
     /// Represents a read-only player info collection.
     /// </summary>
     [Serializable]
-    public class PlayerInfoss : ReadOnlyList<PlayerInfoss, PlayerInfo>
+    public class PlayerInfos : ReadOnlyList<PlayerInfos, PlayerInfo>
     {
         #region Business Rules
 

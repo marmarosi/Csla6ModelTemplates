@@ -153,28 +153,29 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 var cslaProperty = cslaProperties.Find(pi => pi.Name == dtoProperty.Name);
                 if (cslaProperty != null)
                 {
-                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`2") != null)
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else if (cslaProperty.Type.GetInterface(nameof(IEditableModel<Dto>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else
                         dtoProperty.SetValue(dto, GetProperty(cslaProperty));
                 }
             }
 
             return dto;
+        }
+
+        private void SetDtoValue(
+            Dto dto,
+            PropertyInfo dtoProperty,
+            IPropertyInfo cslaProperty
+            )
+        {
+            var cslaBase = GetProperty(cslaProperty);
+            object value = cslaProperty.Type
+                .GetMethod("ToDto")
+                .Invoke(cslaBase, null);
+            dtoProperty.SetValue(dto, value);
         }
 
         #endregion

@@ -1,19 +1,19 @@
-using Csla;
+﻿using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Simple.Edit
+namespace Csla6ModelTemplates.Models.Complex.Edit
 {
     /// <summary>
     /// Represents an editable team object.
     /// </summary>
     [Serializable]
-    [ValidationResourceType(typeof(ValidationText), ObjectName = "SimpleTeam")]
-    public class SimpleTeam : EditableModel<SimpleTeam, SimpleTeamDto>
+    [ValidationResourceType(typeof(ValidationText), ObjectName = "Team")]
+    public class Team : EditableModel<Team, TeamDto>
     {
         #region Properties
 
@@ -49,10 +49,17 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             set => SetProperty(TeamNameProperty, value);
         }
 
+        public static readonly PropertyInfo<Players> PlayersProperty = RegisterProperty<Players>(nameof(Players));
+        public Players Players
+        {
+            get => GetProperty(PlayersProperty);
+            private set => LoadProperty(PlayersProperty, value);
+        }
+
         public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
         public DateTimeOffset? Timestamp
         {
-            get =>  GetProperty(TimestampProperty);
+            get => GetProperty(TimestampProperty);
             private set => LoadProperty(TimestampProperty, value);
         }
 
@@ -83,7 +90,7 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeam),
+        //        typeof(Team),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -100,18 +107,21 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
         /// </summary>
         /// <param name="dto">The data transfer object.</param>
         /// <param name="portal">The data portal of the model.</param>
+        /// <param name="itemPortal">The data portal of the item model.</param>
         /// <returns>The rebuilt editable team instance.</returns>
-        public static async Task<SimpleTeam> FromDto(
-            SimpleTeamDto dto,
-            IDataPortal<SimpleTeam> portal
+        public static async Task<Team> FromDto(
+            TeamDto dto,
+            IDataPortal<Team> portal,
+            IChildDataPortal<Player> itemPortal
             )
         {
             long? teamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            SimpleTeam team = teamKey.HasValue ?
-                await portal.FetchAsync(new SimpleTeamCriteria(teamKey.Value)) :
+            Team team = teamKey.HasValue ?
+                await portal.FetchAsync(new TeamCriteria(teamKey.Value)) :
                 await portal.CreateAsync();
 
-            team.FromDto(dto);
+            DataMapper.Map(dto, team, "Players");
+            team.Players.UpdateById(dto.Players, "PlayerId", itemPortal);
             return team;
         }
 
@@ -121,28 +131,35 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
 
         [Create]
         [RunLocal]
-        private void Create()
+        private void Create(
+            [Inject] IChildDataPortal<Players> itemPortal
+            )
         {
             // Load default values.
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
+            Players = itemPortal.FetchChild(new List<PlayerDao>());
         }
 
         [Fetch]
         private void Fetch(
-            SimpleTeamCriteria criteria,
-            [Inject] ISimpleTeamDal dal
+            TeamCriteria criteria,
+            [Inject] ITeamDal dal,
+            [Inject] IChildDataPortal<Players> itemPortal
             )
         {
             // Load values from persistent storage.
-            SimpleTeamDao dao = dal.Fetch(criteria);
+            TeamDao dao = dal.Fetch(criteria);
             using (BypassPropertyChecks)
-                DataMapper.Map(dao, this);
+            {
+                DataMapper.Map(dao, this, "Players");
+                Players = itemPortal.FetchChild(dao.Players);
+            }
         }
 
         [Insert]
         protected void Insert(
-            [Inject] ISimpleTeamDal dal
+            [Inject] ITeamDal dal
             )
         {
             // Insert values into persistent storage.
@@ -150,20 +167,21 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             {
                 using (BypassPropertyChecks)
                 {
-                    var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
+                    var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
                     dal.Insert(dao);
 
                     // Set new data.
                     TeamKey = dao.TeamKey;
                     Timestamp = dao.Timestamp;
                 }
+                FieldManager.UpdateChildren(this);
                 dal.Commit(transaction);
             }
         }
 
         [Update]
         protected void Update(
-            [Inject] ISimpleTeamDal dal
+            [Inject] ITeamDal dal
             )
         {
             // Update values in persistent storage.
@@ -171,34 +189,43 @@ namespace Csla6ModelTemplates.Models.Simple.Edit
             {
                 using (BypassPropertyChecks)
                 {
-                    var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamDao>();
+                    var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
                     dal.Update(dao);
 
                     // Set new data.
                     Timestamp = dao.Timestamp;
                 }
+                FieldManager.UpdateChildren(this);
                 dal.Commit(transaction);
             }
         }
 
         [DeleteSelf]
         protected void DeleteSelf(
-            [Inject] ISimpleTeamDal dal
+            [Inject] ITeamDal dal,
+            [Inject] IChildDataPortal<Players> itemPortal
             )
         {
             using (BypassPropertyChecks)
-                Delete(new SimpleTeamCriteria(TeamKey), dal);
+                Delete(new TeamCriteria(TeamKey), dal, itemPortal);
         }
 
         [Delete]
         protected void Delete(
-            SimpleTeamCriteria criteria,
-            [Inject] ISimpleTeamDal dal
+            TeamCriteria criteria,
+            [Inject] ITeamDal dal,
+            [Inject] IChildDataPortal<Players> itemPortal
             )
         {
             // Delete values from persistent storage.
             using (var transaction = dal.BeginTransaction())
             {
+                if (!TeamKey.HasValue)
+                    Fetch(criteria, dal, itemPortal);
+
+                Players.Clear();
+                FieldManager.UpdateChildren(this);
+
                 dal.Delete(criteria);
                 dal.Commit(transaction);
             }

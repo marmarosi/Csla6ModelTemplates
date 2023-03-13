@@ -8,6 +8,13 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     {
         public string TeamId { get; set; }
 
+        public TeamParams(
+            string teamId
+            )
+        {
+            TeamId = teamId;
+        }
+
         public TeamCriteria Decode()
         {
             return new TeamCriteria
@@ -23,12 +30,12 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     [Serializable]
     public class TeamCriteria
     {
-        public long TeamKey { get; set; }
+        public long? TeamKey { get; set; }
 
         public TeamCriteria() { }
 
         public TeamCriteria(
-            long teamKey
+            long? teamKey
             )
         {
             TeamKey = teamKey;

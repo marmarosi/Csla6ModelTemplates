@@ -6,13 +6,13 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     [Serializable]
     public class PlayerCriteria
     {
-        public long PlayerKey { get; set; }
+        public long? PlayerKey { get; set; }
 
         public PlayerCriteria()
         { }
 
         public PlayerCriteria(
-            long playerKey
+            long? playerKey
             )
         {
             PlayerKey = playerKey;

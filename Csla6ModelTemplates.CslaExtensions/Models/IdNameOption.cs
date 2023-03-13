@@ -31,32 +31,6 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Business Rules
-
-        //protected override void AddBusinessRules()
-        //{
-        //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
-        //}
-
-        //private static void AddObjectAuthorizationRules()
-        //{
-        //    // Add authorization rules.
-        //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamView),
-        //        new IsInRole(
-        //            AuthorizationActions.GetObject,
-        //            "Manager"
-        //            )
-        //        );
-        //}
-
-        #endregion
-
         #region Data Access
 
         [FetchChild]
