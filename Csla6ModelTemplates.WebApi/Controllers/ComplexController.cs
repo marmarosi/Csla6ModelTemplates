@@ -158,7 +158,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         public async Task<ActionResult<TeamDto>> CreateTeam(
             [FromBody] TeamDto dto,
             [FromServices] IDataPortal<Team> portal,
-            [Inject] IChildDataPortal<Player> itemPortal
+            [FromServices] IChildDataPortal<Player> itemPortal
             )
         {
             try
@@ -195,7 +195,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         public async Task<ActionResult<TeamDto>> UpdateTeam(
             [FromBody] TeamDto dto,
             [FromServices] IDataPortal<Team> portal,
-            [Inject] IChildDataPortal<Player> itemPortal
+            [FromServices] IChildDataPortal<Player> itemPortal
             )
         {
             try
