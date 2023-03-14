@@ -1,7 +1,5 @@
 using Csla.Core;
 using Csla6ModelTemplates.CslaExtensions.Validations;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {

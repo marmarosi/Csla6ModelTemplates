@@ -2,10 +2,12 @@ using Csla;
 using Csla6ModelTemplates.Contracts.Complex.Command;
 using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.Contracts.Complex.List;
+using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.Contracts.Complex.View;
 using Csla6ModelTemplates.Models.Complex.Command;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Csla6ModelTemplates.Models.Complex.List;
+using Csla6ModelTemplates.Models.Complex.Set;
 using Csla6ModelTemplates.Models.Complex.View;
 using Microsoft.AspNetCore.Mvc;
 
@@ -239,6 +241,74 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                 {
                     await portal.DeleteAsync(criteria.Decode());
                     return NoContent();
+                });
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Read-Set
+
+        /// <summary>
+        /// Gets the specified team set to edit.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <returns>The requested team set.</returns>
+        [HttpGet("set")]
+        [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<TeamSetItemDto>>> GetTeamSet(
+            [FromQuery] TeamSetCriteria criteria,
+            [FromServices] IDataPortal<TeamSet> portal
+            )
+        {
+            try
+            {
+                TeamSet teams = await portal.FetchAsync(criteria);
+                return Ok(teams.ToDto());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Update-Set
+
+        /// <summary>
+        /// Updates the specified team set.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <param name="dto">The data transer objects of the team set.</param>
+        /// <param name="portal">The data portal of the collection.</param>
+        /// <param name="itemPortal">The data portal of items.</param>
+        /// <returns>The updated team set.</returns>
+        [HttpPut("set")]
+        [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<List<TeamSetItemDto>>> UpdateTeamSet(
+            [FromQuery] TeamSetCriteria criteria,
+            [FromBody] List<TeamSetItemDto> dto,
+            [FromServices] IDataPortal<TeamSet> portal,
+            [FromServices] IChildDataPortal<TeamSetItem> itemPortal
+            )
+        {
+            try
+            {
+                return await Call<List<TeamSetItemDto>>.RetryOnDeadlock(async () =>
+                {
+                    var set = portal.Create();
+                    TeamSet teams = await TeamSet.FromDto(criteria, dto, portal, itemPortal);
+                    if (teams.IsSavable)
+                    {
+                        teams = await teams.SaveAsync();
+                    }
+                    return Ok(teams.ToDto());
                 });
             }
             catch (Exception ex)

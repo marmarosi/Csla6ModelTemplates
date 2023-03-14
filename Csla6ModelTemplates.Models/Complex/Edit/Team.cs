@@ -132,20 +132,20 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [Create]
         [RunLocal]
         private void Create(
-            [Inject] IChildDataPortal<Players> itemPortal
+            [Inject] IChildDataPortal<Players> itemsPortal
             )
         {
             // Load default values.
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
-            Players = itemPortal.FetchChild(new List<PlayerDao>());
+            Players = itemsPortal.FetchChild(new List<PlayerDao>());
         }
 
         [Fetch]
         private void Fetch(
             TeamCriteria criteria,
             [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemPortal
+            [Inject] IChildDataPortal<Players> itemsPortal
             )
         {
             // Load values from persistent storage.
@@ -153,7 +153,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             using (BypassPropertyChecks)
             {
                 DataMapper.Map(dao, this, "Players");
-                Players = itemPortal.FetchChild(dao.Players);
+                Players = itemsPortal.FetchChild(dao.Players);
             }
         }
 
@@ -187,13 +187,16 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             // Update values in persistent storage.
             using (var transaction = dal.BeginTransaction())
             {
-                using (BypassPropertyChecks)
+                if (IsSelfDirty)
                 {
-                    var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
-                    dal.Update(dao);
+                    using (BypassPropertyChecks)
+                    {
+                        var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
+                        dal.Update(dao);
 
-                    // Set new data.
-                    Timestamp = dao.Timestamp;
+                        // Set new data.
+                        Timestamp = dao.Timestamp;
+                    }
                 }
                 FieldManager.UpdateChildren(this);
                 dal.Commit(transaction);

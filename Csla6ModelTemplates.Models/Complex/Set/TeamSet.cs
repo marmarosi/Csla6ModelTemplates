@@ -1,15 +1,14 @@
-using Csla;
-using Csla6ModelTemplates.Contracts.Simple.Set;
+﻿using Csla;
+using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
-using System.Collections.Generic;
 
-namespace Csla6ModelTemplates.Models.Simple.Set
+namespace Csla6ModelTemplates.Models.Complex.Set
 {
     /// <summary>
     /// Represents an editable team collection.
     /// </summary>
     [Serializable]
-    public class SimpleTeamSet : EditableList<SimpleTeamSet, SimpleTeamSetItem, SimpleTeamSetItemDto>
+    public class TeamSet : EditableList<TeamSet, TeamSetItem, TeamSetItemDto>
     {
         #region Business Rules
 
@@ -17,7 +16,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamSet),
+        //        typeof(TeamSet),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -37,14 +36,14 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         /// <param name="portal">The data portal of the collection.</param>
         /// <param name="itemPortal">The data portal of items.</param>
         /// <returns>The rebuilt editable team instance.</returns>
-        public static async Task<SimpleTeamSet> FromDto(
-            SimpleTeamSetCriteria criteria,
-            List<SimpleTeamSetItemDto> list,
-            IDataPortal<SimpleTeamSet> portal,
-            IChildDataPortal<SimpleTeamSetItem> itemPortal
+        public static async Task<TeamSet> FromDto(
+            TeamSetCriteria criteria,
+            List<TeamSetItemDto> list,
+            [Inject] IDataPortal<TeamSet> portal,
+            [Inject] IChildDataPortal<TeamSetItem> itemPortal
             )
         {
-            SimpleTeamSet set = await portal.FetchAsync(criteria);
+            TeamSet set = await portal.FetchAsync(criteria);
             set.UpdateById(list, "TeamId", itemPortal);
             return set;
         }
@@ -62,23 +61,23 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         [Fetch]
         private void Fetch(
-            SimpleTeamSetCriteria criteria,
-            [Inject] ISimpleTeamSetDal dal,
-            [Inject] IChildDataPortal<SimpleTeamSetItem> itemPortal
+            TeamSetCriteria criteria,
+            [Inject] ITeamSetDal dal,
+            [Inject] IChildDataPortal<TeamSetItem> itemPortal
             )
         {
             // Load values from persistent storage.
             using (LoadListMode)
             {
-                List<SimpleTeamSetItemDao> list = dal.Fetch(criteria);
-                foreach (SimpleTeamSetItemDao item in list)
+                List<TeamSetItemDao> list = dal.Fetch(criteria);
+                foreach (TeamSetItemDao item in list)
                     Add(itemPortal.FetchChild(item));
             }
         }
 
         [Update]
         protected void Update(
-            [Inject] ISimpleTeamSetDal dal
+            [Inject] ITeamSetDal dal
             )
         {
             // Update values in persistent storage.

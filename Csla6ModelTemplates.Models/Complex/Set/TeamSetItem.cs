@@ -1,20 +1,20 @@
-using Csla;
+﻿using Csla;
 using Csla.Core;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Simple.Set
+namespace Csla6ModelTemplates.Models.Complex.Set
 {
     /// <summary>
     /// Represents an editable child object.
     /// </summary>
     [Serializable]
-    [ValidationResourceType(typeof(ValidationText), ObjectName = "SimpleTeamSetItem")]
-    public class SimpleTeamSetItem : EditableModel<SimpleTeamSetItem, SimpleTeamSetItemDto>
+    [ValidationResourceType(typeof(ValidationText), ObjectName = "TeamSetItem")]
+    public class TeamSetItem : EditableModel<TeamSetItem, TeamSetItemDto>
     {
         #region Properties
 
@@ -50,6 +50,13 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             set => SetProperty(TeamNameProperty, value);
         }
 
+        public static readonly PropertyInfo<TeamSetPlayers> PlayersProperty = RegisterProperty<TeamSetPlayers>(nameof(Players));
+        public TeamSetPlayers Players
+        {
+            get => GetProperty(PlayersProperty);
+            private set => LoadProperty(PlayersProperty, value);
+        }
+
         public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
         public DateTimeOffset? Timestamp
         {
@@ -82,7 +89,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamSetItem),
+        //        typeof(TeamSetItem),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -97,66 +104,80 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         [CreateChild]
         private void Create(
             IParent parent,
-            SimpleTeamSetItemDto dto
+            TeamSetItemDto dto,
+            [Inject] IChildDataPortal<TeamSetPlayers> itemsPortal
             )
         {
             // Set values from data transfer object.
             SetParent(parent);
             FromDto(dto);
+            Players = itemsPortal.FetchChild(dto.Players);
         }
 
         [FetchChild]
         private void Fetch(
-            SimpleTeamSetItemDao dao
+            TeamSetItemDao dao,
+            [Inject] IChildDataPortal<TeamSetPlayers> itemsPortal
             )
         {
             // Set values from data access object.
             using (BypassPropertyChecks)
-                DataMapper.Map(dao, this);
+            {
+                DataMapper.Map(dao, this, "Players");
+                Players = itemsPortal.FetchChild(dao.Players);
+            }
         }
 
         [InsertChild]
         private void Insert(
-            [Inject] ISimpleTeamSetItemDal dal
+            [Inject] ITeamSetItemDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamSetItemDao>();
+                var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamSetItemDao>();
                 dal.Insert(dao);
 
                 // Set new data.
                 TeamKey = dao.TeamKey;
                 Timestamp = dao.Timestamp;
             }
+            FieldManager.UpdateChildren(this);
         }
 
         [UpdateChild]
         private void Update(
-            [Inject] ISimpleTeamSetItemDal dal
+            [Inject] ITeamSetItemDal dal
             )
         {
             // Update values in persistent storage.
-            using (BypassPropertyChecks)
+            if (IsSelfDirty)
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<SimpleTeamSetItemDao>();
-                dal.Update(dao);
+                using (BypassPropertyChecks)
+                {
+                    var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamSetItemDao>();
+                    dal.Update(dao);
 
-                // Set new data.
-                Timestamp = dao.Timestamp;
+                    // Set new data.
+                    Timestamp = dao.Timestamp;
+                }
             }
+            FieldManager.UpdateChildren(this);
         }
 
         [DeleteSelfChild]
         private void DeleteSelf(
-            [Inject] ISimpleTeamSetItemDal dal
+            [Inject] ITeamSetItemDal dal
             )
         {
             // Delete values from persistent storage.
             if (TeamKey.HasValue)
             {
-                var criteria = new SimpleTeamSetItemCriteria(TeamKey);
+                Players.Clear();
+                FieldManager.UpdateChildren(this);
+
+                var criteria = new TeamSetItemCriteria(TeamKey);
                 dal.Delete(criteria);
             }
         }

@@ -3,19 +3,19 @@ using Csla.Core;
 using Csla.Data;
 using Csla.Rules;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Complex.Edit
+namespace Csla6ModelTemplates.Models.Complex.Set
 {
     /// <summary>
     /// Represents an editable player object.
     /// </summary>
     [Serializable]
     [ValidationResourceType(typeof(ValidationText), ObjectName = "Player")]
-    public class Player : EditableModel<Player, PlayerDto>
+    public class TeamSetPlayer : EditableModel<TeamSetPlayer, TeamSetPlayerDto>
     {
         #region Properties
 
@@ -92,7 +92,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(Player),
+        //        typeof(TeamSetPlayer),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -121,11 +121,11 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
                 IRuleContext context
                 )
             {
-                Player target = (Player)context.Target;
+                TeamSetPlayer target = (TeamSetPlayer)context.Target;
                 if (target.Parent == null)
                     return;
 
-                Team team = (Team)target.Parent.Parent;
+                TeamSetItem team = (TeamSetItem)target.Parent.Parent;
                 var count = team.Players.Count(player => player.PlayerCode == target.PlayerCode);
                 if (count > 1)
                     context.AddErrorResult(ValidationText.Player_PlayerCode_NotUnique);
@@ -139,7 +139,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [CreateChild]
         private void Create(
             IParent parent,
-            PlayerDto dto
+            TeamSetPlayerDto dto
             )
         {
             // Set values from data transfer object.
@@ -149,7 +149,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [FetchChild]
         private void Fetch(
-            PlayerDao dao
+            TeamSetPlayerDao dao
             )
         {
             // Load values from persistent storage.
@@ -159,15 +159,15 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [InsertChild]
         private void Child_Insert(
-            Team parent,
-            [Inject] IPlayerDal dal
+            TeamSetItem parent,
+            [Inject] ITeamSetPlayerDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
                 TeamKey = parent.TeamKey;
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
+                var dao = Copy.PropertiesFrom(this).ToNew<TeamSetPlayerDao>();
                 dal.Insert(dao);
 
                 // Set new data.
@@ -178,14 +178,14 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [UpdateChild]
         private void Update(
-            Team parent,
-            [Inject] IPlayerDal dal
+            TeamSetItem parent,
+            [Inject] ITeamSetPlayerDal dal
             )
         {
             // Update values in persistent storage.
             using (BypassPropertyChecks)
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
+                var dao = Copy.PropertiesFrom(this).ToNew<TeamSetPlayerDao>();
                 dal.Update(dao);
 
                 // Set new data.
@@ -195,8 +195,8 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [DeleteSelfChild]
         private void Child_DeleteSelf(
-            Team parent,
-            [Inject] IPlayerDal dal
+            TeamSetItem parent,
+            [Inject] ITeamSetPlayerDal dal
             )
         {
             // Delete values from persistent storage.
@@ -204,7 +204,11 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             //Items.Clear();
             //FieldManager.UpdateChildren(this);
 
-            PlayerCriteria criteria = new PlayerCriteria(PlayerKey);
+            TeamSetPlayerCriteria criteria = new TeamSetPlayerCriteria(PlayerKey.Value)
+            {
+                __teamCode = ((TeamSetItem)Parent.Parent).TeamCode,
+                __playerCode = PlayerCode
+            };
             dal.Delete(criteria);
         }
 

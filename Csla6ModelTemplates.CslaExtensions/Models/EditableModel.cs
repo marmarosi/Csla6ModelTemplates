@@ -1,5 +1,6 @@
 using Csla;
 using Csla.Core;
+using Csla.Data;
 using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using System.Collections;
@@ -188,9 +189,12 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         ///// <param name="dto">The data transfer object.</param>
         public virtual void FromDto(
             Dto dto
+            //,
+            //params ChildPropertyName[] childProperties
             )
         {
-            Copy.PropertiesFrom(dto).ToPropertiesOf(this);
+            //Copy.PropertiesFrom(dto).ToPropertiesOf(this);
+            DataMapper.Map(dto, this);
             BusinessRules.CheckRules();
         }
 
