@@ -1,5 +1,4 @@
 using Csla6ModelTemplates.Contracts.Complex.Command;
-using Csla6ModelTemplates.Models.Complex.Command;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -16,12 +15,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             ActionResult<List<CountTeamsResultDto>> actionResult = await sut.CountTeamsCommand(
-                new CountTeamsCriteria(),
-                setup.GetPortal<CountTeams>()
+                new CountTeamsCriteria()
                 );
 
             // Assert

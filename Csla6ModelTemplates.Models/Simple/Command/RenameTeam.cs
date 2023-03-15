@@ -66,6 +66,24 @@ namespace Csla6ModelTemplates.Models.Simple.Command
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Renames the specified team.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="dto">The data transer object of the rename team command.</param>
+        /// <returns>True when the team was renamed; otherwise false.</returns>
+        public static async Task<RenameTeam> Execute(
+            IDataPortalFactory factory,
+            RenameTeamDto dto
+            )
+        {
+            return await factory.GetPortal<RenameTeam>().ExecuteAsync(dto);
+        }
+
+        #endregion
+
         #region Data Access
 
         [Execute]

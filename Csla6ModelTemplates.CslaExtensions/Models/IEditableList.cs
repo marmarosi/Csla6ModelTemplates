@@ -20,11 +20,11 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="keyName">The name of the key property.</param>
-        /// <param name="itemPortal">The data portal of the items.</param>
-        void UpdateByKey
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        void SetValuesByKey
             (List<Dto> list,
             string keyName,
-            IChildDataPortal<C> itemPortal
+            IChildDataPortalFactory childFactory
             );
 
         /// <summary>
@@ -32,11 +32,11 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="idName">The name of the identifier property.</param>
-        /// <param name="itemPortal">The data portal of the items.</param>
-        void UpdateById(
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        void SetValuesById(
             List<Dto> list,
             string idName,
-            IChildDataPortal<C> itemPortal
+            IChildDataPortalFactory childFactory
             );
     }
 }

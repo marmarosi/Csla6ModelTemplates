@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla.Core;
 using Csla.Data;
 using Csla.Rules;
@@ -134,17 +134,32 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         #endregion
 
+        #region Business Methods
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public override void SetValuesOnBuild(
+            PlayerDto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            DataMapper.Map(dto, this);
+            BusinessRules.CheckRules();
+        }
+
+        #endregion
+
         #region Data Access
 
         [CreateChild]
-        private void Create(
-            IParent parent,
-            PlayerDto dto
-            )
+        private void Create()
         {
             // Set values from data transfer object.
-            SetParent(parent);
-            FromDto(dto);
+            //LoadProperty(PlayerCodeProperty, "");
+            //BusinessRules.CheckRules();
         }
 
         [FetchChild]

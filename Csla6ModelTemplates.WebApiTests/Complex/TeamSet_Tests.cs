@@ -1,5 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Complex.Set;
-using Csla6ModelTemplates.Models.Complex.Set;
+using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -19,14 +18,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<List<TeamSetItemDto>> actionResult = await sut.GetTeamSet(
-                criteria,
-                setup.GetPortal<TeamSet>()
-                );
+            ActionResult<List<TeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -53,7 +49,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             TeamSetItemDto pristineTeam3 = null;
@@ -61,66 +57,59 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             TeamSetItemDto pristineTeamNew = null;
             TeamSetPlayerDto pristinePlayerNew = null;
             string deletedTeamId = null;
-            ActionResult<List<TeamSetItemDto>> actionResult = await Call<List<TeamSetItemDto>>.RetryOnDeadlock(async () =>
+
+            TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
+            ActionResult<List<TeamSetItemDto>> actionResultR = await sut.GetTeamSet(criteria);
+            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
+            List<TeamSetItemDto> pristineList = okObjectResultR.Value as List<TeamSetItemDto>;
+
+            // Modify an item.
+            pristineTeam3 = pristineList[2];
+            pristineTeam3.TeamCode = "T-9301";
+            pristineTeam3.TeamName = "Test team number 9301";
+
+            pristinePlayer31 = pristineTeam3.Players[0];
+            pristinePlayer31.PlayerCode = "P-9301-1";
+            pristinePlayer31.PlayerName = "Test player #9301.1";
+
+            // Create new item.
+            pristineTeamNew = new TeamSetItemDto
             {
-                TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
-                ActionResult<List<TeamSetItemDto>> actionResult = await sut.GetTeamSet(
-                    criteria,
-                    setup.GetPortal<TeamSet>()
-                    );
-                OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-                List<TeamSetItemDto> pristineList = okObjectResult.Value as List<TeamSetItemDto>;
+                TeamId = null,
+                TeamCode = "T-9302",
+                TeamName = "Test team number 9302",
+                Timestamp = null
+            };
+            pristinePlayerNew = new TeamSetPlayerDto
+            {
+                PlayerId = null,
+                TeamId = null,
+                PlayerCode = "P-9302-X",
+                PlayerName = "Test player #9302.X"
+            };
+            pristineTeamNew.Players.Add(pristinePlayerNew);
+            pristineList.Add(pristineTeamNew);
 
-                // Modify an item.
-                pristineTeam3 = pristineList[2];
-                pristineTeam3.TeamCode = "T-9301";
-                pristineTeam3.TeamName = "Test team number 9301";
+            // Delete an item.
+            TeamSetItemDto pristineTeam4 = pristineList[3];
+            deletedTeamId = pristineTeam4.TeamId;
+            pristineList.Remove(pristineTeam4);
 
-                pristinePlayer31 = pristineTeam3.Players[0];
-                pristinePlayer31.PlayerCode = "P-9301-1";
-                pristinePlayer31.PlayerName = "Test player #9301.1";
-
-                // Create new item.
-                pristineTeamNew = new TeamSetItemDto
-                {
-                    TeamId = null,
-                    TeamCode = "T-9302",
-                    TeamName = "Test team number 9302",
-                    Timestamp = null
-                };
-                pristinePlayerNew = new TeamSetPlayerDto
-                {
-                    PlayerId = null,
-                    TeamId = null,
-                    PlayerCode = "P-9302-X",
-                    PlayerName = "Test player #9302.X"
-                };
-                pristineTeamNew.Players.Add(pristinePlayerNew);
-                pristineList.Add(pristineTeamNew);
-
-                // Delete an item.
-                TeamSetItemDto pristineTeam4 = pristineList[3];
-                deletedTeamId = pristineTeam4.TeamId;
-                pristineList.Remove(pristineTeam4);
-
-                // Act
-                return await sut.UpdateTeamSet(
-                    criteria,
-                    pristineList,
-                    setup.GetPortal<TeamSet>(),
-                    setup.GetPortal<TeamSetItem>()
-                    );
-            });
+            // Act
+            ActionResult<List<TeamSetItemDto>> actionResultU = await sut.UpdateTeamSet(
+                criteria,
+                pristineList
+                );
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
+            OkObjectResult okObjectResultU = actionResultU.Result as OkObjectResult;
+            Assert.NotNull(okObjectResultU);
 
-            List<TeamSetItemDto> updatedList = okObjectResult.Value as List<TeamSetItemDto>;
+            List<TeamSetItemDto> updatedList = okObjectResultU.Value as List<TeamSetItemDto>;
             Assert.NotNull(updatedList);
 
             // The updated team must have new values.
-            TeamSetItemDto updatedTeam3 = updatedList[2];
+            TeamSetItemDto updatedTeam3 = updatedList.Find(o => o.TeamCode == "T-9301");
 
             Assert.Equal(pristineTeam3.TeamId, updatedTeam3.TeamId);
             Assert.Equal(pristineTeam3.TeamCode, updatedTeam3.TeamCode);
@@ -130,7 +119,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             Assert.Equal(pristineTeam3.Players.Count, updatedTeam3.Players.Count);
 
             // The updated player must reflect the changes.
-            TeamSetPlayerDto updatedPlayer31 = updatedTeam3.Players[0];
+            TeamSetPlayerDto updatedPlayer31 = updatedTeam3.Players.Find(o => o.PlayerCode == "P-9301-1");
             Assert.Equal(pristinePlayer31.PlayerCode, updatedPlayer31.PlayerCode);
             Assert.Equal(pristinePlayer31.PlayerName, updatedPlayer31.PlayerName);
 

@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
@@ -29,22 +29,36 @@ namespace Csla6ModelTemplates.Models.Complex.Set
         #region Factory Methods
 
         /// <summary>
-        /// Rebuilds an editable team instance from the data transfer object.
+        /// Gets the specified team set to edit.
         /// </summary>
-        /// <param name="criteria">The criteria of the editable team collection.</param>
-        /// <param name="list">The data transfer object.</param>
-        /// <param name="portal">The data portal of the collection.</param>
-        /// <param name="itemPortal">The data portal of items.</param>
-        /// <returns>The rebuilt editable team instance.</returns>
-        public static async Task<TeamSet> FromDto(
-            TeamSetCriteria criteria,
-            List<TeamSetItemDto> list,
-            [Inject] IDataPortal<TeamSet> portal,
-            [Inject] IChildDataPortal<TeamSetItem> itemPortal
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <returns>The requested team set.</returns>
+        public static async Task<TeamSet> Get(
+            IDataPortalFactory factory,
+            TeamSetCriteria criteria
             )
         {
-            TeamSet set = await portal.FetchAsync(criteria);
-            set.UpdateById(list, "TeamId", itemPortal);
+            return await factory.GetPortal<TeamSet>().FetchAsync(criteria);
+        }
+
+        /// <summary>
+        /// Rebuilds an editable team instance from the data transfer object.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <param name="list">The data transer objects of the team set.</param>
+        /// <returns>The team set built.</returns>
+        public static async Task<TeamSet> Build(
+            IDataPortalFactory factory,
+            IChildDataPortalFactory childFactory,
+            TeamSetCriteria criteria,
+            List<TeamSetItemDto> list
+            )
+        {
+            var set = await factory.GetPortal<TeamSet>().FetchAsync(criteria);
+            set.SetValuesById(list, "TeamId", childFactory);
             return set;
         }
 

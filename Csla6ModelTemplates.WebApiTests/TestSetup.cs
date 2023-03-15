@@ -22,6 +22,9 @@ namespace Csla6ModelTemplates.WebApiTests
         private readonly ApplicationContext appContext;
         private readonly ServiceProvider provider;
 
+        public IDataPortalFactory PortalFactory { get; private set; }
+        public IChildDataPortalFactory ChildPortalFactory { get; private set; }
+
         /// <summary>
         /// Initializes an integration test.
         /// </summary>
@@ -43,6 +46,8 @@ namespace Csla6ModelTemplates.WebApiTests
             services.AddCsla();
             provider = services.BuildServiceProvider();
             appContext = provider.GetRequiredService<ApplicationContext>();
+            PortalFactory = provider.GetRequiredService<IDataPortalFactory>();
+            ChildPortalFactory = provider.GetRequiredService<IChildDataPortalFactory>();
         }
 
         /// <summary>

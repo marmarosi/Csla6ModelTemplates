@@ -1,5 +1,4 @@
-﻿using Csla;
-using Csla.Core;
+using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Complex.Set;
@@ -99,19 +98,36 @@ namespace Csla6ModelTemplates.Models.Complex.Set
 
         #endregion
 
+        #region Business Methods
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public override void SetValuesOnBuild(
+            TeamSetItemDto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            DataMapper.Map(dto, this, "Players");
+            BusinessRules.CheckRules();
+            Players.SetValuesById(dto.Players, "PlayerId", childFactory);
+        }
+
+        #endregion
+
         #region Data Access
 
         [CreateChild]
         private void Create(
-            IParent parent,
-            TeamSetItemDto dto,
             [Inject] IChildDataPortal<TeamSetPlayers> itemsPortal
             )
         {
             // Set values from data transfer object.
-            SetParent(parent);
-            FromDto(dto);
-            Players = itemsPortal.FetchChild(dto.Players);
+            Players = itemsPortal.CreateChild();
+            //LoadProperty(TeamCodeProperty, "");
+            //BusinessRules.CheckRules();
         }
 
         [FetchChild]

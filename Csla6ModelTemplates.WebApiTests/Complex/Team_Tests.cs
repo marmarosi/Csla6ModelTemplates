@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +12,15 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         #region New
 
         [Fact]
-        public async Task CreateTeam_ReturnsNewModel()
+        public async Task NewTeam_ReturnsNewModel()
         {
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.GetNewTeam(
-                setup.GetPortal<Team>()
-                );
+            ActionResult<TeamDto> actionResult = await sut.GetNewTeam();
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -48,44 +46,38 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             TeamDto pristineTeam = null;
             PlayerDto pristinePlayer1 = null;
             PlayerDto pristinePlayer2 = null;
-            ActionResult<TeamDto> actionResult = await Call<TeamDto>.RetryOnDeadlock(async () =>
-            {
-                pristineTeam = new TeamDto
-                {
-                    TeamId = null,
-                    TeamCode = "T-9201",
-                    TeamName = "Test team number 9201",
-                    Timestamp = null
-                };
-                pristinePlayer1 = new PlayerDto
-                {
-                    PlayerId = null,
-                    TeamId = null,
-                    PlayerCode = "P-9201-1",
-                    PlayerName = "Test player #1"
-                };
-                pristineTeam.Players.Add(pristinePlayer1);
-                pristinePlayer2 = new PlayerDto
-                {
-                    PlayerId = null,
-                    TeamId = null,
-                    PlayerCode = "P-9201-2",
-                    PlayerName = "Test player #2"
-                };
-                pristineTeam.Players.Add(pristinePlayer2);
 
-                return await sut.CreateTeam(
-                    pristineTeam,
-                    setup.GetPortal<Team>(),
-                    setup.GetPortal<Player>()
-                    );
-            });
+            pristineTeam = new TeamDto
+            {
+                TeamId = null,
+                TeamCode = "T-9201",
+                TeamName = "Test team number 9201",
+                Timestamp = null
+            };
+            pristinePlayer1 = new PlayerDto
+            {
+                PlayerId = null,
+                TeamId = null,
+                PlayerCode = "P-9201-1",
+                PlayerName = "Test player #1"
+            };
+            pristineTeam.Players.Add(pristinePlayer1);
+            pristinePlayer2 = new PlayerDto
+            {
+                PlayerId = null,
+                TeamId = null,
+                PlayerCode = "P-9201-2",
+                PlayerName = "Test player #2"
+            };
+            pristineTeam.Players.Add(pristinePlayer2);
+
+            var actionResult = await sut.CreateTeam(pristineTeam);
 
             // Assert
             CreatedResult createdResult = actionResult.Result as CreatedResult;
@@ -126,13 +118,10 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.GetTeam(
-                "LBgyGEK0PN2",
-                setup.GetPortal<Team>()
-                );
+            ActionResult<TeamDto> actionResult = await sut.GetTeam("LBgyGEK0PN2");
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -167,48 +156,39 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sutR = new ComplexController(logger);
-            var sutU = new ComplexController(logger);
+            var sutR = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutU = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // --- Act
             PlayerDto pristinePlayerNew = null;
             TeamDto pristineTeam = null;
             PlayerDto pristinePlayer1 = null;
-            ActionResult<TeamDto> actionResult = await Call<TeamDto>.RetryOnDeadlock(async () =>
+
+            ActionResult<TeamDto> actionResultR = await sutR.GetTeam("JZY3GdKxyOj");
+            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
+            pristineTeam = okObjectResultR.Value as TeamDto;
+            pristinePlayer1 = pristineTeam.Players[0];
+
+            pristineTeam.TeamCode = "T-9202";
+            pristineTeam.TeamName = "Test team number 9202";
+            pristinePlayer1.PlayerCode = "P-9202-1";
+            pristinePlayer1.PlayerName = "Test player #9202.1";
+
+            pristinePlayerNew = new PlayerDto
             {
-                ActionResult<TeamDto> actionResult = await sutR.GetTeam(
-                    "JZY3GdKxyOj",
-                    setup.GetPortal<Team>()
-                    );
-                OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-                pristineTeam = okObjectResult.Value as TeamDto;
-                pristinePlayer1 = pristineTeam.Players[0];
-
-                pristineTeam.TeamCode = "T-9202";
-                pristineTeam.TeamName = "Test team number 9202";
-                pristinePlayer1.PlayerCode = "P-9202-1";
-                pristinePlayer1.PlayerName = "Test player #9202.1";
-
-                pristinePlayerNew = new PlayerDto
-                {
-                    PlayerId = null,
-                    TeamId = null,
-                    PlayerCode = "P-9202-X",
-                    PlayerName = "Test player #9202.X"
-                };
-                pristineTeam.Players.Add(pristinePlayerNew);
-                return await sutU.UpdateTeam(
-                    pristineTeam,
-                    setup.GetPortal<Team>(),
-                    setup.GetPortal<Player>()
-                    );
-            });
+                PlayerId = null,
+                TeamId = null,
+                PlayerCode = "P-9202-X",
+                PlayerName = "Test player #9202.X"
+            };
+            pristineTeam.Players.Add(pristinePlayerNew);
+            var actionResultU = await sutU.UpdateTeam(pristineTeam);
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
+            OkObjectResult okObjectResultU = actionResultU.Result as OkObjectResult;
+            Assert.NotNull(okObjectResultU);
 
-            TeamDto updatedTeam = okObjectResult.Value as TeamDto;
+            TeamDto updatedTeam = okObjectResultU.Value as TeamDto;
             Assert.NotNull(updatedTeam);
 
             // The team must have new values.
@@ -239,16 +219,10 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult actionResult = await Run.RetryOnDeadlock(async () =>
-            {
-                return await sut.DeleteTeam(
-                    "qNwO0mkG3rB",
-                    setup.GetPortal<Team>()
-                    );
-            });
+            ActionResult actionResult = await sut.DeleteTeam("qNwO0mkG3rB");
 
             // Assert
             NoContentResult noContentResult = actionResult as NoContentResult;

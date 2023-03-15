@@ -27,9 +27,13 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new instance.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
         public ComplexController(
-            ILogger<ComplexController> logger
-            ) : base(logger)
+            ILogger<ComplexController> logger,
+            IDataPortalFactory factory,
+            IChildDataPortalFactory childFactory
+            ) : base(logger, factory, childFactory)
         { }
 
         #endregion
@@ -40,18 +44,16 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Gets a list of teams.
         /// </summary>
         /// <param name="criteria">The criteria of the team list.</param>
-        /// <param name="portal">The data portal of the collection.</param>
         /// <returns>The requested team list.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<TeamListItemDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<TeamListItemDto>>> GetTeamList(
-            [FromQuery] TeamListCriteria criteria,
-            [FromServices] IDataPortal<TeamList> portal
+            [FromQuery] TeamListCriteria criteria
             )
         {
             try
             {
-                TeamList list = await portal.FetchAsync(criteria);
+                var list = await TeamList.Get(Factory, criteria);
                 return Ok(list.ToDto<TeamListItemDto>());
             }
             catch (Exception ex)
@@ -68,19 +70,16 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Gets the specified team details to display.
         /// </summary>
         /// <param name="id">The identifier of the team.</param>
-        /// <param name="portal">The data portal of the model.</param>
         /// <returns>The requested team view.</returns>
         [HttpGet("{id}/view")]
         [ProducesResponseType(typeof(TeamViewDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<TeamViewDto>> GetTeamView(
-            string id,
-            [FromServices] IDataPortal<TeamView> portal
+            string id
             )
         {
             try
             {
-                var criteria = new TeamViewParams(id);
-                var team = await portal.FetchAsync(criteria.Decode());
+                var team = await TeamView.Get(Factory, id);
                 return Ok(team.ToDto<TeamViewDto>());
             }
             catch (Exception ex)
@@ -96,17 +95,14 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <summary>
         /// Gets a new team to edit.
         /// </summary>
-        /// <param name="portal">The data portal of the model.</param>
         /// <returns>The new team.</returns>
         [HttpGet("new")]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TeamDto>> GetNewTeam(
-            [FromServices] IDataPortal<Team> portal
-            )
+        public async Task<ActionResult<TeamDto>> GetNewTeam()
         {
             try
             {
-                Team team = await portal.CreateAsync();
+                var team = await Team.New(Factory);
                 return Ok(team.ToDto());
             }
             catch (Exception ex)
@@ -123,19 +119,16 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Gets the specified team to edit.
         /// </summary>
         /// <param name="id">The identifier of the team.</param>
-        /// <param name="portal">The data portal of the model.</param>
         /// <returns>The requested team.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<TeamDto>> GetTeam(
-            string id,
-            [FromServices] IDataPortal<Team> portal
+            string id
             )
         {
             try
             {
-                var criteria = new TeamParams(id);
-                Team team = await portal.FetchAsync(criteria.Decode());
+                var team = await Team.Get(Factory, id);
                 return Ok(team.ToDto());
             }
             catch (Exception ex)
@@ -152,22 +145,18 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new team.
         /// </summary>
         /// <param name="dto">The data transer object of the team.</param>
-        /// <param name="portal">The data portal of the model.</param>
-        /// <param name="itemPortal">The data portal of the item model.</param>
         /// <returns>The created team.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status201Created)]
         public async Task<ActionResult<TeamDto>> CreateTeam(
-            [FromBody] TeamDto dto,
-            [FromServices] IDataPortal<Team> portal,
-            [FromServices] IChildDataPortal<Player> itemPortal
+            [FromBody] TeamDto dto
             )
         {
             try
             {
                 return await Call<TeamDto>.RetryOnDeadlock(async () =>
                 {
-                    Team team = await Team.FromDto(dto, portal, itemPortal);
+                    var team = await Team.Build(Factory, ChildFactory, dto);
                     if (team.IsValid)
                     {
                         team = await team.SaveAsync();
@@ -189,22 +178,18 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Updates the specified team.
         /// </summary>
         /// <param name="dto">The data transer object of the team.</param>
-        /// <param name="portal">The data portal of the model.</param>
-        /// <param name="itemPortal">The data portal of the item model.</param>
         /// <returns>The updated team.</returns>
         [HttpPut]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<TeamDto>> UpdateTeam(
-            [FromBody] TeamDto dto,
-            [FromServices] IDataPortal<Team> portal,
-            [FromServices] IChildDataPortal<Player> itemPortal
+            [FromBody] TeamDto dto
             )
         {
             try
             {
                 return await Call<TeamDto>.RetryOnDeadlock(async () =>
                 {
-                    Team team = await Team.FromDto(dto, portal, itemPortal);
+                    var team = await Team.Build(Factory, ChildFactory, dto);
                     if (team.IsSavable)
                     {
                         team = await team.SaveAsync();
@@ -226,20 +211,17 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Deletes the specified team.
         /// </summary>
         /// <param name="id">The identifier of the team.</param>
-        /// <param name="portal">The data portal of the model.</param>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> DeleteTeam(
-            string id,
-            [FromServices] IDataPortal<Team> portal
+            string id
             )
         {
             try
             {
-                var criteria = new TeamParams(id);
                 return await Run.RetryOnDeadlock(async () =>
                 {
-                    await portal.DeleteAsync(criteria.Decode());
+                    await Team.Delete(Factory, id);
                     return NoContent();
                 });
             }
@@ -257,18 +239,16 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Gets the specified team set to edit.
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
-        /// <param name="portal">The data portal of the collection.</param>
         /// <returns>The requested team set.</returns>
         [HttpGet("set")]
         [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<TeamSetItemDto>>> GetTeamSet(
-            [FromQuery] TeamSetCriteria criteria,
-            [FromServices] IDataPortal<TeamSet> portal
+            [FromQuery] TeamSetCriteria criteria
             )
         {
             try
             {
-                TeamSet teams = await portal.FetchAsync(criteria);
+                var teams = await TeamSet.Get(Factory, criteria);
                 return Ok(teams.ToDto());
             }
             catch (Exception ex)
@@ -286,24 +266,19 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="dto">The data transer objects of the team set.</param>
-        /// <param name="portal">The data portal of the collection.</param>
-        /// <param name="itemPortal">The data portal of items.</param>
         /// <returns>The updated team set.</returns>
         [HttpPut("set")]
         [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<TeamSetItemDto>>> UpdateTeamSet(
             [FromQuery] TeamSetCriteria criteria,
-            [FromBody] List<TeamSetItemDto> dto,
-            [FromServices] IDataPortal<TeamSet> portal,
-            [FromServices] IChildDataPortal<TeamSetItem> itemPortal
+            [FromBody] List<TeamSetItemDto> dto
             )
         {
             try
             {
                 return await Call<List<TeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    var set = portal.Create();
-                    TeamSet teams = await TeamSet.FromDto(criteria, dto, portal, itemPortal);
+                    var teams = await TeamSet.Build(Factory, ChildFactory, criteria, dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
@@ -325,18 +300,16 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Counts the teams grouped by the number of their items.
         /// </summary>
         /// <param name="criteria">The criteria of the count teams by item count command.</param>
-        /// <param name="portal">The data portal of the model.</param>
         /// <returns>The list of the team counts.</returns>
         [HttpPatch]
         [ProducesResponseType(typeof(List<CountTeamsResultDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<CountTeamsResultDto>>> CountTeamsCommand(
-            [FromBody] CountTeamsCriteria criteria,
-            [FromServices] IDataPortal<CountTeams> portal
+            [FromBody] CountTeamsCriteria criteria
             )
         {
             try
             {
-                CountTeams command = await portal.ExecuteAsync(criteria);
+                var command = await CountTeams.Execute(Factory, criteria);
                 return Ok(command.Results.ToDto<CountTeamsResultDto>());
             }
             catch (Exception ex)

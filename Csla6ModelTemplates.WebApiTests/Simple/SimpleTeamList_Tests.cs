@@ -1,5 +1,4 @@
 using Csla6ModelTemplates.Contracts.Simple.List;
-using Csla6ModelTemplates.Models.Simple.List;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -16,12 +15,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(
-                new SimpleTeamListCriteria { TeamName = "9" },
-                setup.GetPortal<SimpleTeamList>()
+                new SimpleTeamListCriteria { TeamName = "9" }
                 );
 
             // Assert

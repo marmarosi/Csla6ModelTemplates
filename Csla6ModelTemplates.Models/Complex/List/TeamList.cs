@@ -26,6 +26,24 @@ namespace Csla6ModelTemplates.Models.Complex.List
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Gets a list of teams.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="criteria">The criteria of the team list.</param>
+        /// <returns>The requested team list.</returns>
+        public static async Task<TeamList> Get(
+            IDataPortalFactory factory,
+            TeamListCriteria criteria
+            )
+        {
+            return await factory.GetPortal<TeamList>().FetchAsync(criteria);
+        }
+
+        #endregion
+
         #region Data Access
 
         [Fetch]

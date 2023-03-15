@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
@@ -31,11 +31,18 @@ namespace Csla6ModelTemplates.Models.Complex.Set
         [FetchChild]
         private void Fetch(
             List<TeamSetPlayerDao> list,
-            [Inject] IChildDataPortal<TeamSetPlayer> itemPortal
+            [Inject] IChildDataPortal<TeamSetPlayer> childPortal
             )
         {
             foreach (TeamSetPlayerDao item in list)
-                Add(itemPortal.FetchChild(item));
+                Add(childPortal.FetchChild(item));
+        }
+
+        [UpdateChild]
+        protected void Update()
+        {
+            // Update values in persistent storage.
+            Child_Update();
         }
 
         #endregion

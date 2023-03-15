@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Complex.Edit;
@@ -100,29 +100,88 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         #endregion
 
+        #region Business Methods
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public override void SetValuesOnBuild(
+            TeamDto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            DataMapper.Map(dto, this, "Players");
+            BusinessRules.CheckRules();
+            Players.SetValuesById(dto.Players, "PlayerId", childFactory);
+        }
+
+        #endregion
+
         #region Factory Methods
 
         /// <summary>
-        /// Rebuilds an editable team instance from the data transfer object.
+        /// Gets a new team to edit.
         /// </summary>
-        /// <param name="dto">The data transfer object.</param>
-        /// <param name="portal">The data portal of the model.</param>
-        /// <param name="itemPortal">The data portal of the item model.</param>
-        /// <returns>The rebuilt editable team instance.</returns>
-        public static async Task<Team> FromDto(
-            TeamDto dto,
-            IDataPortal<Team> portal,
-            IChildDataPortal<Player> itemPortal
+        /// <param name="factory">The data portal factory.</param>
+        /// <returns>The new team.</returns>
+        public static async Task<Team> New(
+            IDataPortalFactory factory
+            )
+        {
+            return await factory.GetPortal<Team>().CreateAsync();
+        }
+
+        /// <summary>
+        /// Gets the specified team to edit.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team.</returns>
+        public static async Task<Team> Get(
+            IDataPortalFactory factory,
+            string id
+            )
+        {
+            var criteria = new TeamParams(id);
+            return await factory.GetPortal<Team>().FetchAsync(criteria.Decode());
+        }
+
+        /// <summary>
+        /// Builds a new or existing team.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="dto"></param>
+        /// <returns>The team built.</returns>
+        public static async Task<Team> Build(
+            IDataPortalFactory factory,
+            IChildDataPortalFactory childFactory,
+            TeamDto dto
             )
         {
             long? teamKey = KeyHash.Decode(ID.Team, dto.TeamId);
             Team team = teamKey.HasValue ?
-                await portal.FetchAsync(new TeamCriteria(teamKey.Value)) :
-                await portal.CreateAsync();
-
-            DataMapper.Map(dto, team, "Players");
-            team.Players.UpdateById(dto.Players, "PlayerId", itemPortal);
+                await Get(factory, dto.TeamId) :
+                await New(factory);
+            team.SetValuesOnBuild(dto, childFactory);
+            //team.Players.SetValuesById(dto.Players, "PlayerId", childFactory);
             return team;
+        }
+
+        /// <summary>
+        /// Deletes the specified team.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="id">The identifier of the team.</param>
+        public static async Task Delete(
+            IDataPortalFactory factory,
+            string id
+            )
+        {
+            var criteria = new TeamParams(id);
+            await factory.GetPortal<Team>().DeleteAsync(criteria.Decode());
         }
 
         #endregion
@@ -136,9 +195,9 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             )
         {
             // Load default values.
+            Players = itemsPortal.CreateChild();
             //LoadProperty(TeamCodeProperty, "");
             //BusinessRules.CheckRules();
-            Players = itemsPortal.FetchChild(new List<PlayerDao>());
         }
 
         [Fetch]

@@ -1,6 +1,5 @@
 using Csla;
 using Csla.Core;
-using Csla.Data;
 using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using System.Collections;
@@ -133,6 +132,23 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
+        #region SetValuesOnBuild
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public virtual void SetValuesOnBuild(
+            Dto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region ToDto
 
         /// <summary>
@@ -177,25 +193,6 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 .GetMethod("ToDto")
                 .Invoke(cslaBase, null);
             dtoProperty.SetValue(dto, value);
-        }
-
-        #endregion
-
-        #region FromDto
-
-        ///// <summary>
-        ///// Updates an editable model from the data transfer object.
-        ///// </summary>
-        ///// <param name="dto">The data transfer object.</param>
-        public virtual void FromDto(
-            Dto dto
-            //,
-            //params ChildPropertyName[] childProperties
-            )
-        {
-            //Copy.PropertiesFrom(dto).ToPropertiesOf(this);
-            DataMapper.Map(dto, this);
-            BusinessRules.CheckRules();
         }
 
         #endregion

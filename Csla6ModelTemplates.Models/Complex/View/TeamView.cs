@@ -79,6 +79,25 @@ namespace Csla6ModelTemplates.Models.Complex.View
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Gets the specified team details to display.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team view.</returns>
+        public static async Task<TeamView> Get(
+            IDataPortalFactory factory,
+            string id
+            )
+        {
+            var criteria = new TeamViewParams(id);
+            return await factory.GetPortal<TeamView>().FetchAsync(criteria.Decode());
+        }
+
+        #endregion
+
         #region Data Access
 
         [Fetch]

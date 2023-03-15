@@ -1,5 +1,4 @@
 using Csla6ModelTemplates.Contracts.Complex.View;
-using Csla6ModelTemplates.Models.Complex.View;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -15,13 +14,10 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger);
+            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<TeamViewDto> actionResult = await sut.GetTeamView(
-                "1r9oGj1x3lk",
-                setup.GetPortal<TeamView>()
-                );
+            ActionResult<TeamViewDto> actionResult = await sut.GetTeamView("1r9oGj1x3lk");
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;

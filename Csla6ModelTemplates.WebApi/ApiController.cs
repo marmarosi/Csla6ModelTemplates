@@ -1,3 +1,4 @@
+using Csla;
 using Csla6ModelTemplates.CslaExtensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,9 @@ namespace Csla6ModelTemplates.WebApi
     /// </summary>
     public class ApiController : ControllerBase
     {
-        internal ILogger Logger { get; set; }
+        internal ILogger Logger { get; private set; }
+        protected IDataPortalFactory Factory { get; private set; }
+        protected IChildDataPortalFactory ChildFactory { get; private set; }
 
         /// <summary>
         /// Gets the path of the request.
@@ -25,11 +28,17 @@ namespace Csla6ModelTemplates.WebApi
         /// Creates a new instance of the controller.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
         internal ApiController(
-            ILogger logger
+            ILogger logger,
+            IDataPortalFactory factory,
+            IChildDataPortalFactory childFactory
             )
         {
             Logger = logger;
+            Factory = factory;
+            ChildFactory = childFactory;
         }
 
         /// <summary>

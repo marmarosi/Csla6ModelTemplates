@@ -49,6 +49,24 @@ namespace Csla6ModelTemplates.Models.Complex.Command
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Counts the teams grouped by the number of their items.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="criteria">The criteria of the count teams by item count command.</param>
+        /// <returns>True when the team was renamed; otherwise false.</returns>
+        public static async Task<CountTeams> Execute(
+            IDataPortalFactory factory,
+            CountTeamsCriteria criteria
+            )
+        {
+            return await factory.GetPortal<CountTeams>().ExecuteAsync(criteria);
+        }
+
+        #endregion
+
         #region Data Access
 
         [Execute]

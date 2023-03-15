@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla.Core;
 using Csla.Data;
 using Csla.Rules;
@@ -134,18 +134,33 @@ namespace Csla6ModelTemplates.Models.Complex.Set
 
         #endregion
 
+        #region Business Methods
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public override void SetValuesOnBuild(
+            TeamSetPlayerDto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            DataMapper.Map(dto, this);
+            BusinessRules.CheckRules();
+        }
+
+        #endregion
+
         #region Data Access
 
         [CreateChild]
-        private void Create(
-            IParent parent,
-            TeamSetPlayerDto dto
-            )
+        private void Create()
         {
             // Set values from data transfer object.
-            SetParent(parent);
-            FromDto(dto);
-        }
+            //LoadProperty(TeamCodeProperty, "");
+            //BusinessRules.CheckRules();
+        }            
 
         [FetchChild]
         private void Fetch(
@@ -159,14 +174,12 @@ namespace Csla6ModelTemplates.Models.Complex.Set
 
         [InsertChild]
         private void Child_Insert(
-            TeamSetItem parent,
             [Inject] ITeamSetPlayerDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                TeamKey = parent.TeamKey;
                 var dao = Copy.PropertiesFrom(this).ToNew<TeamSetPlayerDao>();
                 dal.Insert(dao);
 
@@ -178,7 +191,6 @@ namespace Csla6ModelTemplates.Models.Complex.Set
 
         [UpdateChild]
         private void Update(
-            TeamSetItem parent,
             [Inject] ITeamSetPlayerDal dal
             )
         {
@@ -195,7 +207,6 @@ namespace Csla6ModelTemplates.Models.Complex.Set
 
         [DeleteSelfChild]
         private void Child_DeleteSelf(
-            TeamSetItem parent,
             [Inject] ITeamSetPlayerDal dal
             )
         {

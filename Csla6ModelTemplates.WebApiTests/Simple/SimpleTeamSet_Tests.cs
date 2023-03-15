@@ -1,5 +1,4 @@
 using Csla6ModelTemplates.Contracts.Simple.Set;
-using Csla6ModelTemplates.Models.Simple.Set;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -19,14 +18,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<List<SimpleTeamSetItemDto>> actionResult = await sut.GetTeamSet(
-                criteria,
-                setup.GetPortal<SimpleTeamSet>()
-                );
+            ActionResult<List<SimpleTeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -49,57 +45,51 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger);
-            var sutU = new SimpleController(logger);
+            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             SimpleTeamSetItemDto pristine = null;
             SimpleTeamSetItemDto pristineNew = null;
             string deletedId = null;
-            /*ActionResult<List<SimpleTeamSetItemDto>>*/ var actionResult =
-                await Call<List<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
-                {
-                    SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-                    ActionResult<List<SimpleTeamSetItemDto>> actionResult = await sutR.GetTeamSet(
-                        criteria,
-                        setup.GetPortal<SimpleTeamSet>()
-                        );
-                    OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-                    List<SimpleTeamSetItemDto> pristineList = okObjectResult.Value as List<SimpleTeamSetItemDto>;
 
-                    // Modify an item.
-                    pristine = pristineList[0];
-                    pristine.TeamCode = "T-9101";
-                    pristine.TeamName = "Test team number 9101";
+            SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
+            ActionResult<List<SimpleTeamSetItemDto>> actionResultR = await sutR.GetTeamSet(criteria);
+            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
+            List<SimpleTeamSetItemDto> pristineList = okObjectResultR.Value as List<SimpleTeamSetItemDto>;
 
-                    // Create new item.
-                    pristineNew = new SimpleTeamSetItemDto
-                    {
-                        TeamId = null,
-                        TeamCode = "T-9102",
-                        TeamName = "Test team number 9102",
-                        Timestamp = null
-                    };
-                    pristineList.Add(pristineNew);
+            // Modify an item.
+            pristine = pristineList[0];
+            pristine.TeamCode = "T-9101";
+            pristine.TeamName = "Test team number 9101";
 
-                    // Delete an item.
-                    SimpleTeamSetItemDto pristine3 = pristineList[3];
-                    deletedId = pristine3.TeamId;
-                    pristineList.Remove(pristine3);
+            // Create new item.
+            pristineNew = new SimpleTeamSetItemDto
+            {
+                TeamId = null,
+                TeamCode = "T-9102",
+                TeamName = "Test team number 9102",
+                Timestamp = null
+            };
+            pristineList.Add(pristineNew);
 
-                    return await sutU.UpdateTeamSet(
-                        criteria,
-                        pristineList,
-                        setup.GetPortal<SimpleTeamSet>(),
-                        setup.GetPortal<SimpleTeamSetItem>()
-                        );
-                });
+            // Delete an item.
+            SimpleTeamSetItemDto pristine3 = pristineList[3];
+            deletedId = pristine3.TeamId;
+            pristineList.Remove(pristine3);
+
+            var actionResultU = await sutU.UpdateTeamSet(
+                criteria,
+                pristineList,
+                setup.PortalFactory,
+                setup.ChildPortalFactory
+                );
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
+            OkObjectResult okObjectResultU = actionResultU.Result as OkObjectResult;
+            Assert.NotNull(okObjectResultU);
 
-            List<SimpleTeamSetItemDto> updatedList = okObjectResult.Value as List<SimpleTeamSetItemDto>;
+            List<SimpleTeamSetItemDto> updatedList = okObjectResultU.Value as List<SimpleTeamSetItemDto>;
             Assert.NotNull(updatedList);
 
             // The updated team must have new values.
