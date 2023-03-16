@@ -12,6 +12,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
     /// </summary>
     [Route("api/tree")]
     [ApiController]
+    [Produces("application/json")]
     public class TreeController : ApiController
     {
         #region Constructor
