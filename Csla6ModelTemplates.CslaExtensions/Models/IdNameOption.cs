@@ -1,4 +1,5 @@
 using Csla;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Dal.Contracts;
 
@@ -12,22 +13,56 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     {
         #region Business Methods
 
-        private readonly string _hashid;
+        private string HashModel;
 
-        public static readonly PropertyInfo<string> IdProperty = RegisterProperty<string>(c => c.Id, RelationshipTypes.PrivateField);
-        private long? Key = null;
+        public static readonly PropertyInfo<long?> KeyProperty = RegisterProperty<long?>(nameof(Key));
+        public long? Key
+        {
+            get => GetProperty(KeyProperty);
+            private set => LoadProperty(KeyProperty, value);
+        }
+
+        public static readonly PropertyInfo<long?> IdProperty = RegisterProperty<long?>(nameof(Id), RelationshipTypes.PrivateField);
         public string Id
         {
-            get { return GetProperty(IdProperty, KeyHash.Encode(_hashid, Key)); }
-            private set { Key = KeyHash.Decode(_hashid, value); }
+            get => KeyHash.Encode(HashModel, Key);
+            private set => Key = KeyHash.Decode(HashModel, value);
         }
 
-        public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(c => c.Name);
+        public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(nameof(Name));
         public string Name
         {
-            get { return GetProperty(NameProperty); }
-            private set { LoadProperty(NameProperty, value); }
+            get => GetProperty(NameProperty);
+            private set => LoadProperty(NameProperty, value);
         }
+
+        #endregion
+
+        #region Business Rules
+
+        //protected override void AddBusinessRules()
+        //{
+        //    // Add authorization rules.
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
+        //}
+
+        //private static void AddObjectAuthorizationRules()
+        //{
+        //    // Add authorization rules.
+        //    BusinessRules.AddRule(
+        //        typeof(IdNameOption),
+        //        new IsInRole(
+        //            AuthorizationActions.GetObject,
+        //            "Manager"
+        //            )
+        //        );
+        //}
 
         #endregion
 
@@ -35,11 +70,13 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         [FetchChild]
         private void Fetch(
-            IdNameOptionDao dao
+            IdNameOptionDao dao,
+            string hashModel
             )
         {
-            Key = dao.Key;
-            Name = dao.Name;
+            // Set values from data access object.
+            HashModel = hashModel;
+            DataMapper.Map(dao, this);
         }
 
         #endregion

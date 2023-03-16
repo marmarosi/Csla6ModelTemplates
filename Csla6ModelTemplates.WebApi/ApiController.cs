@@ -10,8 +10,8 @@ namespace Csla6ModelTemplates.WebApi
     public class ApiController : ControllerBase
     {
         internal ILogger Logger { get; private set; }
-        protected IDataPortalFactory Factory { get; private set; }
-        protected IChildDataPortalFactory ChildFactory { get; private set; }
+        internal IDataPortalFactory Factory { get; private set; }
+        internal IChildDataPortalFactory ChildFactory { get; private set; }
 
         /// <summary>
         /// Gets the path of the request.

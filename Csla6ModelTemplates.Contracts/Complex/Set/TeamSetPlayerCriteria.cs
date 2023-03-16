@@ -8,7 +8,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.Set
     [Serializable]
     public class TeamSetPlayerCriteria
     {
-        public long PlayerKey { get; set; }
+        public long? PlayerKey { get; set; }
         [JsonIgnore]
         public string __teamCode { get; set; } // for error messages
         [JsonIgnore]
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.Set
         { }
 
         public TeamSetPlayerCriteria(
-            long playerKey
+            long? playerKey
             )
         {
             PlayerKey = playerKey;

@@ -215,7 +215,7 @@ namespace Csla6ModelTemplates.Models.Complex.Set
             //Items.Clear();
             //FieldManager.UpdateChildren(this);
 
-            TeamSetPlayerCriteria criteria = new TeamSetPlayerCriteria(PlayerKey.Value)
+            TeamSetPlayerCriteria criteria = new TeamSetPlayerCriteria(PlayerKey)
             {
                 __teamCode = ((TeamSetItem)Parent.Parent).TeamCode,
                 __playerCode = PlayerCode
