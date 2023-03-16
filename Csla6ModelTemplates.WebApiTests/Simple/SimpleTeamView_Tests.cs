@@ -1,5 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Simple.View;
-using Csla6ModelTemplates.Models.Simple.View;
+using Csla6ModelTemplates.Contracts.Simple.View;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -15,13 +14,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<SimpleTeamViewDto> actionResult = await sut.GetTeamView(
-                "d9A30RLG8pZ",
-                setup.GetPortal<SimpleTeamView>()
-                );
+            ActionResult<SimpleTeamViewDto> actionResult = await sut.GetTeamView("d9A30RLG8pZ");
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;

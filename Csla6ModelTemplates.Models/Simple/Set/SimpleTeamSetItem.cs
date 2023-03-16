@@ -1,5 +1,4 @@
 using Csla;
-using Csla.Core;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.Set;
@@ -37,8 +36,8 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         [MaxLength(10)]
         public string TeamCode
         {
-            get { return GetProperty(TeamCodeProperty); }
-            set { SetProperty(TeamCodeProperty, value); }
+            get => GetProperty(TeamCodeProperty);
+            set => SetProperty(TeamCodeProperty, value);
         }
 
         public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(nameof(TeamName));
@@ -46,15 +45,15 @@ namespace Csla6ModelTemplates.Models.Simple.Set
         [MaxLength(100)]
         public string TeamName
         {
-            get { return GetProperty(TeamNameProperty); }
-            set { SetProperty(TeamNameProperty, value); }
+            get => GetProperty(TeamNameProperty);
+            set => SetProperty(TeamNameProperty, value);
         }
 
         public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
         public DateTimeOffset? Timestamp
         {
-            get { return GetProperty(TimestampProperty); }
-            private set { LoadProperty(TimestampProperty, value); }
+            get => GetProperty(TimestampProperty);
+            private set => LoadProperty(TimestampProperty, value);
         }
 
         #endregion
@@ -72,7 +71,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         //    // Add authorization rules.
         //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.WriteProperty,
+        //        AuthorizationActions.ReadProperty,
         //        TeamNameProperty,
         //        "Manager"
         //        ));
@@ -92,26 +91,32 @@ namespace Csla6ModelTemplates.Models.Simple.Set
 
         #endregion
 
-        #region Data Access
+        #region Business Methods
 
-        //[CreateChild]
-        //private void Create()
-        //{
-        //    // Load default values.
-        //    // Omit this override if you have no defaults to set.
-        //    //LoadProperty(TeamCodeProperty, "");
-        //    //BusinessRules.CheckRules();
-        //}
-
-        [CreateChild]
-        private void Create(
-            IParent parent,
-            SimpleTeamSetItemDto dto
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public override void SetValuesOnBuild(
+            SimpleTeamSetItemDto dto,
+            IChildDataPortalFactory childFactory
             )
         {
+            DataMapper.Map(dto, this);
+            BusinessRules.CheckRules();
+        }
+
+        #endregion
+
+        #region Data Access
+
+        [CreateChild]
+        private void Create()
+        {
             // Set values from data transfer object.
-            SetParent(parent);
-            FromDto(dto);
+            //LoadProperty(TeamCodeProperty, "");
+            //BusinessRules.CheckRules();
         }
 
         [FetchChild]
@@ -165,7 +170,7 @@ namespace Csla6ModelTemplates.Models.Simple.Set
             // Delete values from persistent storage.
             if (TeamKey.HasValue)
             {
-                SimpleTeamSetItemCriteria criteria = new SimpleTeamSetItemCriteria(TeamKey);
+                var criteria = new SimpleTeamSetItemCriteria(TeamKey);
                 dal.Delete(criteria);
             }
         }

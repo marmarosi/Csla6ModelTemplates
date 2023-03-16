@@ -132,6 +132,23 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
+        #region SetValuesOnBuild
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public virtual void SetValuesOnBuild(
+            Dto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region ToDto
 
         /// <summary>
@@ -153,22 +170,10 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 var cslaProperty = cslaProperties.Find(pi => pi.Name == dtoProperty.Name);
                 if (cslaProperty != null)
                 {
-                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`2") != null)
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else if (cslaProperty.Type.GetInterface(nameof(IEditableModel<Dto>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else
                         dtoProperty.SetValue(dto, GetProperty(cslaProperty));
                 }
@@ -177,20 +182,17 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             return dto;
         }
 
-        #endregion
-
-        #region FromDto
-
-        ///// <summary>
-        ///// Updates an editable model from the data transfer object.
-        ///// </summary>
-        ///// <param name="dto">The data transfer object.</param>
-        public virtual void FromDto(
-            Dto dto
+        private void SetDtoValue(
+            Dto dto,
+            PropertyInfo dtoProperty,
+            IPropertyInfo cslaProperty
             )
         {
-            Copy.PropertiesFrom(dto).ToPropertiesOf(this);
-            BusinessRules.CheckRules();
+            var cslaBase = GetProperty(cslaProperty);
+            object value = cslaProperty.Type
+                .GetMethod("ToDto")
+                .Invoke(cslaBase, null);
+            dtoProperty.SetValue(dto, value);
         }
 
         #endregion

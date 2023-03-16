@@ -23,13 +23,31 @@ namespace Csla6ModelTemplates.Models.Simple.List
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Gets a list of teams.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="criteria">The criteria of the team list.</param>
+        /// <returns>The requested team list.</returns>
+        public static async Task<SimpleTeamList> Get(
+            IDataPortalFactory factory,
+            SimpleTeamListCriteria criteria
+            )
+        {
+            return await factory.GetPortal<SimpleTeamList>().FetchAsync(criteria);
+        }
+
+        #endregion
+
         #region Data Access
 
         [Fetch]
         private void Fetch(
             SimpleTeamListCriteria criteria,
             [Inject] ISimpleTeamListDal dal,
-            [Inject] IChildDataPortal<SimpleTeamListItem> childPortal
+            [Inject] IChildDataPortal<SimpleTeamListItem> itemPortal
             )
         {
             // Load values from persistent storage.
@@ -37,7 +55,7 @@ namespace Csla6ModelTemplates.Models.Simple.List
             {
                 List<SimpleTeamListItemDao> list = dal.Fetch(criteria);
                 foreach (var item in list)
-                    Add(childPortal.FetchChild(item));
+                    Add(itemPortal.FetchChild(item));
             }
         }
 

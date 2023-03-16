@@ -1,3 +1,4 @@
+using Csla;
 using Csla6ModelTemplates.CslaExtensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +9,9 @@ namespace Csla6ModelTemplates.WebApi
     /// </summary>
     public class ApiController : ControllerBase
     {
-        private const int MAX_RETRIES = 1;
-        private const int MIN_DELAY_MS = 100;
-        private const int MAX_DELAY_MS = 200;
-
-        private static readonly Random _random = new Random(DateTime.Now.Millisecond);
-
-        internal ILogger Logger { get; set; }
+        internal ILogger Logger { get; private set; }
+        protected IDataPortalFactory Factory { get; private set; }
+        protected IChildDataPortalFactory ChildFactory { get; private set; }
 
         /// <summary>
         /// Gets the path of the request.
@@ -31,11 +28,17 @@ namespace Csla6ModelTemplates.WebApi
         /// Creates a new instance of the controller.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
         internal ApiController(
-            ILogger logger
+            ILogger logger,
+            IDataPortalFactory factory,
+            IChildDataPortalFactory childFactory
             )
         {
             Logger = logger;
+            Factory = factory;
+            ChildFactory = childFactory;
         }
 
         /// <summary>
@@ -50,9 +53,9 @@ namespace Csla6ModelTemplates.WebApi
             ObjectResult result = null;
 
             // Check validation exception.
-            if (exception is ValidationException)
+            if (exception is ValidationException vException)
                 // Status code 422 = Unprocesssable Entity
-                return StatusCode(422, new ValidationError((ValidationException)exception));
+                return StatusCode(422, new ValidationError(vException));
 
             // Check deadlock exception.
             DeadlockError deadlock = DeadlockError.CheckException(exception);

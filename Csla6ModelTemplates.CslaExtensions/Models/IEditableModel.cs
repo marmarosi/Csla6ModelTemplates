@@ -1,7 +1,5 @@
 using Csla.Core;
 using Csla6ModelTemplates.CslaExtensions.Validations;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -29,11 +27,5 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         /// </summary>
         /// <returns>The data transfer object.</returns>
         Dto ToDto();
-
-        /// <summary>
-        /// Updates an editable model from the data transfer object.
-        /// </summary>
-        /// <param name="dto">The data transfer object.</param>
-        void FromDto(Dto dto);
     }
 }

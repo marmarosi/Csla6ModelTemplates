@@ -49,11 +49,13 @@ namespace Csla6ModelTemplates.Models.Simple.View
         //protected override void AddBusinessRules()
         //{
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()
@@ -67,6 +69,25 @@ namespace Csla6ModelTemplates.Models.Simple.View
         //            )
         //        );
         //}
+
+        #endregion
+
+        #region Factory Methods
+
+        /// <summary>
+        /// Gets the specified team details to display.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team view.</returns>
+        public static async Task<SimpleTeamView> Get(
+            IDataPortalFactory factory,
+            string id
+            )
+        {
+            var criteria = new SimpleTeamViewParams(id);
+            return await factory.GetPortal<SimpleTeamView>().FetchAsync(criteria.Decode());
+        }
 
         #endregion
 

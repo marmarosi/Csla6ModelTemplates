@@ -55,7 +55,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #region Data Access
 
-        private void Child_Fetch(
+        [FetchChild]
+        private void Fetch(
             KeyNameOptionDao dao
             )
         {

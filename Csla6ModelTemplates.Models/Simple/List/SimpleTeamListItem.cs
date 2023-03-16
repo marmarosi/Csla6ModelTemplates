@@ -31,15 +31,15 @@ namespace Csla6ModelTemplates.Models.Simple.List
         public static readonly PropertyInfo<string> TeamCodeProperty = RegisterProperty<string>(nameof(TeamCode));
         public string TeamCode
         {
-            get { return GetProperty(TeamCodeProperty); }
-            private set { LoadProperty(TeamCodeProperty, value); }
+            get => GetProperty(TeamCodeProperty);
+            private set => LoadProperty(TeamCodeProperty, value);
         }
 
         public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(nameof(TeamName));
         public string TeamName
         {
-            get { return GetProperty(TeamNameProperty); }
-            private set { LoadProperty(TeamNameProperty, value); }
+            get => GetProperty(TeamNameProperty);
+            private set => LoadProperty(TeamNameProperty, value);
         }
 
         #endregion
@@ -49,11 +49,13 @@ namespace Csla6ModelTemplates.Models.Simple.List
         //protected override void AddBusinessRules()
         //{
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()

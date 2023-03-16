@@ -36,18 +36,18 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Update by Key
+        #region SetValuesByKey
 
         /// <summary>
         /// Updates an editable collection from the data transfer objects.
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="keyName">The name of the key property.</param>
-        /// <param name="itemPortal">The data portal of the items.</param>
-        public void UpdateByKey(
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        public void SetValuesByKey(
             List<Dto> list,
             string keyName,
-            IChildDataPortal<C> itemPortal
+            IChildDataPortalFactory childFactory
             )
         {
             List<int> indeces = Enumerable.Range(0, list.Count).ToList();
@@ -62,12 +62,20 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                     RemoveItem(i);
                 else
                 {
-                    item.FromDto(dto);
+                    item.SetValuesOnBuild(dto, childFactory);
                     indeces.Remove(list.IndexOf(dto));
                 }
             }
-            foreach (int index in indeces)
-                Items.Add(itemPortal.CreateChild(this, list[index]));
+            if (indeces.Count > 0)
+            {
+                var portal = childFactory.GetPortal<C>();
+                foreach (int index in indeces)
+                {
+                    C item = portal.CreateChild();
+                    item.SetValuesOnBuild(list[index], childFactory);
+                    Items.Add(item);
+                }
+            }
         }
 
         private long? GetKeyValue(
@@ -82,18 +90,18 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Update by ID
+        #region SetValuesById
 
         /// <summary>
         /// Updates an editable collection from the data transfer objects.
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
         /// <param name="idName">The name of the identifier property.</param>
-        /// <param name="itemPortal">The data portal of the items.</param>
-        public void UpdateById(
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        public void SetValuesById(
             List<Dto> list,
             string idName,
-            IChildDataPortal<C> itemPortal
+            IChildDataPortalFactory childFactory
             )
         {
             List<int> indeces = Enumerable.Range(0, list.Count).ToList();
@@ -108,12 +116,20 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                     RemoveItem(i);
                 else
                 {
-                    item.FromDto(dto);
+                    item.SetValuesOnBuild(dto, childFactory);
                     indeces.Remove(list.IndexOf(dto));
                 }
             }
-            foreach (int index in indeces)
-                Items.Add(itemPortal.CreateChild(this, list[index]));
+            if (indeces.Count > 0)
+            {
+                var portal = childFactory.GetPortal<C>();
+                foreach (int index in indeces)
+                {
+                    C item = portal.CreateChild();
+                    item.SetValuesOnBuild(list[index], childFactory);
+                    Items.Add(item);
+                }
+            }
         }
 
         private string GeIdtValue(

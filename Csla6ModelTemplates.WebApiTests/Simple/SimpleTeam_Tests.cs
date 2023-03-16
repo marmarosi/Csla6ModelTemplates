@@ -1,5 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Simple.Edit;
-using Csla6ModelTemplates.Models.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,12 +16,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetNewTeam(
-                setup.GetPortal<SimpleTeam>()
-                );
+            ActionResult<SimpleTeamDto> actionResult = await sut.GetNewTeam();
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -47,24 +44,17 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            SimpleTeamDto pristineTeam = null;
-            ActionResult<SimpleTeamDto> actionResult = await Call<SimpleTeamDto>.RetryOnDeadlock(async () =>
+            var pristineTeam = new SimpleTeamDto
             {
-                pristineTeam = new SimpleTeamDto
-                {
-                    TeamId = null,
-                    TeamCode = "T-9001",
-                    TeamName = "Test team number 9001",
-                    Timestamp = null
-                };
-                return await sut.CreateTeam(
-                    pristineTeam,
-                    setup.GetPortal<SimpleTeam>()
-                    );
-            });
+                TeamId = null,
+                TeamCode = "T-9001",
+                TeamName = "Test team number 9001",
+                Timestamp = null
+            };
+            ActionResult<SimpleTeamDto> actionResult = await sut.CreateTeam(pristineTeam);
 
             // Assert
             CreatedResult createdResult = actionResult.Result as CreatedResult;
@@ -90,13 +80,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetTeam(
-                "zXayGQW0bZv",
-                setup.GetPortal<SimpleTeam>()
-                );
+            ActionResult<SimpleTeamDto> actionResult = await sut.GetTeam("zXayGQW0bZv");
 
             // Assert
             OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
@@ -122,34 +109,24 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger);
-            var sutU = new SimpleController(logger);
+            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            SimpleTeamDto pristine = null;
-            ActionResult<SimpleTeamDto> actionResult = await Call<SimpleTeamDto>.RetryOnDeadlock(async () =>
-            {
-                ActionResult<SimpleTeamDto> actionResult = await sutR.GetTeam(
-                    "zXayGQW0bZv",
-                    setup.GetPortal<SimpleTeam>()
-                    );
-                OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-                pristine = okObjectResult.Value as SimpleTeamDto;
+            ActionResult<SimpleTeamDto> actionResultR = await sutR.GetTeam("zXayGQW0bZv");
+            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
+            var pristine = okObjectResultR.Value as SimpleTeamDto;
 
-                pristine.TeamCode = "T-9002";
-                pristine.TeamName = "Test team number 9002";
+            pristine.TeamCode = "T-9002";
+            pristine.TeamName = "Test team number 9002";
 
-                return await sutU.UpdateTeam(
-                    pristine,
-                    setup.GetPortal<SimpleTeam>()
-                    );
-            });
+            ActionResult<SimpleTeamDto> actionResultU = await sutU.UpdateTeam(pristine);
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
+            OkObjectResult okObjectResultU = actionResultU.Result as OkObjectResult;
+            Assert.NotNull(okObjectResultU);
 
-            SimpleTeamDto updated = okObjectResult.Value as SimpleTeamDto;
+            SimpleTeamDto updated = okObjectResultU.Value as SimpleTeamDto;
             Assert.NotNull(updated);
 
             // The team must have new values.
@@ -169,16 +146,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger);
+            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult actionResult = await Run.RetryOnDeadlock(async () =>
-            {
-                return await sut.DeleteTeam(
-                    "rWqG7KpG5Qo",
-                    setup.GetPortal<SimpleTeam>()
-                    );
-            });
+            ActionResult actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");
 
             // Assert
             NoContentResult noContentResult = actionResult as NoContentResult;

@@ -31,15 +31,15 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(c => c.TeamName);
         public string TeamName
         {
-            get { return ReadProperty(TeamNameProperty); }
-            private set { LoadProperty(TeamNameProperty, value); }
+            get => ReadProperty(TeamNameProperty);
+            private set => LoadProperty(TeamNameProperty, value);
         }
 
         public static readonly PropertyInfo<bool> ResultProperty = RegisterProperty<bool>(c => c.Result);
         public bool Result
         {
-            get { return ReadProperty(ResultProperty); }
-            private set { LoadProperty(ResultProperty, value); }
+            get => ReadProperty(ResultProperty);
+            private set => LoadProperty(ResultProperty, value);
         }
 
         #endregion
@@ -66,9 +66,26 @@ namespace Csla6ModelTemplates.Models.Simple.Command
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Renames the specified team.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="dto">The data transer object of the rename team command.</param>
+        /// <returns>True when the team was renamed; otherwise false.</returns>
+        public static async Task<RenameTeam> Execute(
+            IDataPortalFactory factory,
+            RenameTeamDto dto
+            )
+        {
+            return await factory.GetPortal<RenameTeam>().ExecuteAsync(dto);
+        }
+
+        #endregion
+
         #region Data Access
 
-        [Transactional(TransactionalTypes.TransactionScope)]
         [Execute]
         private void Execute(
             RenameTeamDto dto,
@@ -78,8 +95,13 @@ namespace Csla6ModelTemplates.Models.Simple.Command
             // Execute the command.
             TeamId = dto.TeamId;
             TeamName = dto.TeamName;
-            RenameTeamDao dao = new RenameTeamDao(TeamKey ?? 0, TeamName);
-            dal.Execute(dao);
+            Validate();
+
+            using (var transaction = dal.BeginTransaction())
+            {
+                RenameTeamDao dao = new RenameTeamDao(TeamKey ?? 0, TeamName);
+                dal.Execute(dao);
+            }
 
             // Set new data.
             Result = true;
