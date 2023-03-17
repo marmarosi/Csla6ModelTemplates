@@ -8,7 +8,7 @@ namespace Csla6ModelTemplates.Models.Tree.View
     /// Represents a read-only folder node collection.
     /// </summary>
     [Serializable]
-    public class FolderNodeList : ReadOnlyList<FolderNodeList, FolderNode>
+    public class FolderNodes : ReadOnlyList<FolderNodes, FolderNode>
     {
         #region Business Rules
 

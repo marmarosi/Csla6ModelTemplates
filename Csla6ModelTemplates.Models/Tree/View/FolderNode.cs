@@ -56,8 +56,8 @@ namespace Csla6ModelTemplates.Models.Tree.View
             private set => LoadProperty(LevelProperty, value);
         }
 
-        public static readonly PropertyInfo<FolderNodeList> ChildrenProperty = RegisterProperty<FolderNodeList>(nameof(Children));
-        public FolderNodeList Children
+        public static readonly PropertyInfo<FolderNodes> ChildrenProperty = RegisterProperty<FolderNodes>(nameof(Children));
+        public FolderNodes Children
         {
             get => GetProperty(ChildrenProperty);
             private set => LoadProperty(ChildrenProperty, value);
@@ -107,7 +107,7 @@ namespace Csla6ModelTemplates.Models.Tree.View
         [FetchChild]
         private void Fetch(
             FolderNodeDao dao,
-            [Inject] IChildDataPortal<FolderNodeList> itemsPortal
+            [Inject] IChildDataPortal<FolderNodes> itemsPortal
             )
         {
             // Load values from persistent storage.
