@@ -34,7 +34,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             [Inject] IChildDataPortal<Player> itemPortal
             )
         {
-            foreach (PlayerDao item in list)
+            foreach (var item in list)
                 Add(itemPortal.FetchChild(item));
         }
 

@@ -1,68 +1,43 @@
-using Csla;
+﻿using Csla;
 using Csla.Core;
 using Csla.Data;
 using Csla.Rules;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Complex.Edit
+namespace Csla6ModelTemplates.Models.Junction.Edit
 {
     /// <summary>
-    /// Represents an editable player object.
+    /// Represents an editable group-person object.
     /// </summary>
     [Serializable]
-    [ValidationResourceType(typeof(ValidationText), ObjectName = "Player")]
-    public class Player : EditableModel<Player, PlayerDto>
+    [ValidationResourceType(typeof(ValidationText), ObjectName = "GroupPerson")]
+    public class GroupPerson : EditableModel<GroupPerson, GroupPersonDto>
     {
         #region Properties
 
-        public static readonly PropertyInfo<long?> PlayerKeyProperty = RegisterProperty<long?>(nameof(PlayerKey));
-        public long? PlayerKey
+        public static readonly PropertyInfo<long?> PersonKeyProperty = RegisterProperty<long?>(nameof(PersonKey));
+        public long? PersonKey
         {
-            get => GetProperty(PlayerKeyProperty);
-            private set => SetProperty(PlayerKeyProperty, value);
+            get => GetProperty(PersonKeyProperty);
+            private set => LoadProperty(PersonKeyProperty, value);
         }
 
-        public static readonly PropertyInfo<long?> PlayerIdProperty = RegisterProperty<long?>(nameof(PlayerId), RelationshipTypes.PrivateField);
-        public string PlayerId
+        public static readonly PropertyInfo<long?> PersonIdProperty = RegisterProperty<long?>(nameof(PersonId), RelationshipTypes.PrivateField);
+        public string PersonId
         {
-            get => KeyHash.Encode(ID.Player, PlayerKey);
-            set => PlayerKey = KeyHash.Decode(ID.Player, value);
+            get => KeyHash.Encode(ID.Person, PersonKey);
+            set => PersonKey = KeyHash.Decode(ID.Person, value);
         }
 
-        public static readonly PropertyInfo<long?> TeamKeyProperty = RegisterProperty<long?>(nameof(TeamKey));
-        public long? TeamKey
+        public static readonly PropertyInfo<string> PersonNameProperty = RegisterProperty<string>(nameof(PersonName));
+        public string PersonName
         {
-            get => GetProperty(TeamKeyProperty);
-            private set => SetProperty(TeamKeyProperty, value);
-        }
-
-        public static readonly PropertyInfo<long?> TeamIdProperty = RegisterProperty<long?>(nameof(TeamId), RelationshipTypes.PrivateField);
-        public string TeamId
-        {
-            get => KeyHash.Encode(ID.Team, TeamKey);
-            set => TeamKey = KeyHash.Decode(ID.Team, value);
-        }
-
-        public static readonly PropertyInfo<string> PlayerCodeProperty = RegisterProperty<string>(nameof(PlayerCode));
-        [Required]
-        [MaxLength(10)]
-        public string PlayerCode
-        {
-            get => GetProperty(PlayerCodeProperty);
-            set => SetProperty(PlayerCodeProperty, value);
-        }
-
-        public static readonly PropertyInfo<string> PlayerNameProperty = RegisterProperty<string>(nameof(PlayerName));
-        [Required]
-        [MaxLength(100)]
-        public string PlayerName
-        {
-            get => GetProperty(PlayerNameProperty);
-            set => SetProperty(PlayerNameProperty, value);
+            get => GetProperty(PersonNameProperty);
+            private set => LoadProperty(PersonNameProperty, value);
         }
 
         #endregion
@@ -75,14 +50,14 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             // NOTE: DataAnnotation rules is always added with Priority = 0.
             base.AddBusinessRules();
 
-            // Add validation rules.
-            BusinessRules.AddRule(new UniquePlayerCodes(PlayerCodeProperty));
+            //// Add validation rules.
+            BusinessRules.AddRule(new UniquePersonIds(PersonIdProperty));
 
             //// Add authorization rules.
             //BusinessRules.AddRule(
             //    new IsInRole(
             //        AuthorizationActions.WriteProperty,
-            //        PlayerCodeProperty,
+            //        PersonNameProperty,
             //        "Manager"
             //        )
             //    );
@@ -92,7 +67,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(Player),
+        //        typeof(GroupPerson),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -100,10 +75,10 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         //        );
         //}
 
-        private sealed class UniquePlayerCodes : BusinessRule
+        private sealed class UniquePersonIds : BusinessRule
         {
             // Add additional parameters to your rule to the constructor.
-            public UniquePlayerCodes(
+            public UniquePersonIds(
                 IPropertyInfo primaryProperty
                 )
               : base(primaryProperty)
@@ -121,14 +96,14 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
                 IRuleContext context
                 )
             {
-                Player target = (Player)context.Target;
+                GroupPerson target = (GroupPerson)context.Target;
                 if (target.Parent == null)
                     return;
 
-                Team team = (Team)target.Parent.Parent;
-                var count = team.Players.Count(player => player.PlayerCode == target.PlayerCode);
+                Group group = (Group)target.Parent.Parent;
+                var count = group.Persons.Count(gp => gp.PersonId == target.PersonId);
                 if (count > 1)
-                    context.AddErrorResult(ValidationText.Player_PlayerCode_NotUnique);
+                    context.AddErrorResult(ValidationText.GroupPerson_PersonId_NotUnique);
             }
         }
 
@@ -142,7 +117,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         /// <param name="dto">The data transfer object.</param>
         /// <param name="childFactory">The child data portal factory.</param>
         public override void SetValuesOnBuild(
-            PlayerDto dto,
+            GroupPersonDto dto,
             IChildDataPortalFactory childFactory
             )
         {
@@ -158,60 +133,53 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         private void Create()
         {
             // Set values from data transfer object.
-            //LoadProperty(PlayerCodeProperty, "");
+            //LoadProperty(PersonNameProperty, "");
             //BusinessRules.CheckRules();
         }
 
         [FetchChild]
         private void Fetch(
-            PlayerDao dao
+            GroupPersonDao dao
             )
         {
             // Load values from persistent storage.
             using (BypassPropertyChecks)
-                DataMapper.Map(dao, this);
+                DataMapper.Map(dao, this, "GroupKey");
         }
 
         [InsertChild]
         private void Insert(
-            Team parent,
-            [Inject] IPlayerDal dal
+            Group parent,
+            [Inject] IGroupPersonDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
-                TeamKey = parent.TeamKey;
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
+                var dao = Copy.PropertiesFrom(this).ToNew<GroupPersonDao>();
+                dao.GroupKey = parent.GroupKey;
                 dal.Insert(dao);
 
                 // Set new data.
-                PlayerKey = dao.PlayerKey;
+                PersonKey = dao.PersonKey;
             }
             //FieldManager.UpdateChildren(this);
         }
 
         [UpdateChild]
         private void Update(
-            Team parent,
-            [Inject] IPlayerDal dal
+            Group parent,
+            [Inject] IGroupPersonDal dal
             )
         {
             // Update values in persistent storage.
-            using (BypassPropertyChecks)
-            {
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
-                dal.Update(dao);
-
-                // Set new data.
-            }
-            //FieldManager.UpdateChildren(this);
+            throw new NotImplementedException();
         }
 
         [DeleteSelfChild]
         private void Child_DeleteSelf(
-            Team parent,
-            [Inject] IPlayerDal dal
+            Group parent,
+            [Inject] IGroupPersonDal dal
             )
         {
             // Delete values from persistent storage.
@@ -219,8 +187,9 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             //Items.Clear();
             //FieldManager.UpdateChildren(this);
 
-            PlayerCriteria criteria = new PlayerCriteria(PlayerKey);
-            dal.Delete(criteria);
+            GroupPersonDao dao = Copy.PropertiesFrom(this).Omit("PersonId").ToNew<GroupPersonDao>();
+            dao.GroupKey = parent.GroupKey;
+            dal.Delete(dao);
         }
 
         #endregion

@@ -104,13 +104,13 @@ namespace Csla6ModelTemplates.Models.Complex.View
         private void Fetch(
             TeamViewCriteria criteria,
             [Inject] ITeamViewDal dal,
-            [Inject] IChildDataPortal<PlayerViews> itemPortal
+            [Inject] IChildDataPortal<PlayerViews> itemsPortal
             )
         {
             // Load values from persistent storage.
             TeamViewDao dao = dal.Fetch(criteria);
             DataMapper.Map(dao, this, "Players");
-            Players = itemPortal.FetchChild(dao.Players);
+            Players = itemsPortal.FetchChild(dao.Players);
         }
 
         #endregion

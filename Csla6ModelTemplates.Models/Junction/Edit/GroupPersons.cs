@@ -1,14 +1,14 @@
-using Csla;
-using Csla6ModelTemplates.Contracts.Complex.List;
+﻿using Csla;
+using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Complex.List
+namespace Csla6ModelTemplates.Models.Junction.Edit
 {
     /// <summary>
-    /// Represents a read-only player info collection.
+    /// Represents an editable group-person collection.
     /// </summary>
     [Serializable]
-    public class PlayerInfos : ReadOnlyList<PlayerInfos, PlayerInfo>
+    public class GroupPersons : EditableList<GroupPersons, GroupPerson, GroupPersonDto>
     {
         #region Business Rules
 
@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.Models.Complex.List
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(PlayerInfos),
+        //        typeof(GroupPersons),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -30,13 +30,12 @@ namespace Csla6ModelTemplates.Models.Complex.List
 
         [FetchChild]
         private void Fetch(
-            List<PlayerInfoDao> list,
-            [Inject] IChildDataPortal<PlayerInfo> itemPortal
+            List<GroupPersonDao> list,
+            [Inject] IChildDataPortal<GroupPerson> itemPortal
             )
         {
-            // Load values from persistent storage.
             foreach (var item in list)
-                Items.Add(itemPortal.FetchChild(item));
+                Add(itemPortal.FetchChild(item));
         }
 
         #endregion

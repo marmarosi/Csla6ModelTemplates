@@ -1,59 +1,59 @@
-using Csla;
+﻿using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Models.Complex.Edit
+namespace Csla6ModelTemplates.Models.Junction.Edit
 {
     /// <summary>
-    /// Represents an editable team object.
+    /// Represents an editable group object.
     /// </summary>
     [Serializable]
-    [ValidationResourceType(typeof(ValidationText), ObjectName = "Team")]
-    public class Team : EditableModel<Team, TeamDto>
+    [ValidationResourceType(typeof(ValidationText), ObjectName = "Group")]
+    public class Group : EditableModel<Group, GroupDto>
     {
         #region Properties
 
-        public static readonly PropertyInfo<long?> TeamKeyProperty = RegisterProperty<long?>(nameof(TeamKey));
-        public long? TeamKey
+        public static readonly PropertyInfo<long?> GroupKeyProperty = RegisterProperty<long?>(nameof(GroupKey));
+        public long? GroupKey
         {
-            get => GetProperty(TeamKeyProperty);
-            private set => SetProperty(TeamKeyProperty, value);
+            get => GetProperty(GroupKeyProperty);
+            private set => SetProperty(GroupKeyProperty, value);
         }
 
-        public static readonly PropertyInfo<long?> TeamIdProperty = RegisterProperty<long?>(nameof(TeamId), RelationshipTypes.PrivateField);
-        public string TeamId
+        public static readonly PropertyInfo<long?> GroupIdProperty = RegisterProperty<long?>(nameof(GroupId), RelationshipTypes.PrivateField);
+        public string GroupId
         {
-            get => KeyHash.Encode(ID.Team, TeamKey);
-            set => TeamKey = KeyHash.Decode(ID.Team, value);
+            get => KeyHash.Encode(ID.Group, GroupKey);
+            set => GroupKey = KeyHash.Decode(ID.Group, value);
         }
 
-        public static readonly PropertyInfo<string> TeamCodeProperty = RegisterProperty<string>(nameof(TeamCode));
+        public static readonly PropertyInfo<string> GroupCodeProperty = RegisterProperty<string>(nameof(GroupCode));
         [Required]
         [MaxLength(10)]
-        public string TeamCode
+        public string GroupCode
         {
-            get => GetProperty(TeamCodeProperty);
-            set => SetProperty(TeamCodeProperty, value);
+            get => GetProperty(GroupCodeProperty);
+            set => SetProperty(GroupCodeProperty, value);
         }
 
-        public static readonly PropertyInfo<string> TeamNameProperty = RegisterProperty<string>(nameof(TeamName));
+        public static readonly PropertyInfo<string> GroupNameProperty = RegisterProperty<string>(nameof(GroupName));
         [Required]
         [MaxLength(100)]
-        public string TeamName
+        public string GroupName
         {
-            get => GetProperty(TeamNameProperty);
-            set => SetProperty(TeamNameProperty, value);
+            get => GetProperty(GroupNameProperty);
+            set => SetProperty(GroupNameProperty, value);
         }
 
-        public static readonly PropertyInfo<Players> PlayersProperty = RegisterProperty<Players>(nameof(Players));
-        public Players Players
+        public static readonly PropertyInfo<GroupPersons> GroupPersonsProperty = RegisterProperty<GroupPersons>(nameof(Persons));
+        public GroupPersons Persons
         {
-            get => GetProperty(PlayersProperty);
-            private set => LoadProperty(PlayersProperty, value);
+            get => GetProperty(GroupPersonsProperty);
+            private set => LoadProperty(GroupPersonsProperty, value);
         }
 
         public static readonly PropertyInfo<DateTimeOffset?> TimestampProperty = RegisterProperty<DateTimeOffset?>(nameof(Timestamp));
@@ -74,13 +74,13 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         //    base.AddBusinessRules();
 
         //    // Add validation rules.
-        //    BusinessRules.AddRule(new Required(TeamNameProperty));
+        //    BusinessRules.AddRule(new Required(GroupNameProperty));
 
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
         //        new IsInRole(
-        //            AuthorizationActions.ReadProperty,
-        //            TeamNameProperty,
+        //            AuthorizationActions.WriteProperty,
+        //            GroupNameProperty,
         //            "Manager"
         //            )
         //        );
@@ -90,7 +90,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(Team),
+        //        typeof(Group),
         //        new IsInRole(
         //            AuthorizationActions.EditObject,
         //            "Manager"
@@ -108,13 +108,13 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         /// <param name="dto">The data transfer object.</param>
         /// <param name="childFactory">The child data portal factory.</param>
         public override void SetValuesOnBuild(
-            TeamDto dto,
+            GroupDto dto,
             IChildDataPortalFactory childFactory
             )
         {
-            DataMapper.Map(dto, this, "Players");
+            DataMapper.Map(dto, this, "Persons");
             BusinessRules.CheckRules();
-            Players.SetValuesById(dto.Players, "PlayerId", childFactory);
+            Persons.SetValuesById(dto.Persons, "PersonId", childFactory);
         }
 
         #endregion
@@ -122,30 +122,30 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         #region Factory Methods
 
         /// <summary>
-        /// Gets a new team to edit.
+        /// Gets a new group to edit.
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
-        /// <returns>The new team.</returns>
-        public static async Task<Team> New(
+        /// <returns>The new group.</returns>
+        public static async Task<Group> New(
             IDataPortalFactory factory
             )
         {
-            return await factory.GetPortal<Team>().CreateAsync();
+            return await factory.GetPortal<Group>().CreateAsync();
         }
 
         /// <summary>
-        /// Gets the specified team to edit.
+        /// Gets an existing editable group instance.
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
-        /// <param name="id">The identifier of the team.</param>
-        /// <returns>The requested team.</returns>
-        public static async Task<Team> Get(
+        /// <param name="id">The identifier of the group.</param>
+        /// <returns>The requested editable group instance.</returns>
+        public static async Task<Group> Get(
             IDataPortalFactory factory,
             string id
             )
         {
-            var criteria = new TeamParams(id);
-            return await factory.GetPortal<Team>().FetchAsync(criteria.Decode());
+            var criteria = new GroupParams(id);
+            return await factory.GetPortal<Group>().FetchAsync(criteria.Decode());
         }
 
         /// <summary>
@@ -155,32 +155,32 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         /// <param name="childFactory">The child data portal factory.</param>
         /// <param name="dto"></param>
         /// <returns>The team built.</returns>
-        public static async Task<Team> Build(
+        public static async Task<Group> Build(
             IDataPortalFactory factory,
             IChildDataPortalFactory childFactory,
-            TeamDto dto
+            GroupDto dto
             )
         {
-            long? teamKey = KeyHash.Decode(ID.Team, dto.TeamId);
-            Team team = teamKey.HasValue ?
-                await Get(factory, dto.TeamId) :
+            long? groupKey = KeyHash.Decode(ID.Group, dto.GroupId);
+            Group team = groupKey.HasValue ?
+                await Get(factory, dto.GroupId) :
                 await New(factory);
             team.SetValuesOnBuild(dto, childFactory);
             return team;
         }
 
         /// <summary>
-        /// Deletes the specified team.
+        /// Deletes an existing group.
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
-        /// <param name="id">The identifier of the team.</param>
+        /// <param name="id">The identifier of the group.</param>
         public static async Task Delete(
             IDataPortalFactory factory,
             string id
             )
         {
-            var criteria = new TeamParams(id);
-            await factory.GetPortal<Team>().DeleteAsync(criteria.Decode());
+            var criteria = new GroupParams(id);
+            await factory.GetPortal<Group>().DeleteAsync(criteria.Decode());
         }
 
         #endregion
@@ -190,34 +190,34 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [Create]
         [RunLocal]
         private void Create(
-            [Inject] IChildDataPortal<Players> itemsPortal
+            [Inject] IChildDataPortal<GroupPersons> itemsPortal
             )
         {
             // Load default values.
-            Players = itemsPortal.CreateChild();
-            //LoadProperty(TeamCodeProperty, "");
+            Persons = itemsPortal.CreateChild();
+            //LoadProperty(GroupCodeProperty, "");
             //BusinessRules.CheckRules();
         }
 
         [Fetch]
         private void Fetch(
-            TeamCriteria criteria,
-            [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemsPortal
+            GroupCriteria criteria,
+            [Inject] IGroupDal dal,
+            [Inject] IChildDataPortal<GroupPersons> itemsPortal
             )
         {
             // Load values from persistent storage.
-            TeamDao dao = dal.Fetch(criteria);
+            GroupDao dao = dal.Fetch(criteria);
             using (BypassPropertyChecks)
             {
-                DataMapper.Map(dao, this, "Players");
-                Players = itemsPortal.FetchChild(dao.Players);
+                DataMapper.Map(dao, this, "Persons");
+                Persons = itemsPortal.FetchChild(dao.Persons);
             }
         }
 
         [Insert]
         protected void Insert(
-            [Inject] ITeamDal dal
+            [Inject] IGroupDal dal
             )
         {
             // Insert values into persistent storage.
@@ -225,11 +225,11 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             {
                 using (BypassPropertyChecks)
                 {
-                    var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
+                    var dao = Copy.PropertiesFrom(this).Omit("Persons").ToNew<GroupDao>();
                     dal.Insert(dao);
 
                     // Set new data.
-                    TeamKey = dao.TeamKey;
+                    GroupKey = dao.GroupKey;
                     Timestamp = dao.Timestamp;
                 }
                 FieldManager.UpdateChildren(this);
@@ -239,7 +239,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [Update]
         protected void Update(
-            [Inject] ITeamDal dal
+            [Inject] IGroupDal dal
             )
         {
             // Update values in persistent storage.
@@ -249,7 +249,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
                 {
                     using (BypassPropertyChecks)
                     {
-                        var dao = Copy.PropertiesFrom(this).Omit("Players").ToNew<TeamDao>();
+                        var dao = Copy.PropertiesFrom(this).Omit("Persons").ToNew<GroupDao>();
                         dal.Update(dao);
 
                         // Set new data.
@@ -263,28 +263,28 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [DeleteSelf]
         protected void DeleteSelf(
-            [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemPortal
+            [Inject] IGroupDal dal,
+            [Inject] IChildDataPortal<GroupPersons> itemPortal
             )
         {
             using (BypassPropertyChecks)
-                Delete(new TeamCriteria(TeamKey), dal, itemPortal);
+                Delete(new GroupCriteria(GroupKey), dal, itemPortal);
         }
 
         [Delete]
         protected void Delete(
-            TeamCriteria criteria,
-            [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemPortal
+            GroupCriteria criteria,
+            [Inject] IGroupDal dal,
+            [Inject] IChildDataPortal<GroupPersons> itemPortal
             )
         {
             // Delete values from persistent storage.
             using (var transaction = dal.BeginTransaction())
             {
-                if (!TeamKey.HasValue)
+                if (!GroupKey.HasValue)
                     Fetch(criteria, dal, itemPortal);
 
-                Players.Clear();
+                Persons.Clear();
                 FieldManager.UpdateChildren(this);
 
                 dal.Delete(criteria);

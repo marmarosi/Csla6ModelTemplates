@@ -34,7 +34,7 @@ namespace Csla6ModelTemplates.Models.Complex.Set
             [Inject] IChildDataPortal<TeamSetPlayer> childPortal
             )
         {
-            foreach (TeamSetPlayerDao item in list)
+            foreach (var item in list)
                 Add(childPortal.FetchChild(item));
         }
 
