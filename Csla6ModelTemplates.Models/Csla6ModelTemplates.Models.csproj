@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <Folder Include="Arrangement\LineUp\" />
-    <Folder Include="Arrangement\Pagination\" />
   </ItemGroup>
 
 </Project>
