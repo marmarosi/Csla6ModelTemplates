@@ -1,14 +1,14 @@
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
 using Csla6ModelTemplates.CslaExtensions.Models;
 
-namespace Csla6ModelTemplates.Models.Simple.List
+namespace Csla6ModelTemplates.Models.Arrangement.Sorting
 {
     /// <summary>
-    /// Represents a read-only team collection.
+    /// Represents a read-only sorted team collection.
     /// </summary>
     [Serializable]
-    public class SimpleTeamList : ReadOnlyList<SimpleTeamList, SimpleTeamListItem>
+    public class SortedTeamList : ReadOnlyList<SortedTeamList, SortedTeamListItem>
     {
         #region Business Rules
 
@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.Models.Simple.List
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamList),
+        //        typeof(SortedTeamList),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -29,17 +29,17 @@ namespace Csla6ModelTemplates.Models.Simple.List
         #region Factory Methods
 
         /// <summary>
-        /// Gets a list of teams that matches the criteria.
+        /// Gets a read-only sorted team collection that matches the criteria.
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
-        /// <param name="criteria">The criteria of the team list.</param>
-        /// <returns>The requested team list.</returns>
-        public static async Task<SimpleTeamList> Get(
+        /// <param name="criteria">The criteria of the read-only team collection.</param>
+        /// <returns>The requested read-only sorted team collection.</returns>
+        public static async Task<SortedTeamList> Get(
             IDataPortalFactory factory,
-            SimpleTeamListCriteria criteria
+            SortedTeamListCriteria criteria
             )
         {
-            return await factory.GetPortal<SimpleTeamList>().FetchAsync(criteria);
+            return await factory.GetPortal<SortedTeamList>().FetchAsync(criteria);
         }
 
         #endregion
@@ -48,15 +48,15 @@ namespace Csla6ModelTemplates.Models.Simple.List
 
         [Fetch]
         private void Fetch(
-            SimpleTeamListCriteria criteria,
-            [Inject] ISimpleTeamListDal dal,
-            [Inject] IChildDataPortal<SimpleTeamListItem> itemPortal
+            SortedTeamListCriteria criteria,
+            [Inject] ISortedTeamListDal dal,
+            [Inject] IChildDataPortal<SortedTeamListItem> itemPortal
             )
         {
             // Load values from persistent storage.
             using (LoadListMode)
             {
-                List<SimpleTeamListItemDao> list = dal.Fetch(criteria);
+                List<SortedTeamListItemDao> list = dal.Fetch(criteria);
                 foreach (var item in list)
                     Add(itemPortal.FetchChild(item));
             }
