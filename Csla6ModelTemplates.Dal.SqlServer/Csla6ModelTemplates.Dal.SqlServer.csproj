@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Csla6ModelTemplates.Dal\Csla6ModelTemplates.Dal.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Junction\Edit\" />
+  </ItemGroup>
+
 </Project>

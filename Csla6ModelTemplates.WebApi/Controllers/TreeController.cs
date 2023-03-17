@@ -37,17 +37,17 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <summary>
         /// Gets the specified folder tree.
         /// </summary>
-        /// <param name="rootId">The identifier of the root folder.</param>
+        /// <param name="id">The identifier of the root folder.</param>
         /// <returns>The requested folder tree.</returns>
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<FolderNodeDto>> GetFolderTree(
-            [FromQuery] string rootId
+            [FromQuery] string id
             )
         {
             try
             {
-                var tree = await FolderTree.Get(Factory, rootId);
+                var tree = await FolderTree.Get(Factory, id);
                 return Ok(tree.ToDto<FolderNodeDto>());
             }
             catch (Exception ex)

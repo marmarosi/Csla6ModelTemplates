@@ -36,7 +36,7 @@ namespace Csla6ModelTemplates.Models.Tree.View
         {
             using (LoadListMode)
             {
-                foreach (FolderNodeDao item in list)
+                foreach (var item in list)
                     Add(childPortal.FetchChild(item));
             }
         }

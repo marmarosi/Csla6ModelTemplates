@@ -35,7 +35,7 @@ namespace Csla6ModelTemplates.Models.Complex.Command
             )
         {
             // Load values from persistent storage.
-            foreach (CountTeamsResultDao item in list)
+            foreach (var item in list)
                 Items.Add(itemPortal.FetchChild(item));
         }
 
