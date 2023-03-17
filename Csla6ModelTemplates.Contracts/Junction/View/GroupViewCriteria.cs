@@ -9,10 +9,10 @@
         public string GroupId { get; set; }
 
         public GroupViewParams(
-            string GroupId
+            string groupId
             )
         {
-            this.GroupId = GroupId;
+            GroupId = groupId;
         }
 
         public GroupViewCriteria Decode()
@@ -30,6 +30,6 @@
     [Serializable]
     public class GroupViewCriteria
     {
-        public long GroupKey { get; set; }
+        public long? GroupKey { get; set; }
     }
 }
