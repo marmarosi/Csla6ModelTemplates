@@ -15,8 +15,4 @@
     <ProjectReference Include="..\Csla6ModelTemplates.Dal\Csla6ModelTemplates.Dal.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Arrangement\LineUp\" />
-  </ItemGroup>
-
 </Project>
