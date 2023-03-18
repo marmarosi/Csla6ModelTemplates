@@ -13,11 +13,13 @@
     <PackageReference Include="Csla" Version="6.2.2" />
     <PackageReference Include="Csla.AspNetCore" Version="6.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Csla6ModelTemplates.CslaExtensions\Csla6ModelTemplates.CslaExtensions.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.SqlServer\Csla6ModelTemplates.Dal.SqlServer.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Models\Csla6ModelTemplates.Models.csproj" />
   </ItemGroup>
 
 </Project>
