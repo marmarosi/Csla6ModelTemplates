@@ -2,14 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>Csla6ModelTemplates.Endpoints.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Ardalis.ApiEndpoints" Version="4.0.1" />
     <PackageReference Include="Csla" Version="6.2.2" />
     <PackageReference Include="Csla.AspNetCore" Version="6.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Csla6ModelTemplates.CslaExtensions\Csla6ModelTemplates.CslaExtensions.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.SqlServer\Csla6ModelTemplates.Dal.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>
