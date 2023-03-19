@@ -38,9 +38,7 @@ builder.Services.AddSwaggerGen(o =>
             )
         }
     );
-    string xmlFile = $"{builder.Environment.ApplicationName}.xml";
-    string xmlPath = Path.Combine(builder.Environment.ContentRootPath, xmlFile);
-    o.IncludeXmlComments(xmlPath, true);
+    o.EnableAnnotations();
 });
 
 // Configure data access layer.

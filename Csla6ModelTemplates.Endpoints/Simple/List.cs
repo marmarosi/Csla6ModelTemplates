@@ -49,7 +49,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
                 "}<br>" +
                 "Result: SimpleTeamListItemDto[]",
             OperationId = "SimpleTeam.List",
-            Tags = new[] { "Simple Endpoints" })
+            Tags = new[] { "Simple" })
         ]
         public override async Task<ActionResult<IList<SimpleTeamListItemDto>>> HandleAsync(
             [FromQuery] SimpleTeamListCriteria criteria,

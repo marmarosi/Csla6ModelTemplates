@@ -1,7 +1,7 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.Edit;
-using Csla6ModelTemplates.Models.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.Models.Simple.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
@@ -9,12 +9,12 @@ using System.Net.Mime;
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
     /// <summary>
-    /// Gets a new team to edit.
+    /// Gets the specified team set to edit.
     /// </summary>
     [Route(Routes.Simple)]
-    public class New : EndpointBaseAsync
-        .WithoutRequest
-        .WithActionResult<SimpleTeamDto>
+    public class ReadSet : EndpointBaseAsync
+        .WithRequest<SimpleTeamSetCriteria>
+        .WithActionResult<IList<SimpleTeamSetItemDto>>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -24,8 +24,8 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// </summary>
         /// <param name="logger">The application logging service.</param>
         /// <param name="factory">The data portal factory.</param>
-        public New(
-            ILogger<New> logger,
+        public ReadSet(
+            ILogger<ReadSet> logger,
             IDataPortalFactory factory
             )
         {
@@ -34,27 +34,32 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         }
 
         /// <summary>
-        /// Gets a new team to edit.
+        /// Gets the specified team set to edit.
         /// </summary>
+        /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A new team..</returns>
-        [HttpGet("new")]
+        /// <returns>The requested team set.</returns>
+        [HttpGet("set")]
         [Produces(MediaTypeNames.Application.Json)]
         [SwaggerOperation(
-            Summary = "Gets a new team to edit.",
-            Description = "Gets a new team to edit.<br>" +
-                "Result: SimpleTeamDto",
-            OperationId = "SimpleTeam.New",
+            Summary = "Gets the specified team set to edit.",
+            Description = "Gets the specified team set to edit.<br>" +
+                "Criteria:<br>{<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;teamName: string<br>" +
+                "}<br>" +
+                "Result: SimpleTeamSetItemDto[]",
+            OperationId = "SimpleTeamSet.Read",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<SimpleTeamDto>> HandleAsync(
+        public override async Task<ActionResult<IList<SimpleTeamSetItemDto>>> HandleAsync(
+            [FromQuery] SimpleTeamSetCriteria criteria,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                var team = await SimpleTeam.New(Factory);
-                return Ok(team.ToDto());
+                var teams = await SimpleTeamSet.Get(Factory, criteria);
+                return Ok(teams.ToDto());
             }
             catch (Exception ex)
             {

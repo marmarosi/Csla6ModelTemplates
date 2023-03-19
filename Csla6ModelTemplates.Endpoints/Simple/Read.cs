@@ -49,7 +49,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
                 "}<br>" +
                 "Result: SimpleTeamDto",
             OperationId = "SimpleTeam.Read",
-            Tags = new[] { "Simple Endpoints" })
+            Tags = new[] { "Simple" })
         ]
         public override async Task<ActionResult<SimpleTeamDto>> HandleAsync(
             string id,
