@@ -1,0 +1,75 @@
+using Ardalis.ApiEndpoints;
+using Csla;
+using Csla6ModelTemplates.Contracts.Arrangement.Full;
+using Csla6ModelTemplates.Dal.Contracts;
+using Csla6ModelTemplates.Models.Arrangement.Full;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
+
+namespace Csla6ModelTemplates.Endpoints.Arrangement
+{
+    /// <summary>
+    /// Gets the specified page of sorted teams.
+    /// </summary>
+    [Route(Routes.Arrangement)]
+    public class Full : EndpointBaseAsync
+        .WithRequest<ArrangedTeamListCriteria>
+        .WithActionResult<IPaginatedList<ArrangedTeamListItemDto>>
+    {
+        internal ILogger Logger { get; private set; }
+        internal IDataPortalFactory Factory { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of the endpoint.
+        /// </summary>
+        /// <param name="logger">The application logging service.</param>
+        /// <param name="factory">The data portal factory.</param>
+        public Full(
+            ILogger<Full> logger,
+            IDataPortalFactory factory
+            )
+        {
+            Logger = logger;
+            Factory = factory;
+        }
+
+        /// <summary>
+        /// Gets the specified page of sorted teams.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team list.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The requested page of the sorted team list.</returns>
+        [HttpGet("full")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [SwaggerOperation(
+            Summary = "Gets the specified page of sorted teams.",
+            Description = "Gets the specified page of sorted teams.<br>" +
+                "Criteria:<br>{<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;teamName: string,<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;sortBy: string,<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;sortDirection: ascending | descending,<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;pageIndex: number,<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;pageSize: number<br>" +
+                "}<br>" +
+                "Result: ArrangedTeamListItemDto[]",
+            OperationId = "ArrangedTeam.List",
+            Tags = new[] { "Arrangement" })
+        ]
+        public override async Task<ActionResult<IPaginatedList<ArrangedTeamListItemDto>>> HandleAsync(
+            [FromQuery] ArrangedTeamListCriteria criteria,
+            CancellationToken cancellationToken = default
+            )
+        {
+            try
+            {
+                var list = await ArrangedTeamList.Get(Factory, criteria);
+                return Ok(list.ToPaginatedDto<ArrangedTeamListItemDto>());
+            }
+            catch (Exception ex)
+            {
+                return Helper.HandleError(this, Logger, ex);
+            }
+        }
+    }
+}

@@ -76,7 +76,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         {
             try
             {
-                PaginatedTeamList list = await PaginatedTeamList.Get(Factory, criteria);
+                var list = await PaginatedTeamList.Get(Factory, criteria);
                 return Ok(list.ToDto<PaginatedList<PaginatedTeamListItemDto>>());
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         {
             try
             {
-                ArrangedTeamList list = await ArrangedTeamList.Get(Factory, criteria);
+                var list = await ArrangedTeamList.Get(Factory, criteria);
                 return Ok(list.ToDto<PaginatedList<ArrangedTeamListItemDto>>());
             }
             catch (Exception ex)
