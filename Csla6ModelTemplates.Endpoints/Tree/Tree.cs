@@ -1,0 +1,70 @@
+using Ardalis.ApiEndpoints;
+using Csla;
+using Csla6ModelTemplates.Contracts.Tree.View;
+using Csla6ModelTemplates.Models.Tree.View;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
+
+namespace Csla6ModelTemplates.Endpoints.Tree
+{
+    /// <summary>
+    /// Gets the specified folder tree.
+    /// </summary>
+    [Route(Routes.Tree)]
+    public class Tree : EndpointBaseAsync
+        .WithRequest<string>
+        .WithActionResult<FolderNodeDto>
+    {
+        internal ILogger Logger { get; private set; }
+        internal IDataPortalFactory Factory { get; private set; }
+
+        /// <summary>
+        /// Creates a new instance of the endpoint.
+        /// </summary>
+        /// <param name="logger">The application logging service.</param>
+        /// <param name="factory">The data portal factory.</param>
+        public Tree(
+            ILogger<Tree> logger,
+            IDataPortalFactory factory
+            )
+        {
+            Logger = logger;
+            Factory = factory;
+        }
+
+        /// <summary>
+        /// Gets the specified folder tree.
+        /// </summary>
+        /// <param name="id">The identifier of the root folder.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The requested folder tree.</returns>
+        [HttpGet("{id}")]
+        [Produces(MediaTypeNames.Application.Json)]
+        [SwaggerOperation(
+            Summary = "Gets the specified folder tree.",
+            Description = "Gets the specified folder tree.<br>" +
+                "Criteria:<br>{<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;rootId: string<br>" +
+                "<br>}<br>" +
+                "Result: FolderNodeDto",
+            OperationId = "FolderTree.View",
+            Tags = new[] { "Tree" })
+        ]
+        public override async Task<ActionResult<FolderNodeDto>> HandleAsync(
+            string id,
+            CancellationToken cancellationToken = default
+            )
+        {
+            try
+            {
+                var tree = await FolderTree.Get(Factory, id);
+                return Ok(tree.ToDto<FolderNodeDto>());
+            }
+            catch (Exception ex)
+            {
+                return Helper.HandleError(this, Logger, ex);
+            }
+        }
+    }
+}

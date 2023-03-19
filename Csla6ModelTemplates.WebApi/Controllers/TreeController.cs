@@ -1,4 +1,4 @@
-﻿using Csla;
+using Csla;
 using Csla6ModelTemplates.Contracts.Tree.View;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Tree.Choice;
@@ -42,7 +42,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<FolderNodeDto>> GetFolderTree(
-            [FromQuery] string id
+            string id
             )
         {
             try
