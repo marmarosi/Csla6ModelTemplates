@@ -1,19 +1,16 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.Edit;
-using Csla6ModelTemplates.Models.Simple.Edit;
+using Csla6ModelTemplates.Models.Complex.Edit;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
-namespace Csla6ModelTemplates.Endpoints.Simple
+namespace Csla6ModelTemplates.Endpoints.Complex
 {
     /// <summary>
     /// Deletes the specified team.
     /// </summary>
-    [Route(Routes.Simple)]
+    [Route(Routes.Complex)]
     public class Delete : EndpointBaseAsync
         .WithRequest<string>
         .WithoutResult
@@ -49,8 +46,8 @@ namespace Csla6ModelTemplates.Endpoints.Simple
                 "Criteria:<br>{<br>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;teamId: string<br>" +
                 "}",
-            OperationId = "SimpleTeam.Delete",
-            Tags = new[] { "Simple" })
+            OperationId = "Team.Delete",
+            Tags = new[] { "Complex" })
         ]
         public override async Task<ActionResult> HandleAsync(
             string id,
@@ -61,7 +58,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             {
                 return await Run.RetryOnDeadlock(async () =>
                 {
-                    await SimpleTeam.Delete(Factory, id);
+                    await Team.Delete(Factory, id);
                     return NoContent();
                 });
             }

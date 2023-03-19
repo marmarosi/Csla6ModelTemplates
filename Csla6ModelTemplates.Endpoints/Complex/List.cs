@@ -1,20 +1,20 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.List;
-using Csla6ModelTemplates.Models.Simple.List;
+using Csla6ModelTemplates.Contracts.Complex.List;
+using Csla6ModelTemplates.Models.Complex.List;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
-namespace Csla6ModelTemplates.Endpoints.Simple
+namespace Csla6ModelTemplates.Endpoints.Complex
 {
     /// <summary>
     /// Gets a list of teams.
     /// </summary>
-    [Route(Routes.Simple)]
+    [Route(Routes.Complex)]
     public class List : EndpointBaseAsync
-        .WithRequest<SimpleTeamListCriteria>
-        .WithActionResult<IList<SimpleTeamListItemDto>>
+        .WithRequest<TeamListCriteria>
+        .WithActionResult<IList<TeamListItemDto>>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -45,21 +45,21 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             Summary = "Gets a list of teams.",
             Description = "Gets a list of teams.<br>" +
                 "Criteria:<br>{<br>" +
-                "&nbsp;&nbsp;&nbsp;&nbsp;TeamName: string<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;teamName: string<br>" +
                 "}<br>" +
-                "Result: SimpleTeamListItemDto[]",
-            OperationId = "SimpleTeam.List",
-            Tags = new[] { "Simple" })
+                "Result: TeamListItemDto[]",
+            OperationId = "Team.List",
+            Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamListItemDto>>> HandleAsync(
-            [FromQuery] SimpleTeamListCriteria criteria,
+        public override async Task<ActionResult<IList<TeamListItemDto>>> HandleAsync(
+            [FromQuery] TeamListCriteria criteria,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                var teams = await SimpleTeamList.Get(Factory, criteria);
-                return Ok(teams.ToDto<SimpleTeamListItemDto>());
+                var teams = await TeamList.Get(Factory, criteria);
+                return Ok(teams.ToDto<TeamListItemDto>());
             }
             catch (Exception ex)
             {

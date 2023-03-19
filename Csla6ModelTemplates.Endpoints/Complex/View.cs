@@ -1,22 +1,20 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts;
-using Csla6ModelTemplates.Contracts.Simple.Edit;
-using Csla6ModelTemplates.Models.Simple.Edit;
+using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.Models.Complex.View;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
-namespace Csla6ModelTemplates.Endpoints.Simple
+namespace Csla6ModelTemplates.Endpoints.Complex
 {
     /// <summary>
-    /// Deletes the specified team.
+    /// Gets the specified team details to display.
     /// </summary>
-    [Route(Routes.Simple)]
-    public class Delete : EndpointBaseAsync
+    [Route(Routes.Complex)]
+    public class View : EndpointBaseAsync
         .WithRequest<string>
-        .WithoutResult
+        .WithActionResult<TeamViewDto>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -26,8 +24,8 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// </summary>
         /// <param name="logger">The application logging service.</param>
         /// <param name="factory">The data portal factory.</param>
-        public Delete(
-            ILogger<Delete> logger,
+        public View(
+            ILogger<View> logger,
             IDataPortalFactory factory
             )
         {
@@ -36,34 +34,32 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         }
 
         /// <summary>
-        /// Deletes the specified team.
+        /// Gets the specified team details to display.
         /// </summary>
         /// <param name="id">The identifier of the team.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        [HttpDelete("{id}")]
+        /// <returns>The requested team view.</returns>
+        [HttpGet("{id}/view")]
         [Produces(MediaTypeNames.Application.Json)]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
         [SwaggerOperation(
-            Summary = "Deletes the specified team.",
-            Description = "Deletes the specified team.<br>" +
+            Summary = "Gets the specified team details to display.",
+            Description = "Gets the specified team details to display.<br>" +
                 "Criteria:<br>{<br>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;teamId: string<br>" +
-                "}",
-            OperationId = "SimpleTeam.Delete",
-            Tags = new[] { "Simple" })
+                "}<br>" +
+                "Result: TeamViewDto",
+            OperationId = "Team.View",
+            Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult> HandleAsync(
+        public override async Task<ActionResult<TeamViewDto>> HandleAsync(
             string id,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Run.RetryOnDeadlock(async () =>
-                {
-                    await SimpleTeam.Delete(Factory, id);
-                    return NoContent();
-                });
+                var team = await TeamView.Get(Factory, id);
+                return Ok(team.ToDto<TeamViewDto>());
             }
             catch (Exception ex)
             {

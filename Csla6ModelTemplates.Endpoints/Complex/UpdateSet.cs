@@ -1,20 +1,20 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.Set;
-using Csla6ModelTemplates.Models.Simple.Set;
+using Csla6ModelTemplates.Contracts.Complex.Set;
+using Csla6ModelTemplates.Models.Complex.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
-namespace Csla6ModelTemplates.Endpoints.Simple
+namespace Csla6ModelTemplates.Endpoints.Complex
 {
     /// <summary>
     /// Updates the specified team set.
     /// </summary>
-    [Route(Routes.Simple)]
+    [Route(Routes.Complex)]
     public class UpdateSet : EndpointBaseAsync
-        .WithRequest<SimpleTeamSetRequest>
-        .WithActionResult<IList<SimpleTeamSetItemDto>>
+        .WithRequest<TeamSetRequest>
+        .WithActionResult<IList<TeamSetItemDto>>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -54,21 +54,21 @@ namespace Csla6ModelTemplates.Endpoints.Simple
                 "Criteria:<br>{<br>" +
                 "&nbsp;&nbsp;&nbsp;&nbsp;teamName: string<br>" +
                 "}<br>" +
-                "Data: SimpleTeamSetItemDto[]<br>" +
-                "Result: SimpleTeamSetItemDto[]",
-            OperationId = "SimpleTeamSet.Update",
-            Tags = new[] { "Simple" })
+                "Data: TeamSetItemDto[]<br>" +
+                "Result: TeamSetItemDto[]",
+            OperationId = "TeamSet.Update",
+            Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamSetItemDto>>> HandleAsync(
-            [FromRoute] SimpleTeamSetRequest request,
+        public override async Task<ActionResult<IList<TeamSetItemDto>>> HandleAsync(
+            [FromRoute] TeamSetRequest request,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<IList<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
+                return await Call<IList<TeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    var teams = await SimpleTeamSet.Build(Factory, ChildFactory, request.Criteria, request.Dto);
+                    var teams = await TeamSet.Build(Factory, ChildFactory, request.Criteria, request.Dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
@@ -86,16 +86,16 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     /// <summary>
     /// Defines the input data to update a team set.
     /// </summary>
-    public class SimpleTeamSetRequest
+    public class TeamSetRequest
     {
         /// <summary>
         /// The criteria of the team set.
         /// </summary>
-        [FromQuery] public SimpleTeamSetCriteria Criteria { get; set; }
+        [FromQuery] public TeamSetCriteria Criteria { get; set; }
 
         /// <summary>
         /// The data transer objects of the team set.
         /// </summary>
-        [FromBody] public List<SimpleTeamSetItemDto> Dto { get; set; }
+        [FromBody] public List<TeamSetItemDto> Dto { get; set; }
     }
 }

@@ -1,20 +1,20 @@
 using Ardalis.ApiEndpoints;
 using Csla;
-using Csla6ModelTemplates.Contracts.Simple.List;
-using Csla6ModelTemplates.Models.Simple.List;
+using Csla6ModelTemplates.Contracts.Complex.Set;
+using Csla6ModelTemplates.Models.Complex.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net.Mime;
 
-namespace Csla6ModelTemplates.Endpoints.Simple
+namespace Csla6ModelTemplates.Endpoints.Complex
 {
     /// <summary>
-    /// Gets a list of teams.
+    /// Gets the specified team set to edit.
     /// </summary>
-    [Route(Routes.Simple)]
-    public class List : EndpointBaseAsync
-        .WithRequest<SimpleTeamListCriteria>
-        .WithActionResult<IList<SimpleTeamListItemDto>>
+    [Route(Routes.Complex)]
+    public class ReadSet : EndpointBaseAsync
+        .WithRequest<TeamSetCriteria>
+        .WithActionResult<IList<TeamSetItemDto>>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -24,8 +24,8 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// </summary>
         /// <param name="logger">The application logging service.</param>
         /// <param name="factory">The data portal factory.</param>
-        public List(
-            ILogger<List> logger,
+        public ReadSet(
+            ILogger<ReadSet> logger,
             IDataPortalFactory factory
             )
         {
@@ -34,32 +34,32 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         }
 
         /// <summary>
-        /// Gets a list of teams.
+        /// Gets the specified team set to edit.
         /// </summary>
-        /// <param name="criteria">The criteria of the team list.</param>
+        /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A list of teams.</returns>
-        [HttpGet]
+        /// <returns>The requested team set.</returns>
+        [HttpGet("set")]
         [Produces(MediaTypeNames.Application.Json)]
         [SwaggerOperation(
-            Summary = "Gets a list of teams.",
-            Description = "Gets a list of teams.<br>" +
+            Summary = "Gets the specified team set to edit.",
+            Description = "Gets the specified team set to edit.<br>" +
                 "Criteria:<br>{<br>" +
-                "&nbsp;&nbsp;&nbsp;&nbsp;TeamName: string<br>" +
+                "&nbsp;&nbsp;&nbsp;&nbsp;teamName: string<br>" +
                 "}<br>" +
-                "Result: SimpleTeamListItemDto[]",
-            OperationId = "SimpleTeam.List",
-            Tags = new[] { "Simple" })
+                "Result: TeamSetItemDto[]",
+            OperationId = "TeamSet.Read",
+            Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamListItemDto>>> HandleAsync(
-            [FromQuery] SimpleTeamListCriteria criteria,
+        public override async Task<ActionResult<IList<TeamSetItemDto>>> HandleAsync(
+            [FromQuery] TeamSetCriteria criteria,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                var teams = await SimpleTeamList.Get(Factory, criteria);
-                return Ok(teams.ToDto<SimpleTeamListItemDto>());
+                var teams = await TeamSet.Get(Factory, criteria);
+                return Ok(teams.ToDto());
             }
             catch (Exception ex)
             {
