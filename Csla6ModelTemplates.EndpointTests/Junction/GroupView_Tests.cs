@@ -1,10 +1,10 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.View;
-using Csla6ModelTemplates.WebApi.Controllers;
+using Csla6ModelTemplates.Endpoints.Junction;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Junction
+namespace Csla6ModelTemplates.EndpointTests.Junction
 {
     public class GroupView_Tests
     {
@@ -13,11 +13,11 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<View>();
+            var sut = new View(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<GroupViewDto> actionResult = await sut.GetGroupView("oQLOyK85x6g");
+            ActionResult<GroupViewDto> actionResult = await sut.HandleAsync("oQLOyK85x6g");
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;

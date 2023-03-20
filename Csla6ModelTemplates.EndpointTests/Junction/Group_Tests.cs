@@ -1,10 +1,11 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
-using Csla6ModelTemplates.WebApi.Controllers;
+using Csla6ModelTemplates.Endpoints.Junction;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Junction
+namespace Csla6ModelTemplates.EndpointTests.Junction
 {
     public class Group_Tests
     {
@@ -15,11 +16,11 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<New>();
+            var sut = new New(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<GroupDto> actionResult = await sut.GetNewGroup();
+            ActionResult<GroupDto> actionResult = await sut.HandleAsync();
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -44,8 +45,8 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Create>();
+            var sut = new Create(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             var pristineGroup = new GroupDto
@@ -68,7 +69,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             };
             pristineGroup.Persons.Add(pristineMember2);
 
-            ActionResult<GroupDto> actionResult = await sut.CreateGroup(pristineGroup);
+            var actionResult = await sut.HandleAsync(pristineGroup, new CancellationToken());
 
             // Assert
             var createdResult = actionResult.Result as CreatedResult;
@@ -104,11 +105,11 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Read>();
+            var sut = new Read(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<GroupDto> actionResult = await sut.GetGroup("6KANyA658o9");
+            ActionResult<GroupDto> actionResult = await sut.HandleAsync("6KANyA658o9");
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -140,26 +141,32 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sutR = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var loggerR = setup.GetLogger<Read>();
+            var loggerU = setup.GetLogger<Update>();
+            var sutR = new Read(loggerR, setup.PortalFactory);
+            var sutU = new Update(loggerU, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<GroupDto> actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
+            GroupDto pristineGroup = null;
+            GroupPersonDto pristineMember1 = null;
+            GroupPersonDto pristineMemberNew = null;
+
+            ActionResult<GroupDto> actionResultR = await sutR.HandleAsync("aqL3y3P5dGm");
             var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineGroup = okObjectResultR.Value as GroupDto;
-            var pristineMember1 = pristineGroup.Persons[0];
+            pristineGroup = okObjectResultR.Value as GroupDto;
+            pristineMember1 = pristineGroup.Persons[0];
 
             pristineGroup.GroupCode = "G-1212";
             pristineGroup.GroupName = "Group No. 1212";
 
-            var pristineMemberNew = new GroupPersonDto
+            pristineMemberNew = new GroupPersonDto
             {
                 PersonId = "a4P18mr5M62",
                 PersonName = "New member",
             };
             pristineGroup.Persons.Add(pristineMemberNew);
-            ActionResult<GroupDto> actionResultU = await sutU.UpdateGroup(pristineGroup);
+
+            var actionResultU = await sutU.HandleAsync(pristineGroup, new CancellationToken());
 
             // Assert
             var okObjectResultU = actionResultU.Result as OkObjectResult;
@@ -195,11 +202,11 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Delete>();
+            var sut = new Delete(logger, setup.PortalFactory);
 
             // Act
-            ActionResult actionResult = await sut.DeleteGroup("3Nr8nQenQjA");
+            ActionResult actionResult = await sut.HandleAsync("3Nr8nQenQjA");
 
             // Assert
             var noContentResult = actionResult as NoContentResult;
