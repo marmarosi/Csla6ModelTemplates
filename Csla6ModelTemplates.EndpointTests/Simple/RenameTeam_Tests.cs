@@ -1,10 +1,10 @@
-using Csla6ModelTemplates.Contracts.Simple.Command;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Simple.Command;
+using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Simple
+namespace Csla6ModelTemplates.EndpointTests.Simple
 {
     public class RenameTeam_Tests
     {
@@ -13,16 +13,16 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Command>();
+            var sut = new Command(logger, setup.PortalFactory);
 
             // Act
-            var dto = new RenameTeamDto
+            RenameTeamDto dto = new RenameTeamDto
             {
                 TeamId = "oZkzGJ6G794",
                 TeamName = "Team Thirty Seven"
             };
-            ActionResult<bool> actionResult = await sut.RenameTeamCommand(dto);
+            ActionResult<bool> actionResult = await sut.HandleAsync(dto);
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;

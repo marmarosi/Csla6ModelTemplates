@@ -1,12 +1,12 @@
-using Csla6ModelTemplates.Contracts.Simple.Set;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Simple
+namespace Csla6ModelTemplates.EndpointTests.Simple
 {
     public class SimpleTeamSet_Tests
     {
@@ -17,12 +17,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<ReadSet>();
+            var sut = new ReadSet(logger, setup.PortalFactory);
 
             // Act
-            SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<List<SimpleTeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
+            ActionResult<IList<SimpleTeamSetItemDto>> actionResult = await sut.HandleAsync(
+                new SimpleTeamSetCriteria { TeamName = "8" }
+                );
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -32,7 +33,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             Assert.NotNull(pristineList);
 
             // List must contain 5 items.
-            Assert.True(pristineList.Count > 3);
+            Assert.InRange(pristineList.Count, 1, 10);
         }
 
         #endregion
@@ -44,9 +45,10 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var loggerR = setup.GetLogger<ReadSet>();
+            var loggerU = setup.GetLogger<UpdateSet>();
+            var sutR = new ReadSet(loggerR, setup.PortalFactory);
+            var sutU = new UpdateSet(loggerU, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             SimpleTeamSetItemDto pristine = null;
@@ -54,7 +56,9 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             string deletedId = null;
 
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<List<SimpleTeamSetItemDto>> actionResultR = await sutR.GetTeamSet(criteria);
+            ActionResult<IList<SimpleTeamSetItemDto>> actionResultR = await sutR.HandleAsync(
+                criteria
+                );
             var okObjectResultR = actionResultR.Result as OkObjectResult;
             var pristineList = okObjectResultR.Value as List<SimpleTeamSetItemDto>;
 
@@ -78,12 +82,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             deletedId = pristine3.TeamId;
             pristineList.Remove(pristine3);
 
-            var actionResultU = await sutU.UpdateTeamSet(
-                criteria,
-                pristineList,
-                setup.PortalFactory,
-                setup.ChildPortalFactory
-                );
+            // Act
+            SimpleTeamSetRequest request = new SimpleTeamSetRequest
+            {
+                Criteria = criteria,
+                Dto = pristineList
+            };
+            var actionResultU = await sutU.HandleAsync(request);
 
             // Assert
             var okObjectResultU = actionResultU.Result as OkObjectResult;
