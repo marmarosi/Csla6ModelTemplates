@@ -349,3 +349,4 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /Csla6ModelTemplates.WebApi/Csla6ModelTemplates.WebApi.xml
+/Csla6ModelTemplates.Endpoints/Csla6ModelTemplates.Endpoints.xml

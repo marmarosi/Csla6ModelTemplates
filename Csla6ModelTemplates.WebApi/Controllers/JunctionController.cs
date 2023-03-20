@@ -42,7 +42,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         [HttpGet("{id}/view")]
         [ProducesResponseType(typeof(GroupViewDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<GroupViewDto>> GetGroupView(
-            [FromQuery] string id
+            string id
             )
         {
             try
