@@ -1,12 +1,12 @@
 ﻿using Csla6ModelTemplates.Contracts.Selection.WithKey;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.WebApi.Controllers;
+using Csla6ModelTemplates.Endpoints.Selection;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Selection
+namespace Csla6ModelTemplates.EndpointTests.Selection
 {
     public class TeamKeyChoice_Tests
     {
@@ -15,11 +15,11 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SelectionController>();
-            var sut = new SelectionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<WithKey>();
+            var sut = new WithKey(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<List<KeyNameOptionDto>> actionResult = await sut.GetTeamChoiceWithKey(
+            ActionResult<IList<KeyNameOptionDto>> actionResult = await sut.HandleAsync(
                 new TeamKeyChoiceCriteria { TeamName = "7" }
                 );
 
@@ -27,7 +27,7 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
             var okObjectResult = actionResult.Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
 
-            var choice = okObjectResult.Value as IList<KeyNameOptionDto>;
+            var choice = okObjectResult.Value as List<KeyNameOptionDto>;
             Assert.NotNull(choice);
 
             // The choice must have 5 items.

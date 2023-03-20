@@ -1,12 +1,12 @@
 ﻿using Csla6ModelTemplates.Contracts.Selection.WithCode;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.WebApi.Controllers;
+using Csla6ModelTemplates.Endpoints.Selection;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Selection
+namespace Csla6ModelTemplates.EndpointTests.Selection
 {
     public class TeamCodeChoice_Tests
     {
@@ -15,11 +15,11 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SelectionController>();
-            var sut = new SelectionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<WithCode>();
+            var sut = new WithCode(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<List<CodeNameOptionDto>> actionResult = await sut.GetTeamChoiceWithCode(
+            ActionResult<IList<CodeNameOptionDto>> actionResult = await sut.HandleAsync(
                 new TeamCodeChoiceCriteria { TeamName = "9" }
                 );
 
@@ -27,7 +27,7 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
             var okObjectResult = actionResult.Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
 
-            var choice = okObjectResult.Value as IList<CodeNameOptionDto>;
+            var choice = okObjectResult.Value as List<CodeNameOptionDto>;
             Assert.NotNull(choice);
 
             // The choice must have 5 items.
