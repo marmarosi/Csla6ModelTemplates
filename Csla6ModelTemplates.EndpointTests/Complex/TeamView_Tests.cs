@@ -1,10 +1,10 @@
-using Csla6ModelTemplates.Contracts.Complex.View;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Complex
+namespace Csla6ModelTemplates.EndpointTests.Complex
 {
     public class TeamView_Tests
     {
@@ -13,11 +13,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<View>();
+            var sut = new View(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<TeamViewDto> actionResult = await sut.GetTeamView("1r9oGj1x3lk");
+            ActionResult<TeamViewDto> actionResult = await sut.HandleAsync("1r9oGj1x3lk");
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;

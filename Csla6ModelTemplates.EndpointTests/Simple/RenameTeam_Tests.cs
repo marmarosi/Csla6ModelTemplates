@@ -17,7 +17,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             var sut = new Command(logger, setup.PortalFactory);
 
             // Act
-            RenameTeamDto dto = new RenameTeamDto
+            var dto = new RenameTeamDto
             {
                 TeamId = "oZkzGJ6G794",
                 TeamName = "Team Thirty Seven"

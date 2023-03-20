@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
     [Route(Routes.Complex)]
     public class Command : EndpointBaseAsync
         .WithRequest<CountTeamsCriteria>
-        .WithActionResult<CountTeamsResultDto>
+        .WithActionResult<List<CountTeamsResultDto>>
     {
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -51,7 +51,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             OperationId = "SimpleTeam.Rename",
             Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<CountTeamsResultDto>> HandleAsync(
+        public override async Task<ActionResult<List<CountTeamsResultDto>>> HandleAsync(
             [FromBody] CountTeamsCriteria criteria,
             CancellationToken cancellationToken = default
             )

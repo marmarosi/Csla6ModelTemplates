@@ -3,7 +3,7 @@ using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Xunit;
-using C = System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace Csla6ModelTemplates.EndpointTests.Simple
 {
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             var sut = new List(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<C.IList<SimpleTeamListItemDto>> actionResult = await sut.HandleAsync(
+            ActionResult<IList<SimpleTeamListItemDto>> actionResult = await sut.HandleAsync(
                 new SimpleTeamListCriteria { TeamName = "9" }
                 );
 
@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             var okObjectResult = actionResult.Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
 
-            var list = okObjectResult.Value as C.List<SimpleTeamListItemDto>;
+            var list = okObjectResult.Value as List<SimpleTeamListItemDto>;
             Assert.NotNull(list);
 
             // The list must have 5 items.

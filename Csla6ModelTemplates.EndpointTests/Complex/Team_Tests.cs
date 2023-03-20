@@ -1,10 +1,11 @@
-using Csla6ModelTemplates.Contracts.Complex.Edit;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Complex
+namespace Csla6ModelTemplates.EndpointTests.Complex
 {
     public class Team_Tests
     {
@@ -15,11 +16,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<New>();
+            var sut = new New(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.GetNewTeam();
+            ActionResult<TeamDto> actionResult = await sut.HandleAsync();
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -44,8 +45,8 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Create>();
+            var sut = new Create(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             var pristineTeam = new TeamDto
@@ -72,7 +73,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             };
             pristineTeam.Players.Add(pristinePlayer2);
 
-            var actionResult = await sut.CreateTeam(pristineTeam);
+            ActionResult<TeamDto> actionResult = await sut.HandleAsync(pristineTeam);
 
             // Assert
             var createdResult = actionResult.Result as CreatedResult;
@@ -112,11 +113,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Read>();
+            var sut = new Read(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.GetTeam("LBgyGEK0PN2");
+            ActionResult<TeamDto> actionResult = await sut.HandleAsync("LBgyGEK0PN2");
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -150,13 +151,14 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sutR = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var loggerR = setup.GetLogger<Read>();
+            var loggerU = setup.GetLogger<Update>();
+            var sutR = new Read(loggerR, setup.PortalFactory);
+            var sutU = new Update(loggerU, setup.PortalFactory, setup.ChildPortalFactory);
 
-            // --- Act
-            ActionResult<TeamDto> actionResultR = await sutR.GetTeam("JZY3GdKxyOj");
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
+            // Act
+            ActionResult<TeamDto> actionResultR = await sutR.HandleAsync("JZY3GdKxyOj");
+            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
             var pristineTeam = okObjectResultR.Value as TeamDto;
             var pristinePlayer1 = pristineTeam.Players[0];
 
@@ -173,7 +175,8 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
                 PlayerName = "Test player #9202.X"
             };
             pristineTeam.Players.Add(pristinePlayerNew);
-            var actionResultU = await sutU.UpdateTeam(pristineTeam);
+
+            var actionResultU = await sutU.HandleAsync(pristineTeam, new CancellationToken());
 
             // Assert
             var okObjectResultU = actionResultU.Result as OkObjectResult;
@@ -209,11 +212,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Delete>();
+            var sut = new Delete(logger, setup.PortalFactory);
 
             // Act
-            ActionResult actionResult = await sut.DeleteTeam("qNwO0mkG3rB");
+            ActionResult actionResult = await sut.HandleAsync("qNwO0mkG3rB");
 
             // Assert
             var noContentResult = actionResult as NoContentResult;

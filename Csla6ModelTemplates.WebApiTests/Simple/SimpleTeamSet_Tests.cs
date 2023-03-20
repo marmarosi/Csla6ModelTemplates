@@ -49,22 +49,18 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            SimpleTeamSetItemDto pristine = null;
-            SimpleTeamSetItemDto pristineNew = null;
-            string deletedId = null;
-
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
             ActionResult<List<SimpleTeamSetItemDto>> actionResultR = await sutR.GetTeamSet(criteria);
             var okObjectResultR = actionResultR.Result as OkObjectResult;
             var pristineList = okObjectResultR.Value as List<SimpleTeamSetItemDto>;
 
             // Modify an item.
-            pristine = pristineList[0];
+            var pristine = pristineList[0];
             pristine.TeamCode = "T-9101";
             pristine.TeamName = "Test team number 9101";
 
             // Create new item.
-            pristineNew = new SimpleTeamSetItemDto
+            var pristineNew = new SimpleTeamSetItemDto
             {
                 TeamId = null,
                 TeamCode = "T-9102",
@@ -75,7 +71,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
 
             // Delete an item.
             SimpleTeamSetItemDto pristine3 = pristineList[3];
-            deletedId = pristine3.TeamId;
+            var deletedId = pristine3.TeamId;
             pristineList.Remove(pristine3);
 
             var actionResultU = await sutU.UpdateTeamSet(
@@ -93,7 +89,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             Assert.NotNull(updatedList);
 
             // The updated team must have new values.
-            SimpleTeamSetItemDto updated = updatedList[0];
+            var updated = updatedList[0];
 
             Assert.Equal(pristine.TeamId, updated.TeamId);
             Assert.Equal(pristine.TeamCode, updated.TeamCode);
@@ -101,7 +97,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             Assert.NotEqual(pristine.Timestamp, updated.Timestamp);
 
             // The created team must have new values.
-            SimpleTeamSetItemDto created = updatedList
+            var created = updatedList
                 .FirstOrDefault(o => o.TeamCode == pristineNew.TeamCode);
             Assert.NotNull(created);
 
@@ -111,7 +107,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             Assert.NotNull(created.Timestamp);
 
             // The deleted team must have gone.
-            SimpleTeamSetItemDto deleted = updatedList
+            var deleted = updatedList
                 .FirstOrDefault(o => o.TeamId == deletedId);
             Assert.Null(deleted);
         }

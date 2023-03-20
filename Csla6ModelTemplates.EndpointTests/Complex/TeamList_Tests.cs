@@ -1,11 +1,11 @@
-using Csla6ModelTemplates.Contracts.Complex.List;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Complex.List;
+using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Complex
+namespace Csla6ModelTemplates.EndpointTests.Complex
 {
     public class TeamList_Tests
     {
@@ -14,12 +14,13 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<List>();
+            var sut = new List(logger, setup.PortalFactory);
 
             // Act
-            TeamListCriteria criteria = new TeamListCriteria { TeamName = "6" };
-            ActionResult<List<TeamListItemDto>> actionResult = await sut.GetTeamList(criteria);
+            ActionResult<IList<TeamListItemDto>> actionResult = await sut.HandleAsync(
+                new TeamListCriteria { TeamName = "6" }
+                );
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
