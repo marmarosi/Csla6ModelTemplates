@@ -33,7 +33,7 @@ namespace Csla6ModelTemplates.EndpointTests.Selection
             // The choice must have 5 items.
             Assert.Equal(5, choice.Count);
 
-            // The names must end with 7.
+            // The names must end with 0.
             foreach (var item in choice)
             {
                 Assert.EndsWith("0", item.Name);

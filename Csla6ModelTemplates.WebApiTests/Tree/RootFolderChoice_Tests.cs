@@ -1,0 +1,40 @@
+﻿using Csla6ModelTemplates.Dal.Contracts;
+using Csla6ModelTemplates.WebApi.Controllers;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Csla6ModelTemplates.WebApiTests.Tree
+{
+    public class RootFolderChoice_Tests
+    {
+        [Fact]
+        public async Task GetTeamChoiceWithId_ReturnsAChoice()
+        {
+            // Arrange
+            var setup = TestSetup.GetInstance();
+            var logger = setup.GetLogger<TreeController>();
+            var sut = new TreeController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+
+            // Act
+            ActionResult<List<IdNameOptionDto>> actionResult = await sut.GetRootFolderChoice();
+
+            // Assert
+            var okObjectResult = actionResult.Result as OkObjectResult;
+            Assert.NotNull(okObjectResult);
+
+            var choice = okObjectResult.Value as IList<IdNameOptionDto>;
+            Assert.NotNull(choice);
+
+            // The choice must have 3 items.
+            Assert.Equal(3, choice.Count);
+
+            // The names must start with 'Folder entry'.
+            foreach (var item in choice)
+            {
+                Assert.StartsWith("Folder entry", item.Name);
+            }
+        }
+    }
+}
