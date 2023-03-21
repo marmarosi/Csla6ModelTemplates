@@ -1,6 +1,7 @@
 ﻿using Csla;
 using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,9 +38,10 @@ namespace Csla6ModelTemplates.EndpointTests
                 .AddJsonFile("appsettings.json", true, true) // use appsettings.json in current folder
                 .AddEnvironmentVariables();
             IConfiguration configuration = builder.Build();
+            DeadLockDetector detector = new DeadLockDetector();
 
             // Configure data access layer.
-            services.AddSqlServerDal(configuration);
+            services.AddSqlServerDal(detector, configuration);
             services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
 
             // Configure CSLA.

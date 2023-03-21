@@ -1,6 +1,8 @@
 ﻿using Csla;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.Contracts.Junction.View;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Dal;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Csla6ModelTemplates.Models.Junction.View;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +23,11 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new instance.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public JunctionController(
             ILogger<JunctionController> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
-            ) : base(logger, factory, childFactory)
+            ICslaService csla
+            ) : base(logger, csla)
         { }
 
         #endregion

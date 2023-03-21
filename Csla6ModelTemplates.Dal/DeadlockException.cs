@@ -1,5 +1,4 @@
-using Csla6ModelTemplates.Resources;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Csla6ModelTemplates.Dal
 {
@@ -7,7 +6,7 @@ namespace Csla6ModelTemplates.Dal
     /// Represents an exception thrown by the data access layer.
     /// </summary>
     [Serializable]
-    public class DalException : BackendException
+    public class DeadlockException : BackendException
     {
         #region Constructors
 
@@ -15,7 +14,7 @@ namespace Csla6ModelTemplates.Dal
         /// Initializes a new instance.
         /// </summary>
         /// <param name="message">The message.</param>
-        public DalException(
+        public DeadlockException(
             string message
             )
             : base(message)
@@ -26,7 +25,7 @@ namespace Csla6ModelTemplates.Dal
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public DalException(
+        public DeadlockException(
             string message,
             Exception innerException
             )
@@ -46,7 +45,10 @@ namespace Csla6ModelTemplates.Dal
         ///   <IPermission class="System.Security.Permissions.FileIOPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Read="*AllFiles*" PathDiscovery="*AllFiles*" />
         ///   <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="SerializationFormatter" />
         /// </PermissionSet>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(
+            SerializationInfo info,
+            StreamingContext context
+            )
         {
             base.GetObjectData(info, context);
         }

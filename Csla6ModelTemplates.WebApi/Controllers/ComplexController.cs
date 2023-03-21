@@ -1,9 +1,9 @@
-using Csla;
 using Csla6ModelTemplates.Contracts.Complex.Command;
 using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.Contracts.Complex.View;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Models.Complex.Command;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Csla6ModelTemplates.Models.Complex.List;
@@ -27,13 +27,11 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new instance.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public ComplexController(
             ILogger<ComplexController> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
-            ) : base(logger, factory, childFactory)
+            ICslaService csla
+            ) : base(logger, csla)
         { }
 
         #endregion

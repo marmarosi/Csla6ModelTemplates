@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Tree.View;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Tree.View;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,20 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         .WithActionResult<FolderNodeDto>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public Tree(
-            ILogger<Tree> logger,
-            IDataPortalFactory factory
+            ILogger<Full> logger,
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -58,12 +59,12 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         {
             try
             {
-                var tree = await FolderTree.Get(Factory, id);
+                var tree = await FolderTree.Get(Csla.Factory, id);
                 return Ok(tree.ToDto<FolderNodeDto>());
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

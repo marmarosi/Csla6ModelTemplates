@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,24 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         .WithActionResult<IList<SimpleTeamSetItemDto>>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
-        internal IChildDataPortalFactory ChildFactory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public UpdateSet(
-            ILogger<UpdateSet> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
+            ILogger<Full> logger,
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
-            ChildFactory = childFactory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             {
                 return await Call<IList<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
                 {
-                    var teams = await SimpleTeamSet.Build(Factory, ChildFactory, request.Criteria, request.Dto);
+                    var teams = await SimpleTeamSet.Build(Csla.Factory, Csla.ChildFactory, request.Criteria, request.Dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
@@ -78,7 +75,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

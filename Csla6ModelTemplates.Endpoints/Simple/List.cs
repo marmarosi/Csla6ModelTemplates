@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.List;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,20 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         .WithActionResult<IList<SimpleTeamListItemDto>>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public List(
-            ILogger<List> logger,
-            IDataPortalFactory factory
+            ILogger<Full> logger,
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -58,12 +59,12 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         {
             try
             {
-                var teams = await SimpleTeamList.Get(Factory, criteria);
+                var teams = await SimpleTeamList.Get(Csla.Factory, criteria);
                 return Ok(teams.ToDto<SimpleTeamListItemDto>());
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

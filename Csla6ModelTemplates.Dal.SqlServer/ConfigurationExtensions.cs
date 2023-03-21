@@ -1,5 +1,7 @@
-﻿using Csla6ModelTemplates.Dal.SqlServer;
+﻿using Csla6ModelTemplates.Dal;
+using Csla6ModelTemplates.Dal.SqlServer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,6 +21,7 @@ namespace Csla6ModelTemplates.Configuration
         /// <param name="configuration">Teh application configuration.</param>
         public static void AddSqlServerDal(
             this IServiceCollection services,
+            IDeadLockDetector detector = null,
             IConfiguration configuration = null
             )
         {
@@ -35,6 +38,24 @@ namespace Csla6ModelTemplates.Configuration
             // Configure data access layer.
             foreach (var dalType in SqlServerDalIndex.Items)
                 services.AddTransient(dalType.Key, dalType.Value);
+
+            // Configure dead lock checking.
+            detector.RegisterCheckMethod(
+                DAL.SQLServer,
+                typeof(SqlServerContext).GetMethod("IsDeadlock")
+                );
+        }
+
+        /// <summary>
+        /// CHecks whether the reason of the exception is a deadlock.
+        /// </summary>
+        /// <param name="ex">The original exception thrown.</param>
+        /// <returns>True when the reason is a deadlock; otherwise false;</returns>
+        public static bool IsDeadlock(
+            Exception ex
+            )
+        {
+            return ex is SqlException && (ex as SqlException).Number == 1205;
         }
 
         /// <summary>

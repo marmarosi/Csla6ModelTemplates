@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Csla6ModelTemplates.Endpoints
@@ -23,11 +24,13 @@ namespace Csla6ModelTemplates.Endpoints
         /// </summary>
         /// <param name="endpoint">The API endpoint.</param>
         /// <param name="logger">The application logging service.</param>
+        /// <param name="deadLock">The dead lock detector service.</param>
         /// <param name="exception">The exception thrown by the backend.</param>
         /// <returns>The error information to send to the frontend.</returns>
         public static ObjectResult HandleError(
             ControllerBase endpoint,
             ILogger logger,
+            IDeadLockDetector deadLock,
             Exception exception
             )
         {
@@ -41,7 +44,7 @@ namespace Csla6ModelTemplates.Endpoints
                     );
 
             // Check deadlock exception.
-            DeadlockError deadlock = DeadlockError.CheckException(exception);
+            DeadlockException deadlock = deadLock.CheckException(exception);
             if (deadlock != null)
             {
                 // Status code 423 = Locked
