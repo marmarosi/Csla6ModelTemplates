@@ -1,12 +1,12 @@
 ﻿using Csla6ModelTemplates.Contracts.Selection.WithId;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.WebApi.Controllers;
+using Csla6ModelTemplates.Endpoints.Selection;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Selection
+namespace Csla6ModelTemplates.EndpointTests.Selection
 {
     public class TeamIdChoice_Tests
     {
@@ -15,11 +15,11 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SelectionController>();
-            var sut = new SelectionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<WithId>();
+            var sut = new WithId(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<List<IdNameOptionDto>> actionResult = await sut.GetTeamChoiceWithId(
+            ActionResult<IList<IdNameOptionDto>> actionResult = await sut.HandleAsync(
                 new TeamIdChoiceCriteria { TeamName = "0" }
                 );
 
@@ -27,7 +27,7 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
             var okObjectResult = actionResult.Result as OkObjectResult;
             Assert.NotNull(okObjectResult);
 
-            var choice = okObjectResult.Value as IList<IdNameOptionDto>;
+            var choice = okObjectResult.Value as List<IdNameOptionDto>;
             Assert.NotNull(choice);
 
             // The choice must have 5 items.

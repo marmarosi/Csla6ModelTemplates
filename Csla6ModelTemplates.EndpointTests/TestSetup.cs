@@ -1,4 +1,4 @@
-using Csla;
+﻿using Csla;
 using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
 using Csla6ModelTemplates.Dal;
@@ -10,7 +10,7 @@ using System.IO;
 using Xunit;
 
 [assembly: CollectionBehavior(MaxParallelThreads = 1)]
-namespace Csla6ModelTemplates.WebApiTests
+namespace Csla6ModelTemplates.EndpointTests
 {
     /// <summary>
     /// Provides methods to initialize integration tests.

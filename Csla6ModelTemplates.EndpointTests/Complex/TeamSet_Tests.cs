@@ -1,12 +1,13 @@
-using Csla6ModelTemplates.Contracts.Complex.Set;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Complex.Set;
+using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Complex
+namespace Csla6ModelTemplates.EndpointTests.Complex
 {
     public class TeamSet_Tests
     {
@@ -17,12 +18,13 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<ReadSet>();
+            var sut = new ReadSet(logger, setup.PortalFactory);
 
             // Act
-            TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<List<TeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
+            ActionResult<IList<TeamSetItemDto>> actionResult = await sut.HandleAsync(
+                new TeamSetCriteria { TeamName = "7" }
+                );
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -31,9 +33,9 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             var pristineList = okObjectResult.Value as List<TeamSetItemDto>;
             Assert.NotNull(pristineList);
 
-            // List must contain some items.
+            // List must contain 5 items.
             Assert.Equal(5, pristineList.Count);
-            foreach (TeamSetItemDto item in pristineList)
+            foreach (var item in pristineList)
             {
                 Assert.True(item.Players.Count > 0);
             }
@@ -48,12 +50,16 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var loggerRead = setup.GetLogger<ReadSet>();
+            var sutRead = new ReadSet(loggerRead, setup.PortalFactory);
+            var loggerUpdate = setup.GetLogger<UpdateSet>();
+            var sutUpdate = new UpdateSet(loggerUpdate, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             var criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<List<TeamSetItemDto>> actionResultR = await sut.GetTeamSet(criteria);
+            ActionResult<IList<TeamSetItemDto>> actionResultR = await sutRead.HandleAsync(
+                criteria
+                );
             var okObjectResultR = actionResultR.Result as OkObjectResult;
             var pristineList = okObjectResultR.Value as List<TeamSetItemDto>;
 
@@ -90,10 +96,13 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             pristineList.Remove(pristineTeam4);
 
             // Act
-            ActionResult<List<TeamSetItemDto>> actionResultU = await sut.UpdateTeamSet(
-                criteria,
-                pristineList
-                );
+            TeamSetRequest request = new TeamSetRequest
+            {
+                Criteria = criteria,
+                Dto = pristineList
+            };
+
+            var actionResultU = await sutUpdate.HandleAsync(request, new CancellationToken());
 
             // Assert
             var okObjectResultU = actionResultU.Result as OkObjectResult;
@@ -103,7 +112,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             Assert.NotNull(updatedList);
 
             // The updated team must have new values.
-            var updatedTeam3 = updatedList.Find(o => o.TeamCode == "T-9301");
+            var updatedTeam3 = updatedList[2];
 
             Assert.Equal(pristineTeam3.TeamId, updatedTeam3.TeamId);
             Assert.Equal(pristineTeam3.TeamCode, updatedTeam3.TeamCode);
@@ -113,7 +122,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             Assert.Equal(pristineTeam3.Players.Count, updatedTeam3.Players.Count);
 
             // The updated player must reflect the changes.
-            var updatedPlayer31 = updatedTeam3.Players.Find(o => o.PlayerCode == "P-9301-1");
+            var updatedPlayer31 = updatedTeam3.Players[0];
             Assert.Equal(pristinePlayer31.PlayerCode, updatedPlayer31.PlayerCode);
             Assert.Equal(pristinePlayer31.PlayerName, updatedPlayer31.PlayerName);
 

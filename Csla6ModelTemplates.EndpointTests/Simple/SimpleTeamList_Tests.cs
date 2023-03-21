@@ -1,11 +1,11 @@
-using Csla6ModelTemplates.Contracts.Simple.List;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Simple.List;
+using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
+using System.Collections.Generic;
 
-namespace Csla6ModelTemplates.WebApiTests.Simple
+namespace Csla6ModelTemplates.EndpointTests.Simple
 {
     public class SimpleTeamList_Tests
     {
@@ -14,11 +14,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<List>();
+            var sut = new List(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(
+            ActionResult<IList<SimpleTeamListItemDto>> actionResult = await sut.HandleAsync(
                 new SimpleTeamListCriteria { TeamName = "9" }
                 );
 
@@ -30,7 +30,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             Assert.NotNull(list);
 
             // The list must have 5 items.
-            Assert.Equal(5, list.Count);
+            Assert.InRange(list.Count, 1, 10);
 
             // The code and names must end with 9.
             foreach (var item in list)

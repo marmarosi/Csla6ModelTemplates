@@ -1,10 +1,11 @@
-using Csla6ModelTemplates.Contracts.Simple.Edit;
-using Csla6ModelTemplates.WebApi.Controllers;
+﻿using Csla6ModelTemplates.Contracts.Simple.Edit;
+using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Csla6ModelTemplates.WebApiTests.Simple
+namespace Csla6ModelTemplates.EndpointTests.Simple
 {
     public class SimpleTeam_Tests
     {
@@ -15,11 +16,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<New>();
+            var sut = new New(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetNewTeam();
+            ActionResult<SimpleTeamDto> actionResult = await sut.HandleAsync();
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -43,8 +44,8 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Create>();
+            var sut = new Create(logger, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
             var pristineTeam = new SimpleTeamDto
@@ -54,7 +55,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
                 TeamName = "Test team number 9001",
                 Timestamp = null
             };
-            ActionResult<SimpleTeamDto> actionResult = await sut.CreateTeam(pristineTeam);
+            var actionResult = await sut.HandleAsync(pristineTeam);
 
             // Assert
             var createdResult = actionResult.Result as CreatedResult;
@@ -79,11 +80,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Read>();
+            var sut = new Read(logger, setup.PortalFactory);
 
             // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetTeam("zXayGQW0bZv");
+            ActionResult<SimpleTeamDto> actionResult = await sut.HandleAsync("zXayGQW0bZv");
 
             // Assert
             var okObjectResult = actionResult.Result as OkObjectResult;
@@ -108,19 +109,19 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var loggerR = setup.GetLogger<Read>();
+            var loggerU = setup.GetLogger<Update>();
+            var sutR = new Read(loggerR, setup.PortalFactory);
+            var sutU = new Update(loggerU, setup.PortalFactory, setup.ChildPortalFactory);
 
             // Act
-            ActionResult<SimpleTeamDto> actionResultR = await sutR.GetTeam("zXayGQW0bZv");
+            ActionResult<SimpleTeamDto> actionResultR = await sutR.HandleAsync("zXayGQW0bZv");
             var okObjectResultR = actionResultR.Result as OkObjectResult;
             var pristine = okObjectResultR.Value as SimpleTeamDto;
 
             pristine.TeamCode = "T-9002";
             pristine.TeamName = "Test team number 9002";
-
-            ActionResult<SimpleTeamDto> actionResultU = await sutU.UpdateTeam(pristine);
+            var actionResultU = await sutU.HandleAsync(pristine, new CancellationToken());
 
             // Assert
             var okObjectResultU = actionResultU.Result as OkObjectResult;
@@ -145,11 +146,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         {
             // Arrange
             var setup = TestSetup.GetInstance();
-            var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var logger = setup.GetLogger<Delete>();
+            var sut = new Delete(logger, setup.PortalFactory);
 
             // Act
-            ActionResult actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");
+            ActionResult actionResult = await sut.HandleAsync("rWqG7KpG5Qo");
 
             // Assert
             var noContentResult = actionResult as NoContentResult;

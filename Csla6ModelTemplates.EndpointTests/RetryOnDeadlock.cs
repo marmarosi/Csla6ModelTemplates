@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Csla6ModelTemplates.WebApiTests
+namespace Csla6ModelTemplates.EndpointTests
 {
     internal static class Wait
     {
@@ -17,12 +17,9 @@ namespace Csla6ModelTemplates.WebApiTests
         internal static int RandomTime()
         {
             return RandomInt.Next(Wait.MIN_DELAY_MS, Wait.MAX_DELAY_MS);
-        }    
+        }
     }
 
-    /// <summary>
-    /// Provides methods to handle dead lock errors.
-    /// </summary>
     public static class Run
     {
         /// <summary>
@@ -59,9 +56,6 @@ namespace Csla6ModelTemplates.WebApiTests
         }
     }
 
-    /// <summary>
-    /// Provides methods to handle dead lock errors.
-    /// </summary>
     public static class Call<T> where T : class
     {
         /// <summary>
