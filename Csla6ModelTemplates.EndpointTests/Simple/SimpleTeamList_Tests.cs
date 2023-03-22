@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<List>();
-            var sut = new List(logger, setup.PortalFactory);
+            var sut = new List(logger, setup.Csla);
 
             // Act
             ActionResult<IList<SimpleTeamListItemDto>> actionResult = await sut.HandleAsync(

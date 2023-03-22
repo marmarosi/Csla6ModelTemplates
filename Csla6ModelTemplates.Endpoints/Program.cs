@@ -1,5 +1,6 @@
 using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.OpenApi.Models;
@@ -42,7 +43,9 @@ builder.Services.AddSwaggerGen(o =>
 });
 
 // Configure data access layer.
-builder.Services.AddSqlServerDal();
+IDeadLockDetector detector = new DeadLockDetector();
+builder.Services.AddSingleton(detector);
+builder.Services.AddSqlServerDal(detector);
 builder.Services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
 
 // If using Kestrel:
@@ -67,6 +70,7 @@ builder.Services.AddCsla(o => o
         })
     )
 );
+builder.Services.AddScoped<ICslaService, CslaService>();
 
 builder.Services.AddControllers();
 

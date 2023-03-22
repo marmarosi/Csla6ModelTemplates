@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SelectionController>();
-            var sut = new SelectionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SelectionController(logger, setup.Csla);
 
             // Act
             ActionResult<List<KeyNameOptionDto>> actionResult = await sut.GetTeamChoiceWithKey(

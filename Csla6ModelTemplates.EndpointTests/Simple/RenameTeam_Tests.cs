@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Command>();
-            var sut = new Command(logger, setup.PortalFactory);
+            var sut = new Command(logger, setup.Csla);
 
             // Act
             var dto = new RenameTeamDto

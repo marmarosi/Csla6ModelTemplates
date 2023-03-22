@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,24 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         .WithActionResult<TeamDto>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
-        internal IChildDataPortalFactory ChildFactory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public Create(
             ILogger<Create> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
-            ChildFactory = childFactory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -63,7 +60,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             {
                 return await Call<TeamDto>.RetryOnDeadlock(async () =>
                 {
-                    var team = await Team.Build(Factory, ChildFactory, dto);
+                    var team = await Team.Build(Csla.Factory, Csla.ChildFactory, dto);
                     if (team.IsValid)
                     {
                         team = await team.SaveAsync();
@@ -73,7 +70,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

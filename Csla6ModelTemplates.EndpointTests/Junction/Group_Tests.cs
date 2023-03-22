@@ -17,7 +17,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<New>();
-            var sut = new New(logger, setup.PortalFactory);
+            var sut = new New(logger, setup.Csla);
 
             // Act
             ActionResult<GroupDto> actionResult = await sut.HandleAsync();
@@ -46,7 +46,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Create>();
-            var sut = new Create(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new Create(logger, setup.Csla);
 
             // Act
             var pristineGroup = new GroupDto
@@ -106,7 +106,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Read>();
-            var sut = new Read(logger, setup.PortalFactory);
+            var sut = new Read(logger, setup.Csla);
 
             // Act
             ActionResult<GroupDto> actionResult = await sut.HandleAsync("6KANyA658o9");
@@ -143,8 +143,8 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             var setup = TestSetup.GetInstance();
             var loggerR = setup.GetLogger<Read>();
             var loggerU = setup.GetLogger<Update>();
-            var sutR = new Read(loggerR, setup.PortalFactory);
-            var sutU = new Update(loggerU, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutR = new Read(loggerR, setup.Csla);
+            var sutU = new Update(loggerU, setup.Csla);
 
             // Act
             GroupDto pristineGroup = null;
@@ -203,7 +203,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Delete>();
-            var sut = new Delete(logger, setup.PortalFactory);
+            var sut = new Delete(logger, setup.Csla);
 
             // Act
             ActionResult actionResult = await sut.HandleAsync("3Nr8nQenQjA");

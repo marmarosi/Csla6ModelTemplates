@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Tree.Choice;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,20 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         .WithActionResult<IList<IdNameOptionDto>>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public Choice(
             ILogger<Choice> logger,
-            IDataPortalFactory factory
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -53,12 +54,12 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         {
             try
             {
-                var choice = await RootFolderChoice.Get(Factory);
+                var choice = await RootFolderChoice.Get(Csla.Factory);
                 return Ok(choice.ToDto<IdNameOptionDto>());
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

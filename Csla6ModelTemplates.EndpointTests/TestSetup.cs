@@ -1,6 +1,6 @@
-﻿using Csla;
-using Csla.Configuration;
+﻿using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,11 +19,9 @@ namespace Csla6ModelTemplates.EndpointTests
     {
         private static readonly TestSetup instance = new();
         private readonly IServiceCollection services = new ServiceCollection();
-        private readonly ApplicationContext appContext;
         private readonly ServiceProvider provider;
 
-        public IDataPortalFactory PortalFactory { get; private set; }
-        public IChildDataPortalFactory ChildPortalFactory { get; private set; }
+        public ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Initializes an integration test.
@@ -39,15 +37,18 @@ namespace Csla6ModelTemplates.EndpointTests
             IConfiguration configuration = builder.Build();
 
             // Configure data access layer.
-            services.AddSqlServerDal(configuration);
+            IDeadLockDetector detector = new DeadLockDetector();
+            services.AddSingleton(detector);
+            services.AddSqlServerDal(detector, configuration);
             services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
 
             // Configure CSLA.
             services.AddCsla();
+            services.AddScoped<ICslaService, CslaService>();
+
+            // Initialize properties.
             provider = services.BuildServiceProvider();
-            appContext = provider.GetRequiredService<ApplicationContext>();
-            PortalFactory = provider.GetRequiredService<IDataPortalFactory>();
-            ChildPortalFactory = provider.GetRequiredService<IChildDataPortalFactory>();
+            Csla = provider.GetRequiredService<ICslaService>();
         }
 
         /// <summary>
@@ -68,17 +69,6 @@ namespace Csla6ModelTemplates.EndpointTests
         {
             // Create logger.
             return new NullLogger<T>();
-        }
-
-        /// <summary>
-        /// Gets the CSLA data portal for the specified model, collection or command.
-        /// </summary>
-        /// <typeparam name="T">The type of the model, collection or command.</typeparam>
-        /// <returns>The required CSLA data portal.</returns>
-        public DataPortal<T> GetPortal<T>() where T : class
-        {
-            // Create logger.
-            return appContext.CreateInstanceDI<DataPortal<T>>();
         }
     }
 }

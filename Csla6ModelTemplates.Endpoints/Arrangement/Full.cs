@@ -1,6 +1,6 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Arrangement.Full;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Full;
 using Microsoft.AspNetCore.Mvc;
@@ -18,20 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         .WithActionResult<IPaginatedList<ArrangedTeamListItemDto>>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public Full(
             ILogger<Full> logger,
-            IDataPortalFactory factory
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -63,12 +63,12 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         {
             try
             {
-                var list = await ArrangedTeamList.Get(Factory, criteria);
+                var list = await ArrangedTeamList.Get(Csla.Factory, criteria);
                 return Ok(list.ToPaginatedDto<ArrangedTeamListItemDto>());
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

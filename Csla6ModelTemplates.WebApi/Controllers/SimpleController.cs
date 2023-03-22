@@ -4,6 +4,7 @@ using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.Contracts.Simple.View;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Models.Simple.Command;
 using Csla6ModelTemplates.Models.Simple.Edit;
 using Csla6ModelTemplates.Models.Simple.List;
@@ -26,13 +27,11 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new instance.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public SimpleController(
             ILogger<SimpleController> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
-            ) : base(logger, factory, childFactory)
+            ICslaService csla
+            ) : base(logger, csla)
         { }
 
         #endregion
@@ -265,16 +264,12 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// </summary>
         /// <param name="criteria">The criteria of the team set.</param>
         /// <param name="dto">The data transer objects of the team set.</param>
-        /// <param name="factory">The data portal factory of the collection.</param>
-        /// <param name="childFactory">The data portal factory of the items.</param>
         /// <returns>The updated team set.</returns>
         [HttpPut("set")]
         [ProducesResponseType(typeof(List<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<List<SimpleTeamSetItemDto>>> UpdateTeamSet(
             [FromQuery] SimpleTeamSetCriteria criteria,
-            [FromBody] List<SimpleTeamSetItemDto> dto,
-            [FromServices] IDataPortalFactory factory,
-            [FromServices] IChildDataPortalFactory childFactory
+            [FromBody] List<SimpleTeamSetItemDto> dto
             )
         {
             try

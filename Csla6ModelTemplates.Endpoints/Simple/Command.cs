@@ -1,6 +1,7 @@
 using Ardalis.ApiEndpoints;
-using Csla;
 using Csla6ModelTemplates.Contracts.Simple.Command;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Command;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -17,20 +18,20 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         .WithActionResult<bool>
     {
         internal ILogger Logger { get; private set; }
-        internal IDataPortalFactory Factory { get; private set; }
+        internal ICslaService Csla { get; private set; }
 
         /// <summary>
         /// Creates a new instance of the endpoint.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public Command(
             ILogger<Command> logger,
-            IDataPortalFactory factory
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
+            Csla = csla;
         }
 
         /// <summary>
@@ -58,13 +59,13 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             {
                 return await Run.RetryOnDeadlock(async () =>
                 {
-                    var command = await RenameTeam.Execute(Factory, dto);
+                    var command = await RenameTeam.Execute(Csla.Factory, dto);
                     return Ok(command.Result);
                 });
             }
             catch (Exception ex)
             {
-                return Helper.HandleError(this, Logger, ex);
+                return Helper.HandleError(this, Logger, Csla.DeadLock, ex);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new JunctionController(logger, setup.Csla);
 
             // Act
             ActionResult<GroupViewDto> actionResult = await sut.GetGroupView("oQLOyK85x6g");

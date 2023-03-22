@@ -1,5 +1,6 @@
 using Csla;
 using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Csla6ModelTemplates.WebApi
@@ -12,33 +13,30 @@ namespace Csla6ModelTemplates.WebApi
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
         internal IChildDataPortalFactory ChildFactory { get; private set; }
+        internal IDeadLockDetector DeadLock { get; private set; }
 
         /// <summary>
         /// Gets the path of the request.
         /// </summary>
         protected string Uri
         {
-            get
-            {
-                return Request == null ? "" : Request.Path.ToString();
-            }
+            get { return Request == null ? "" : Request.Path.ToString(); }
         }
 
         /// <summary>
         /// Creates a new instance of the controller.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         internal ApiController(
             ILogger logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
+            ICslaService csla
             )
         {
             Logger = logger;
-            Factory = factory;
-            ChildFactory = childFactory;
+            Factory = csla.Factory;
+            ChildFactory = csla.ChildFactory;
+            DeadLock = csla.DeadLock;
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace Csla6ModelTemplates.WebApi
                 return StatusCode(422, new ValidationError(vException));
 
             // Check deadlock exception.
-            DeadlockError deadlock = DeadlockError.CheckException(exception);
+            DeadlockException deadlock = DeadLock.CheckException(exception);
             if (deadlock != null)
             {
                 // Status code 423 = Locked

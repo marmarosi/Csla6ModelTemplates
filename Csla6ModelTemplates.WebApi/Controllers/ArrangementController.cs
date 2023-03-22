@@ -1,7 +1,7 @@
-using Csla;
 using Csla6ModelTemplates.Contracts.Arrangement.Full;
 using Csla6ModelTemplates.Contracts.Arrangement.Pagination;
 using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Full;
 using Csla6ModelTemplates.Models.Arrangement.Pagination;
@@ -24,13 +24,11 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// Creates a new instance.
         /// </summary>
         /// <param name="logger">The application logging service.</param>
-        /// <param name="factory">The data portal factory.</param>
-        /// <param name="childFactory">The child data portal factory.</param>
+        /// <param name="csla">The CSLA helper service.</param>
         public ArrangementController(
             ILogger<ArrangementController> logger,
-            IDataPortalFactory factory,
-            IChildDataPortalFactory childFactory
-            ) : base(logger, factory, childFactory)
+            ICslaService csla
+            ) : base(logger, csla)
         { }
 
         #endregion

@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(

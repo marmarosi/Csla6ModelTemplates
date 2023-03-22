@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<View>();
-            var sut = new View(logger, setup.PortalFactory);
+            var sut = new View(logger, setup.Csla);
 
             // Act
             ActionResult<GroupViewDto> actionResult = await sut.HandleAsync("oQLOyK85x6g");

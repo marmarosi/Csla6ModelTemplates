@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new JunctionController(logger, setup.Csla);
 
             // Act
             ActionResult<GroupDto> actionResult = await sut.GetNewGroup();
@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new JunctionController(logger, setup.Csla);
 
             // Act
             var pristineGroup = new GroupDto
@@ -105,7 +105,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new JunctionController(logger, setup.Csla);
 
             // Act
             ActionResult<GroupDto> actionResult = await sut.GetGroup("6KANyA658o9");
@@ -141,8 +141,8 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sutR = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutR = new JunctionController(logger, setup.Csla);
+            var sutU = new JunctionController(logger, setup.Csla);
 
             // Act
             ActionResult<GroupDto> actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
@@ -196,7 +196,7 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
-            var sut = new JunctionController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new JunctionController(logger, setup.Csla);
 
             // Act
             ActionResult actionResult = await sut.DeleteGroup("3Nr8nQenQjA");

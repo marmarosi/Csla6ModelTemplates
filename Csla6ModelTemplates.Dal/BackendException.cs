@@ -19,7 +19,7 @@ namespace Csla6ModelTemplates.Dal
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackendException"/> class.
+        /// Initializes a new instance.
         /// </summary>
         public BackendException()
             : base()
@@ -28,7 +28,7 @@ namespace Csla6ModelTemplates.Dal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackendException"/> class.
+        /// Initializes a new instance.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         public BackendException(
@@ -40,7 +40,7 @@ namespace Csla6ModelTemplates.Dal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackendException"/> class.
+        /// Initializes a new instance.
         /// </summary>
         /// <param name="message">The error message that explains the reason for the exception.</param>
         /// <param name="inner">The exception that is the cause of the current exception.
@@ -56,7 +56,7 @@ namespace Csla6ModelTemplates.Dal
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BackendException"/> class.
+        /// Initializes a new instance.
         /// </summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>

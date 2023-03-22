@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Pagination>();
-            var sut = new Pagination(logger, setup.PortalFactory);
+            var sut = new Pagination(logger, setup.Csla);
 
             // Act
             ActionResult<IPaginatedList<PaginatedTeamListItemDto>> actionResult = await sut.HandleAsync(

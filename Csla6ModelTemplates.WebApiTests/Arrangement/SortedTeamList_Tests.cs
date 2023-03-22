@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
             // Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ArrangementController>();
-            var sut = new ArrangementController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ArrangementController(logger, setup.Csla);
 
             // Act
             SortedTeamListCriteria criteria = new SortedTeamListCriteria
