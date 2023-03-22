@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="logger">The application logging service.</param>
         /// <param name="csla">The CSLA helper service.</param>
         public Read(
-            ILogger<Full> logger,
+            ILogger<Read> logger,
             ICslaService csla
             )
         {

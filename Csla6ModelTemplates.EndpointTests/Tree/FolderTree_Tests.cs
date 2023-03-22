@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.EndpointTests.Tree
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<M.Tree>();
-            var sut = new M.Tree(logger, setup.PortalFactory);
+            var sut = new M.Tree(logger, setup.Csla);
 
             // Act
             ActionResult<FolderNodeDto> actionResult = await sut.HandleAsync("7x95p9vYaZz");

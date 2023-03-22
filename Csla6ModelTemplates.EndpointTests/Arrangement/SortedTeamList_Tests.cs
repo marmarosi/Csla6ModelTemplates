@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Sorting>();
-            var sut = new Sorting(logger, setup.PortalFactory);
+            var sut = new Sorting(logger, setup.Csla);
 
             // Act
             ActionResult<IList<SortedTeamListItemDto>> actionResult = await sut.HandleAsync(

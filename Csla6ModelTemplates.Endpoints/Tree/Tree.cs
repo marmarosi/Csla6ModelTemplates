@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         /// <param name="logger">The application logging service.</param>
         /// <param name="csla">The CSLA helper service.</param>
         public Tree(
-            ILogger<Full> logger,
+            ILogger<Tree> logger,
             ICslaService csla
             )
         {

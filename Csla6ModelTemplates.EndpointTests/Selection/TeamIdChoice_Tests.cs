@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.EndpointTests.Selection
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<WithId>();
-            var sut = new WithId(logger, setup.PortalFactory);
+            var sut = new WithId(logger, setup.Csla);
 
             // Act
             ActionResult<IList<IdNameOptionDto>> actionResult = await sut.HandleAsync(

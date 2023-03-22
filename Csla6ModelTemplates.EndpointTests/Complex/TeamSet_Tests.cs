@@ -19,7 +19,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ReadSet>();
-            var sut = new ReadSet(logger, setup.PortalFactory);
+            var sut = new ReadSet(logger, setup.Csla);
 
             // Act
             ActionResult<IList<TeamSetItemDto>> actionResult = await sut.HandleAsync(
@@ -51,9 +51,9 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var loggerRead = setup.GetLogger<ReadSet>();
-            var sutRead = new ReadSet(loggerRead, setup.PortalFactory);
+            var sutRead = new ReadSet(loggerRead, setup.Csla);
             var loggerUpdate = setup.GetLogger<UpdateSet>();
-            var sutUpdate = new UpdateSet(loggerUpdate, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutUpdate = new UpdateSet(loggerUpdate, setup.Csla);
 
             // Act
             var criteria = new TeamSetCriteria { TeamName = "7" };

@@ -46,6 +46,7 @@ namespace Csla6ModelTemplates.WebApiTests
             services.AddCsla();
             services.AddScoped<ICslaService, CslaService>();
 
+            // Initialize properties.
             provider = services.BuildServiceProvider();
             Csla = provider.GetRequiredService<ICslaService>();
         }

@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<View>();
-            var sut = new View(logger, setup.PortalFactory);
+            var sut = new View(logger, setup.Csla);
 
             // Act
             ActionResult<TeamViewDto> actionResult = await sut.HandleAsync("1r9oGj1x3lk");

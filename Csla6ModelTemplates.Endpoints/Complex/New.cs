@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="logger">The application logging service.</param>
         /// <param name="csla">The CSLA helper service.</param>
         public New(
-            ILogger<Full> logger,
+            ILogger<New> logger,
             ICslaService csla
             )
         {

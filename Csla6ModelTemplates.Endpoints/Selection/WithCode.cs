@@ -27,7 +27,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
         /// <param name="logger">The application logging service.</param>
         /// <param name="csla">The CSLA helper service.</param>
         public WithCode(
-            ILogger<Full> logger,
+            ILogger<WithCode> logger,
             ICslaService csla
             )
         {
