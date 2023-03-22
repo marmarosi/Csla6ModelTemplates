@@ -1,7 +1,7 @@
-using Csla6ModelTemplates.CslaExtensions;
+﻿using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Csla6ModelTemplates.Endpoints
+namespace Csla6ModelTemplates.CslaExtensions
 {
     internal static class RUN
     {
@@ -36,7 +36,7 @@ namespace Csla6ModelTemplates.Endpoints
                 result = await businessMethod();
 
                 if ((result is OkObjectResult) &&
-                    ((OkObjectResult)result).Value is DeadlockError)
+                    ((OkObjectResult)result).Value is DeadlockException)
                 {
                     retryCount++;
                     result = null;
@@ -77,7 +77,7 @@ namespace Csla6ModelTemplates.Endpoints
                 result = await businessMethod();
 
                 if ((result.Result is ObjectResult) &&
-                    ((ObjectResult)result.Result).Value is DeadlockError)
+                    ((ObjectResult)result.Result).Value is DeadlockException)
                 {
                     retryCount++;
                     result = null;

@@ -49,7 +49,11 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         private void Validate()
         {
             if (string.IsNullOrEmpty(TeamName))
-                throw new CommandException(ValidationText.RenameTeam_TeamName_Required);
+                throw new ValidationException(
+                    nameof(RenameTeam),
+                    nameof(TeamName),
+                    ValidationText.RenameTeam_TeamName_Required
+                    );
         }
 
         //private static void AddObjectAuthorizationRules()

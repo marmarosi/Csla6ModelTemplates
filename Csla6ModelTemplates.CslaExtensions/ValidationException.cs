@@ -1,3 +1,4 @@
+using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Dal;
 using System.Runtime.Serialization;
@@ -22,7 +23,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationException"/> class.
+        /// Initializes a new instance.
         /// </summary>
         /// <param name="messages">Information v the failed validations.</param>
         public ValidationException(
@@ -31,6 +32,25 @@ namespace Csla6ModelTemplates.CslaExtensions
             : base()
         {
             Messages = messages;
+        }
+
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
+        /// <param name="model">The name of the business object model.</param>
+        /// <param name="property">The name of the proerty with optiona prefix.</param>
+        /// <param name="description">The message text.</param>
+        /// <param name="severity">The rule severity, defaults to error.</param>
+        public ValidationException(
+            string model,
+            string property,
+            string description,
+            RuleSeverity severity = RuleSeverity.Error
+            )
+            : base()
+        {
+            var message = new ValidationMessage(model, property, description, severity);
+            Messages = new List<ValidationMessage> { message };
         }
 
         #endregion
