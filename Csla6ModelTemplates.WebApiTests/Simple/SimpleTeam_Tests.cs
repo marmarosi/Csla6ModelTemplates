@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             ActionResult<SimpleTeamDto> actionResult = await sut.GetNewTeam();
@@ -44,7 +44,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             var pristineTeam = new SimpleTeamDto
@@ -80,7 +80,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             ActionResult<SimpleTeamDto> actionResult = await sut.GetTeam("zXayGQW0bZv");
@@ -109,8 +109,8 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutR = new SimpleController(logger, setup.Csla);
+            var sutU = new SimpleController(logger, setup.Csla);
 
             // Act
             ActionResult<SimpleTeamDto> actionResultR = await sutR.GetTeam("zXayGQW0bZv");
@@ -146,7 +146,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             ActionResult actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");

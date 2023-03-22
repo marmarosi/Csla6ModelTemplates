@@ -14,7 +14,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             ActionResult<TeamViewDto> actionResult = await sut.GetTeamView("1r9oGj1x3lk");

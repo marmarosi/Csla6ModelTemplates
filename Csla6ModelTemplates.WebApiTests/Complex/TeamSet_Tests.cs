@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
@@ -49,7 +49,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             var criteria = new TeamSetCriteria { TeamName = "7" };

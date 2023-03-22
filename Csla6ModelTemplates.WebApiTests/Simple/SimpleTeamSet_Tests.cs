@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sut = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new SimpleController(logger, setup.Csla);
 
             // Act
             SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
@@ -45,8 +45,8 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
-            var sutR = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new SimpleController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutR = new SimpleController(logger, setup.Csla);
+            var sutU = new SimpleController(logger, setup.Csla);
 
             // Act
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
@@ -76,9 +76,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
 
             var actionResultU = await sutU.UpdateTeamSet(
                 criteria,
-                pristineList,
-                setup.PortalFactory,
-                setup.ChildPortalFactory
+                pristineList
                 );
 
             // Assert

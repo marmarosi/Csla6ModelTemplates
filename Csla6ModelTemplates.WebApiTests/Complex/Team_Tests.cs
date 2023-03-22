@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             ActionResult<TeamDto> actionResult = await sut.GetNewTeam();
@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             var pristineTeam = new TeamDto
@@ -113,7 +113,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             ActionResult<TeamDto> actionResult = await sut.GetTeam("LBgyGEK0PN2");
@@ -151,8 +151,8 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sutR = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
-            var sutU = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sutR = new ComplexController(logger, setup.Csla);
+            var sutU = new ComplexController(logger, setup.Csla);
 
             // --- Act
             ActionResult<TeamDto> actionResultR = await sutR.GetTeam("JZY3GdKxyOj");
@@ -210,7 +210,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
-            var sut = new ComplexController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new ComplexController(logger, setup.Csla);
 
             // Act
             ActionResult actionResult = await sut.DeleteTeam("qNwO0mkG3rB");

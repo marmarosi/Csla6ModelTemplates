@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.WebApiTests.Tree
             // Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<TreeController>();
-            var sut = new TreeController(logger, setup.PortalFactory, setup.ChildPortalFactory);
+            var sut = new TreeController(logger, setup.Csla);
 
             // Act
             ActionResult<List<IdNameOptionDto>> actionResult = await sut.GetRootFolderChoice();
