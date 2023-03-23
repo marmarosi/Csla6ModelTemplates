@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.Contracts.Complex.Command;
+using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -18,16 +19,13 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             var sut = new ComplexController(logger, setup.Csla);
 
             // Act
-            ActionResult<List<CountTeamsResultDto>> actionResult = await sut.CountTeamsCommand(
+            var actionResult = await sut.CountTeamsCommand(
                 new CountTeamsCriteria()
                 );
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as List<CountTeamsResultDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IList<CountTeamsResultDto>>(okObjectResult.Value);
 
             // Count list must contain 4 items.
             Assert.Equal(4, list.Count);

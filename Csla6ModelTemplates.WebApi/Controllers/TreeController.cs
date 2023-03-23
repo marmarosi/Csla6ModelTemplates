@@ -39,7 +39,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested folder tree.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<FolderNodeDto>> GetFolderTree(
+        public async Task<IActionResult> GetFolderTree(
             string id
             )
         {
@@ -64,7 +64,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The ID-name choice of the trees.</returns>
         [HttpGet("choice")]
         [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<IdNameOptionDto>>> GetRootFolderChoice()
+        public async Task<IActionResult> GetRootFolderChoice()
         {
             try
             {

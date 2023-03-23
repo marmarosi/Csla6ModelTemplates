@@ -26,14 +26,11 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
                 SortBy = ArrangedTeamListSortBy.TeamCode,
                 SortDirection = SortDirection.Descending
             };
-            ActionResult<PaginatedList<ArrangedTeamListItemDto>> actionResult = await sut.GetArrangedTeamList(criteria);
+            var actionResult = await sut.GetArrangedTeamList(criteria);
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            IPaginatedList<ArrangedTeamListItemDto> list = okObjectResult.Value as IPaginatedList<ArrangedTeamListItemDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IPaginatedList<ArrangedTeamListItemDto>>(okObjectResult.Value);
 
             // The list must have 4 items and 14 total items.
             Assert.Equal(4, list.Data.Count);

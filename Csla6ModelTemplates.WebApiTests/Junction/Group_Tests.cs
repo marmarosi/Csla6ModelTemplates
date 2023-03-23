@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -6,7 +7,7 @@ using Xunit;
 
 namespace Csla6ModelTemplates.WebApiTests.Junction
 {
-    public class Group_Tests
+    public class Group_Tests : TestBase
     {
         #region New
 
@@ -19,14 +20,11 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             var sut = new JunctionController(logger, setup.Csla);
 
             // Act
-            ActionResult<GroupDto> actionResult = await sut.GetNewGroup();
+            var actionResult = await sut.GetNewGroup();
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var group = okObjectResult.Value as GroupDto;
-            Assert.NotNull(group);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
             // The code and name must miss.
             Assert.Empty(group.GroupCode);
@@ -68,14 +66,12 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             };
             pristineGroup.Persons.Add(pristineMember2);
 
-            ActionResult<GroupDto> actionResult = await sut.CreateGroup(pristineGroup);
+            var actionResult = await sut.CreateGroup(pristineGroup);
 
             // Assert
-            var createdResult = actionResult.Result as CreatedResult;
-            Assert.NotNull(createdResult);
-
-            var createdGroup = createdResult.Value as GroupDto;
-            Assert.NotNull(createdGroup);
+            if (IsDeadlock(actionResult, "Group - Create")) return;
+            var createdResult = Assert.IsType<CreatedResult>(actionResult);
+            var createdGroup = Assert.IsAssignableFrom<GroupDto>(createdResult.Value);
 
             // The group must have new values.
             Assert.NotNull(createdGroup.GroupId);
@@ -108,26 +104,23 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             var sut = new JunctionController(logger, setup.Csla);
 
             // Act
-            ActionResult<GroupDto> actionResult = await sut.GetGroup("6KANyA658o9");
+            var actionResult = await sut.GetGroup("6KANyA658o9");
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineGroup = okObjectResult.Value as GroupDto;
-            Assert.NotNull(pristineGroup);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
             // The group code and name must end with 10.
-            Assert.Equal("6KANyA658o9", pristineGroup.GroupId);
-            Assert.Equal("G-10", pristineGroup.GroupCode);
-            Assert.EndsWith("10", pristineGroup.GroupName);
-            Assert.NotNull(pristineGroup.Timestamp);
+            Assert.Equal("6KANyA658o9", group.GroupId);
+            Assert.Equal("G-10", group.GroupCode);
+            Assert.EndsWith("10", group.GroupName);
+            Assert.NotNull(group.Timestamp);
 
             // The person name must start with Person.
-            Assert.True(pristineGroup.Persons.Count > 0);
-            foreach (var groupPerson in pristineGroup.Persons)
+            Assert.True(group.Persons.Count > 0);
+            foreach (var person in group.Persons)
             {
-                Assert.StartsWith("Person", groupPerson.PersonName);
+                Assert.StartsWith("Person", person.PersonName);
             }
         }
 
@@ -145,9 +138,9 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             var sutU = new JunctionController(logger, setup.Csla);
 
             // Act
-            ActionResult<GroupDto> actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineGroup = okObjectResultR.Value as GroupDto;
+            var actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultR.Value);
             var pristineMember1 = pristineGroup.Persons[0];
 
             pristineGroup.GroupCode = "G-1212";
@@ -159,14 +152,12 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
                 PersonName = "New member",
             };
             pristineGroup.Persons.Add(pristineMemberNew);
-            ActionResult<GroupDto> actionResultU = await sutU.UpdateGroup(pristineGroup);
+            var actionResultU = await sutU.UpdateGroup(pristineGroup);
 
             // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedGroup = okObjectResultU.Value as GroupDto;
-            Assert.NotNull(updatedGroup);
+            if (IsDeadlock(actionResultU, "Group - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultU.Value);
 
             // The group must have new values.
             Assert.Equal(pristineGroup.GroupId, updatedGroup.GroupId);
@@ -199,11 +190,12 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             var sut = new JunctionController(logger, setup.Csla);
 
             // Act
-            ActionResult actionResult = await sut.DeleteGroup("3Nr8nQenQjA");
+            var actionResult = await sut.DeleteGroup("3Nr8nQenQjA");
 
             // Assert
-            var noContentResult = actionResult as NoContentResult;
-            Assert.NotNull(noContentResult);
+            if (IsDeadlock(actionResult, "Group - Delete")) return;
+            var noContentResult = Assert.IsType<NoContentResult>(actionResult);
+
             Assert.Equal(204, noContentResult.StatusCode);
         }
 

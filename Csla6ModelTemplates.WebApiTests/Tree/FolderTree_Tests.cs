@@ -18,14 +18,11 @@ namespace Csla6ModelTemplates.WebApiTests.Tree
             var sut = new TreeController(logger, setup.Csla);
 
             // Act
-            ActionResult<FolderNodeDto> actionResult = await sut.GetFolderTree("7x95p9vYaZz");
+            var actionResult = await sut.GetFolderTree("7x95p9vYaZz");
 
             // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            List<FolderNodeDto> tree = okObjectResult.Value as List<FolderNodeDto>;
-            Assert.NotNull(tree);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var tree = Assert.IsAssignableFrom<IList<FolderNodeDto>>(okObjectResult.Value);
 
             // The tree must have one root node.
             Assert.Single(tree);

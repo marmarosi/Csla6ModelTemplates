@@ -17,14 +17,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             var sut = new ComplexController(logger, setup.Csla);
 
             // Act
-            ActionResult<TeamViewDto> actionResult = await sut.GetTeamView("1r9oGj1x3lk");
+            var actionResult = await sut.GetTeamView("1r9oGj1x3lk");
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var team = okObjectResult.Value as TeamViewDto;
-            Assert.NotNull(team);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<TeamViewDto>(okObjectResult.Value);
 
             // The code and name must end with 17.
             Assert.Equal("T-0017", team.TeamCode);

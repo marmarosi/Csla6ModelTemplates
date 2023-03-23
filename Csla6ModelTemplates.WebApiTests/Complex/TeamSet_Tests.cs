@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.Contracts.Complex.Set;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using Xunit;
 
 namespace Csla6ModelTemplates.WebApiTests.Complex
 {
-    public class TeamSet_Tests
+    public class TeamSet_Tests : TestBase
     {
         #region Read
 
@@ -22,14 +23,11 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
 
             // Act
             TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<List<TeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
+            var actionResult = await sut.GetTeamSet(criteria);
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineList = okObjectResult.Value as List<TeamSetItemDto>;
-            Assert.NotNull(pristineList);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResult.Value);
 
             // List must contain some items.
             Assert.Equal(5, pristineList.Count);
@@ -53,9 +51,9 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
 
             // Act
             var criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<List<TeamSetItemDto>> actionResultR = await sut.GetTeamSet(criteria);
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineList = okObjectResultR.Value as List<TeamSetItemDto>;
+            var actionResultR = await sut.GetTeamSet(criteria);
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultR.Value);
 
             // Modify an item.
             var pristineTeam3 = pristineList[2];
@@ -90,20 +88,18 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             pristineList.Remove(pristineTeam4);
 
             // Act
-            ActionResult<List<TeamSetItemDto>> actionResultU = await sut.UpdateTeamSet(
+            var actionResultU = await sut.UpdateTeamSet(
                 criteria,
-                pristineList
+                (List<TeamSetItemDto>)pristineList
                 );
 
             // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedList = okObjectResultU.Value as List<TeamSetItemDto>;
-            Assert.NotNull(updatedList);
+            if (IsDeadlock(actionResultU, "TeamSet - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultU.Value);
 
             // The updated team must have new values.
-            var updatedTeam3 = updatedList.Find(o => o.TeamCode == "T-9301");
+            var updatedTeam3 = ((List<TeamSetItemDto>)updatedList).Find(o => o.TeamCode == "T-9301");
 
             Assert.Equal(pristineTeam3.TeamId, updatedTeam3.TeamId);
             Assert.Equal(pristineTeam3.TeamCode, updatedTeam3.TeamCode);

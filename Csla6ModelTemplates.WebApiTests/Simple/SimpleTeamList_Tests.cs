@@ -18,16 +18,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             var sut = new SimpleController(logger, setup.Csla);
 
             // Act
-            ActionResult<List<SimpleTeamListItemDto>> actionResult = await sut.GetTeamList(
+            var actionResult = await sut.GetTeamList(
                 new SimpleTeamListCriteria { TeamName = "9" }
                 );
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as List<SimpleTeamListItemDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IList<SimpleTeamListItemDto>>(okObjectResult.Value);
 
             // The list must have 5 items.
             Assert.Equal(5, list.Count);

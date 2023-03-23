@@ -18,14 +18,11 @@ namespace Csla6ModelTemplates.WebApiTests.Tree
             var sut = new TreeController(logger, setup.Csla);
 
             // Act
-            ActionResult<List<IdNameOptionDto>> actionResult = await sut.GetRootFolderChoice();
+            var actionResult = await sut.GetRootFolderChoice();
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var choice = okObjectResult.Value as IList<IdNameOptionDto>;
-            Assert.NotNull(choice);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var choice = Assert.IsAssignableFrom<IList<IdNameOptionDto>>(okObjectResult.Value);
 
             // The choice must have 3 items.
             Assert.Equal(3, choice.Count);

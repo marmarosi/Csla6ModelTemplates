@@ -42,7 +42,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested team list.</returns>
         [HttpGet("sorted")]
         [ProducesResponseType(typeof(List<SortedTeamListItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<SortedTeamListItemDto>>> GetSortedTeamList(
+        public async Task<IActionResult> GetSortedTeamList(
             [FromQuery] SortedTeamListCriteria criteria
             )
         {
@@ -68,7 +68,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested page of the team list.</returns>
         [HttpGet("paginated")]
         [ProducesResponseType(typeof(PaginatedList<PaginatedTeamListItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PaginatedList<PaginatedTeamListItemDto>>> GetPaginatedTeamList(
+        public async Task<IActionResult> GetPaginatedTeamList(
             [FromQuery] PaginatedTeamListCriteria criteria
             )
         {
@@ -94,7 +94,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested page of the sorted team list.</returns>
         [HttpGet("full")]
         [ProducesResponseType(typeof(PaginatedList<ArrangedTeamListItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<PaginatedList<ArrangedTeamListItemDto>>> GetArrangedTeamList(
+        public async Task<IActionResult> GetArrangedTeamList(
             [FromQuery] ArrangedTeamListCriteria criteria
             )
         {

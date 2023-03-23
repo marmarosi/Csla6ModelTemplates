@@ -17,14 +17,11 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             var sut = new SimpleController(logger, setup.Csla);
 
             // Act
-            ActionResult<SimpleTeamViewDto> actionResult = await sut.GetTeamView("d9A30RLG8pZ");
+            var actionResult = await sut.GetTeamView("d9A30RLG8pZ");
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var team = okObjectResult.Value as SimpleTeamViewDto;
-            Assert.NotNull(team);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<SimpleTeamViewDto>(okObjectResult.Value);
 
             // The code and name must end with 31.
             Assert.Equal("T-0031", team.TeamCode);
