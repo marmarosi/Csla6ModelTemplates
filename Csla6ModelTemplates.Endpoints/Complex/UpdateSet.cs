@@ -86,11 +86,25 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <summary>
         /// The criteria of the team set.
         /// </summary>
-        [FromQuery] public TeamSetCriteria Criteria { get; set; }
+        public TeamSetCriteria Criteria { get; set; }
 
         /// <summary>
         /// The data transer objects of the team set.
         /// </summary>
-        [FromBody] public List<TeamSetItemDto> Dto { get; set; }
+        public List<TeamSetItemDto> Dto { get; set; }
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <param name="dto">The data transer objects of the team set.</param>
+        public TeamSetRequest(
+            TeamSetCriteria criteria,
+            List<TeamSetItemDto> dto
+            )
+        {
+            Criteria = criteria;
+            Dto = dto;
+        }
     }
 }

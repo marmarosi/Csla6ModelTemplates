@@ -10,9 +10,9 @@ namespace Csla6ModelTemplates.WebApi
     /// </summary>
     public class ApiController : ControllerBase
     {
-        internal const int MAX_RETRIES = 1;
-        internal const int MIN_DELAY_MS = 200;
-        internal const int MAX_DELAY_MS = 400;
+        private const int MAX_RETRIES = 1;
+        private const int MIN_DELAY_MS = 500;
+        private const int MAX_DELAY_MS = 1000;
 
         internal ILogger Logger { get; private set; }
         internal IDataPortalFactory Factory { get; private set; }
@@ -110,42 +110,7 @@ namespace Csla6ModelTemplates.WebApi
 
         #endregion
 
-        /// <summary>
-        /// Handles the eventual exceptions.
-        /// </summary>
-        /// <param name="exception">The exception thrown by the backend.</param>
-        /// <returns>The error information to send to the frontend.</returns>
-        protected ObjectResult HandleError_Old(
-            Exception exception
-            )
-        {
-            ObjectResult result = null;
-
-            // Check validation exception.
-            if (exception is ValidationException vException)
-                // Status code 422 = Unprocesssable Entity
-                return StatusCode(422, new ValidationError(vException));
-
-            // Check deadlock exception.
-            DeadlockException deadlock = DeadLock.CheckException(exception);
-            if (deadlock != null)
-            {
-                // Status code 423 = Locked
-                result = new ObjectResult(deadlock);
-                result.StatusCode = StatusCodes.Status423Locked;
-                return result;
-            }
-
-            // Evaluate other exceptions.
-            int statusCode;
-            BackendError backend = BackendError.Evaluate(exception, out statusCode);
-
-            Logger.LogError(exception, backend.Summary, null);
-
-            result = new ObjectResult(backend);
-            result.StatusCode = statusCode;
-            return result;
-        }
+        #region HandleError
 
         /// <summary>
         /// Handles the eventual exceptions.
@@ -158,16 +123,18 @@ namespace Csla6ModelTemplates.WebApi
         {
             // Check validation exception.
             if (exception is ValidationException vException)
-                // Status code 422 = Unprocesssable Entity
-                //eturn StatusCode(422, new ValidationError(vException));
                 return ValidationProblem();
 
             // Check deadlock exception.
             DeadlockException deadlock = DeadLock.CheckException(exception);
             if (deadlock != null)
-            {
-                return Problem(deadlock.Message, null, 422, "Transaction is deadlocked", null);
-            }
+                return Problem(
+                    deadlock.Message,
+                    null,
+                    StatusCodes.Status423Locked,
+                    "Transaction is deadlocked",
+                    null
+                    );
 
             // Evaluate other exceptions.
             int statusCode;
@@ -180,5 +147,7 @@ namespace Csla6ModelTemplates.WebApi
             //return result;
             return Problem(backend.Summary, null, statusCode, exception.Message, null);
         }
+
+        #endregion
     }
 }

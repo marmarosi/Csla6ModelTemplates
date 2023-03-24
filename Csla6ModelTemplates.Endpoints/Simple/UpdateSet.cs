@@ -86,11 +86,25 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <summary>
         /// The criteria of the team set.
         /// </summary>
-        [FromQuery] public SimpleTeamSetCriteria Criteria { get; set; }
+        public SimpleTeamSetCriteria Criteria { get; set; }
 
         /// <summary>
         /// The data transer objects of the team set.
         /// </summary>
-        [FromBody] public List<SimpleTeamSetItemDto> Dto { get; set; }
+        public List<SimpleTeamSetItemDto> Dto { get; set; }
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="criteria"> The criteria of the team set.</param>
+        /// <param name="dto">The data transer objects of the team set.</param>
+        public SimpleTeamSetRequest(
+            SimpleTeamSetCriteria criteria,
+            List<SimpleTeamSetItemDto> dto
+            )
+        {
+            Criteria = criteria;
+            Dto = dto;
+        }
     }
 }

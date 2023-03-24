@@ -53,17 +53,9 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
                 GroupName = "Test group number 9201",
                 Timestamp = null
             };
-            var pristineMember1 = new GroupPersonDto
-            {
-                PersonId = "7adBbqg8nxV",
-                PersonName = "Person #11"
-            };
+            var pristineMember1 = new GroupPersonDto("7adBbqg8nxV", "Person #11");
             pristineGroup.Persons.Add(pristineMember1);
-            var pristineMember2 = new GroupPersonDto
-            {
-                PersonId = "4aoj5R40G1e",
-                PersonName = "Person #17"
-            };
+            var pristineMember2 = new GroupPersonDto("4aoj5R40G1e", "Person #17");
             pristineGroup.Persons.Add(pristineMember2);
 
             var actionResult = await sut.CreateGroup(pristineGroup);
@@ -146,12 +138,9 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
             pristineGroup.GroupCode = "G-1212";
             pristineGroup.GroupName = "Group No. 1212";
 
-            var pristineMemberNew = new GroupPersonDto
-            {
-                PersonId = "a4P18mr5M62",
-                PersonName = "New member",
-            };
+            var pristineMemberNew = new GroupPersonDto("a4P18mr5M62", "New member");
             pristineGroup.Persons.Add(pristineMemberNew);
+
             var actionResultU = await sutU.UpdateGroup(pristineGroup);
 
             // Assert

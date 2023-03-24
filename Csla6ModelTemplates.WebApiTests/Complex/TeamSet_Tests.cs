@@ -87,7 +87,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
             var deletedTeamId = pristineTeam4.TeamId;
             pristineList.Remove(pristineTeam4);
 
-            // Act
+            // Update now.
             var actionResultU = await sut.UpdateTeamSet(
                 criteria,
                 (List<TeamSetItemDto>)pristineList

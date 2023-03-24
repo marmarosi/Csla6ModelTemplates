@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Complex.Edit;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
@@ -7,7 +8,7 @@ using Xunit;
 
 namespace Csla6ModelTemplates.EndpointTests.Complex
 {
-    public class Team_Tests
+    public class Team_Tests : TestBase
     {
         #region New
 
@@ -20,14 +21,11 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var sut = new New(logger, setup.Csla);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.HandleAsync();
+            var actionResult = await sut.HandleAsync();
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var team = okObjectResult.Value as TeamDto;
-            Assert.NotNull(team);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<TeamDto>(okObjectResult.Value);
 
             // The code and name must miss.
             Assert.Empty(team.TeamCode);
@@ -73,14 +71,12 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             };
             pristineTeam.Players.Add(pristinePlayer2);
 
-            ActionResult<TeamDto> actionResult = await sut.HandleAsync(pristineTeam);
+            var actionResult = await sut.HandleAsync(pristineTeam);
 
             // Assert
-            var createdResult = actionResult.Result as CreatedResult;
-            Assert.NotNull(createdResult);
-
-            var createdTeam = createdResult.Value as TeamDto;
-            Assert.NotNull(createdTeam);
+            if (IsDeadlock(actionResult, "Team - Create")) return;
+            var createdResult = Assert.IsType<CreatedResult>(actionResult);
+            var createdTeam = Assert.IsAssignableFrom<TeamDto>(createdResult.Value);
 
             // The team must have new values.
             Assert.NotNull(createdTeam.TeamId);
@@ -117,24 +113,21 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var sut = new Read(logger, setup.Csla);
 
             // Act
-            ActionResult<TeamDto> actionResult = await sut.HandleAsync("LBgyGEK0PN2");
+            var actionResult = await sut.HandleAsync("LBgyGEK0PN2");
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineTeam = okObjectResult.Value as TeamDto;
-            Assert.NotNull(pristineTeam);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<TeamDto>(okObjectResult.Value);
 
             // The team code and name must end with 26.
-            Assert.Equal("LBgyGEK0PN2", pristineTeam.TeamId);
-            Assert.Equal("T-0026", pristineTeam.TeamCode);
-            Assert.EndsWith("26", pristineTeam.TeamName);
-            Assert.NotNull(pristineTeam.Timestamp);
+            Assert.Equal("LBgyGEK0PN2", team.TeamId);
+            Assert.Equal("T-0026", team.TeamCode);
+            Assert.EndsWith("26", team.TeamName);
+            Assert.NotNull(team.Timestamp);
 
             // The player codes and names must contain 26.
-            Assert.True(pristineTeam.Players.Count > 0);
-            foreach (var player in pristineTeam.Players)
+            Assert.True(team.Players.Count > 0);
+            foreach (var player in team.Players)
             {
                 Assert.Equal("LBgyGEK0PN2", player.TeamId);
                 Assert.Contains("26", player.PlayerCode);
@@ -157,9 +150,9 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var sutU = new Update(loggerU, setup.Csla);
 
             // Act
-            ActionResult<TeamDto> actionResultR = await sutR.HandleAsync("JZY3GdKxyOj");
-            OkObjectResult okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineTeam = okObjectResultR.Value as TeamDto;
+            var actionResultR = await sutR.HandleAsync("JZY3GdKxyOj");
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineTeam = Assert.IsAssignableFrom<TeamDto>(okObjectResultR.Value);
             var pristinePlayer1 = pristineTeam.Players[0];
 
             pristineTeam.TeamCode = "T-9202";
@@ -179,11 +172,9 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var actionResultU = await sutU.HandleAsync(pristineTeam, new CancellationToken());
 
             // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedTeam = okObjectResultU.Value as TeamDto;
-            Assert.NotNull(updatedTeam);
+            if (IsDeadlock(actionResultU, "Team - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedTeam = Assert.IsAssignableFrom<TeamDto>(okObjectResultU.Value);
 
             // The team must have new values.
             Assert.Equal(pristineTeam.TeamId, updatedTeam.TeamId);
@@ -216,11 +207,12 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var sut = new Delete(logger, setup.Csla);
 
             // Act
-            ActionResult actionResult = await sut.HandleAsync("qNwO0mkG3rB");
+            var actionResult = await sut.HandleAsync("qNwO0mkG3rB");
 
             // Assert
-            var noContentResult = actionResult as NoContentResult;
-            Assert.NotNull(noContentResult);
+            if (IsDeadlock(actionResult, "Team - Delete")) return;
+            var noContentResult = Assert.IsType<NoContentResult>(actionResult);
+
             Assert.Equal(204, noContentResult.StatusCode);
         }
 

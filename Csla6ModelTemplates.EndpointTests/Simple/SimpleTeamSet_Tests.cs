@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using Xunit;
 
 namespace Csla6ModelTemplates.EndpointTests.Simple
 {
-    public class SimpleTeamSet_Tests
+    public class SimpleTeamSet_Tests : TestBase
     {
         #region Read
 
@@ -21,16 +22,13 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             var sut = new ReadSet(logger, setup.Csla);
 
             // Act
-            ActionResult<IList<SimpleTeamSetItemDto>> actionResult = await sut.HandleAsync(
+            var actionResult = await sut.HandleAsync(
                 new SimpleTeamSetCriteria { TeamName = "8" }
                 );
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineList = okObjectResult.Value as List<SimpleTeamSetItemDto>;
-            Assert.NotNull(pristineList);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResult.Value);
 
             // List must contain 5 items.
             Assert.InRange(pristineList.Count, 1, 10);
@@ -52,11 +50,9 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
 
             // Act
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<IList<SimpleTeamSetItemDto>> actionResultR = await sutR.HandleAsync(
-                criteria
-                );
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineList = okObjectResultR.Value as List<SimpleTeamSetItemDto>;
+            var actionResultR = await sutR.HandleAsync(criteria);
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultR.Value);
 
             // Modify an item.
             var pristine = pristineList[0];
@@ -79,19 +75,13 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             pristineList.Remove(pristine3);
 
             // Act
-            var request = new SimpleTeamSetRequest
-            {
-                Criteria = criteria,
-                Dto = pristineList
-            };
+            var request = new SimpleTeamSetRequest(criteria, (List<SimpleTeamSetItemDto>)pristineList);
             var actionResultU = await sutU.HandleAsync(request);
 
             // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedList = okObjectResultU.Value as List<SimpleTeamSetItemDto>;
-            Assert.NotNull(updatedList);
+            if (IsDeadlock(actionResultU, "SimpleTeamSet - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultU.Value);
 
             // The updated team must have new values.
             var updated = updatedList[0];

@@ -18,14 +18,11 @@ namespace Csla6ModelTemplates.EndpointTests.Tree
             var sut = new Choice(logger, setup.Csla);
 
             // Act
-            ActionResult<IList<IdNameOptionDto>> actionResult = await sut.HandleAsync();
+            var actionResult = await sut.HandleAsync();
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var choice = okObjectResult.Value as List<IdNameOptionDto>;
-            Assert.NotNull(choice);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var choice = Assert.IsAssignableFrom<List<IdNameOptionDto>>(okObjectResult.Value);
 
             // The choice must have 3 items.
             Assert.Equal(3, choice.Count);

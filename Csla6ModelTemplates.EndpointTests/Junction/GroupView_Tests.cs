@@ -17,14 +17,11 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
             var sut = new View(logger, setup.Csla);
 
             // Act
-            ActionResult<GroupViewDto> actionResult = await sut.HandleAsync("oQLOyK85x6g");
+            var actionResult = await sut.HandleAsync("oQLOyK85x6g");
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var group = okObjectResult.Value as GroupViewDto;
-            Assert.NotNull(group);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupViewDto>(okObjectResult.Value);
 
             // The code and name must end with 17.
             Assert.Equal("G-08", group.GroupCode);

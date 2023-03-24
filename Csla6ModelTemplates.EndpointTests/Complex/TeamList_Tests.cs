@@ -18,16 +18,13 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var sut = new List(logger, setup.Csla);
 
             // Act
-            ActionResult<IList<TeamListItemDto>> actionResult = await sut.HandleAsync(
+            var actionResult = await sut.HandleAsync(
                 new TeamListCriteria { TeamName = "6" }
                 );
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as List<TeamListItemDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IList<TeamListItemDto>>(okObjectResult.Value);
 
             // The choice must have 5 items.
             Assert.Equal(5, list.Count);

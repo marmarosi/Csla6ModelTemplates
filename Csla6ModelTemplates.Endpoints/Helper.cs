@@ -9,9 +9,9 @@ namespace Csla6ModelTemplates.Endpoints
     /// </summary>
     public static class Helper
     {
-        internal const int MAX_RETRIES = 1;
-        internal const int MIN_DELAY_MS = 200;
-        internal const int MAX_DELAY_MS = 400;
+        private const int MAX_RETRIES = 1;
+        private const int MIN_DELAY_MS = 500;
+        private const int MAX_DELAY_MS = 1000;
 
         /// <summary>
         /// Gets the path of the request.
@@ -90,50 +90,7 @@ namespace Csla6ModelTemplates.Endpoints
 
         #endregion
 
-        /// <summary>
-        /// Handles the eventual exceptions.
-        /// </summary>
-        /// <param name="endpoint">The API endpoint.</param>
-        /// <param name="logger">The application logging service.</param>
-        /// <param name="deadLock">The dead lock detector service.</param>
-        /// <param name="exception">The exception thrown by the backend.</param>
-        /// <returns>The error information to send to the frontend.</returns>
-        public static ObjectResult HandleError_Old(
-            ControllerBase endpoint,
-            ILogger logger,
-            IDeadLockDetector deadLock,
-            Exception exception
-            )
-        {
-            ObjectResult result = null;
-
-            // Check validation exception.
-            if (exception is ValidationException)
-                // Status code 422 = Unprocesssable Entity
-                return endpoint.UnprocessableEntity(
-                    new ValidationError(exception as ValidationException)
-                    );
-
-            // Check deadlock exception.
-            DeadlockException deadlock = deadLock.CheckException(exception);
-            if (deadlock != null)
-            {
-                // Status code 423 = Locked
-                result = new ObjectResult(deadlock);
-                result.StatusCode = StatusCodes.Status423Locked;
-                return result;
-            }
-
-            // Evaluate other exceptions.
-            int statusCode;
-            BackendError backend = BackendError.Evaluate(exception, out statusCode);
-
-            logger.LogError(exception, backend.Summary, null);
-
-            result = new ObjectResult(backend);
-            result.StatusCode = statusCode;
-            return result;
-        }
+        #region HandleError
 
         /// <summary>
         /// Handles the eventual exceptions.
@@ -152,22 +109,18 @@ namespace Csla6ModelTemplates.Endpoints
         {
             // Check validation exception.
             if (exception is ValidationException)
-                //// Status code 422 = Unprocesssable Entity
-                //return endpoint.UnprocessableEntity(
-                //    new ValidationError(exception as ValidationException)
-                //    );
                 return endpoint.ValidationProblem();
 
             // Check deadlock exception.
             DeadlockException deadlock = deadLock.CheckException(exception);
             if (deadlock != null)
-            {
-                //// Status code 423 = Locked
-                //result = new ObjectResult(deadlock);
-                //result.StatusCode = StatusCodes.Status423Locked;
-                //return result;
-                return endpoint.Problem(deadlock.Message, null, StatusCodes.Status423Locked, "Transaction is deadlocked", null);
-            }
+                return endpoint.Problem(
+                    deadlock.Message,
+                    null,
+                    StatusCodes.Status423Locked,
+                    "Transaction is deadlocked",
+                    null
+                    );
 
             // Evaluate other exceptions.
             int statusCode;
@@ -180,5 +133,7 @@ namespace Csla6ModelTemplates.Endpoints
             //return result;
             return endpoint.Problem(backend.Summary, null, statusCode, exception.Message, null);
         }
+
+        #endregion
     }
 }

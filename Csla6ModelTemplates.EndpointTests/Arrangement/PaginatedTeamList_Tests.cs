@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
             var sut = new Pagination(logger, setup.Csla);
 
             // Act
-            ActionResult<IPaginatedList<PaginatedTeamListItemDto>> actionResult = await sut.HandleAsync(
+            var actionResult = await sut.HandleAsync(
                 new PaginatedTeamListCriteria
                 {
                     TeamName = "1",
@@ -27,11 +27,8 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
                 });
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as PaginatedList<PaginatedTeamListItemDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IPaginatedList<PaginatedTeamListItemDto>>(okObjectResult.Value);
 
             // The list must have 4 items and 14 total items.
             Assert.Equal(4, list.Data.Count);

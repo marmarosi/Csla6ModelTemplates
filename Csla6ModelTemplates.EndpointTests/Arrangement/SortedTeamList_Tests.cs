@@ -19,7 +19,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
             var sut = new Sorting(logger, setup.Csla);
 
             // Act
-            ActionResult<IList<SortedTeamListItemDto>> actionResult = await sut.HandleAsync(
+            var actionResult = await sut.HandleAsync(
                 new SortedTeamListCriteria
                 {
                     TeamName = "5",
@@ -28,11 +28,8 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
                 });
 
             // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as List<SortedTeamListItemDto>;
-            Assert.NotNull(list);
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IList<SortedTeamListItemDto>>(okObjectResult.Value);
 
             // The list must have 6 items.
             Assert.Equal(6, list.Count);
