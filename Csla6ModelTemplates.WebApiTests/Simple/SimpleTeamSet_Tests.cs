@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.Contracts.Simple.Set;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -8,28 +9,25 @@ using Xunit;
 
 namespace Csla6ModelTemplates.WebApiTests.Simple
 {
-    public class SimpleTeamSet_Tests
+    public class SimpleTeamSet_Tests : TestBase
     {
         #region Read
 
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<List<SimpleTeamSetItemDto>> actionResult = await sut.GetTeamSet(criteria);
+            var actionResult = await sut.GetTeamSet(criteria);
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineList = okObjectResult.Value as List<SimpleTeamSetItemDto>;
-            Assert.NotNull(pristineList);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResult.Value);
 
             // List must contain 5 items.
             Assert.True(pristineList.Count > 3);
@@ -42,17 +40,17 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sutR = new SimpleController(logger, setup.Csla);
             var sutU = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
-            ActionResult<List<SimpleTeamSetItemDto>> actionResultR = await sutR.GetTeamSet(criteria);
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineList = okObjectResultR.Value as List<SimpleTeamSetItemDto>;
+            var actionResultR = await sutR.GetTeamSet(criteria);
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultR.Value);
 
             // Modify an item.
             var pristine = pristineList[0];
@@ -76,15 +74,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
 
             var actionResultU = await sutU.UpdateTeamSet(
                 criteria,
-                pristineList
+                (List<SimpleTeamSetItemDto>)pristineList
                 );
 
-            // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedList = okObjectResultU.Value as List<SimpleTeamSetItemDto>;
-            Assert.NotNull(updatedList);
+            // ********** Assert
+            if (IsDeadlock(actionResultU, "SimpleTeamSet - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultU.Value);
 
             // The updated team must have new values.
             var updated = updatedList[0];

@@ -2,11 +2,9 @@ using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Selection.WithKey;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Selection.WithKey;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Selection
 {
@@ -16,7 +14,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
     [Route(Routes.Selection)]
     public class WithKey : EndpointBaseAsync
         .WithRequest<TeamKeyChoiceCriteria>
-        .WithActionResult<IList<KeyNameOptionDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -42,7 +40,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The key-name choice of the teams.</returns>
         [HttpGet("with-key")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<KeyNameOptionDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the key-name choice of the teams.",
             Description = "Gets the key-name choice of the teams.<br>" +
@@ -53,7 +51,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
             OperationId = "TeamKeyChoice.List",
             Tags = new[] { "Selection" })
         ]
-        public override async Task<ActionResult<IList<KeyNameOptionDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] TeamKeyChoiceCriteria criteria,
             CancellationToken cancellationToken = default
             )

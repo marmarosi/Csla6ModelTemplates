@@ -12,20 +12,17 @@ namespace Csla6ModelTemplates.EndpointTests.Tree
         [Fact]
         public async Task GetTeamChoiceWithId_ReturnsAChoice()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Choice>();
             var sut = new Choice(logger, setup.Csla);
 
-            // Act
-            ActionResult<IList<IdNameOptionDto>> actionResult = await sut.HandleAsync();
+            // ********** Act
+            var actionResult = await sut.HandleAsync();
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var choice = okObjectResult.Value as List<IdNameOptionDto>;
-            Assert.NotNull(choice);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var choice = Assert.IsAssignableFrom<List<IdNameOptionDto>>(okObjectResult.Value);
 
             // The choice must have 3 items.
             Assert.Equal(3, choice.Count);

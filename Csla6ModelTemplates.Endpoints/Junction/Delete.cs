@@ -1,10 +1,8 @@
 ﻿using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Junction
 {
@@ -39,8 +37,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
         /// <param name="id">The identifier of the group.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         [HttpDelete("{id}")]
-        [Produces(MediaTypeNames.Application.Json)]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [SwaggerOperation(
             Summary = "Deletes the specified group.",
             Description = "Deletes the specified group.<br>" +
@@ -57,11 +54,11 @@ namespace Csla6ModelTemplates.Endpoints.Junction
         {
             try
             {
-                return await Run.RetryOnDeadlock(async () =>
+                await Helper.RetryOnDeadlock(async () =>
                 {
                     await Task.Run(() => Group.Delete(Csla.Factory, id));
-                    return NoContent();
                 });
+                return NoContent();
             }
             catch (Exception ex)
             {

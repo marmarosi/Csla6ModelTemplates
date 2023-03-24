@@ -1,11 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Junction
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
     [Route(Routes.Junction)]
     public class Update : EndpointBaseAsync
         .WithRequest<GroupDto>
-        .WithActionResult<GroupDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The updated group.</returns>
         [HttpPut]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(GroupDto), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Updates the specified group.",
             Description = "Updates the specified group.<br>" +
@@ -50,22 +48,22 @@ namespace Csla6ModelTemplates.Endpoints.Junction
             OperationId = "Group.Update",
             Tags = new[] { "Junction" })
         ]
-        public override async Task<ActionResult<GroupDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] GroupDto dto,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<GroupDto>.RetryOnDeadlock(async () =>
+                return Ok(await Helper.RetryOnDeadlock(async () =>
                 {
                     Group group = await Group.Build(Csla.Factory, Csla.ChildFactory, dto);
                     if (group.IsSavable)
                     {
                         group = await group.SaveAsync();
                     }
-                    return Ok(group.ToDto());
-                });
+                    return group.ToDto();
+                }));
             }
             catch (Exception ex)
             {

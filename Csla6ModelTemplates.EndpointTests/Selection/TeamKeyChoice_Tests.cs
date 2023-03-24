@@ -13,22 +13,19 @@ namespace Csla6ModelTemplates.EndpointTests.Selection
         [Fact]
         public async Task GetTeamChoiceWithKey_ReturnsAChoice()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<WithKey>();
             var sut = new WithKey(logger, setup.Csla);
 
-            // Act
-            ActionResult<IList<KeyNameOptionDto>> actionResult = await sut.HandleAsync(
+            // ********** Act
+            var actionResult = await sut.HandleAsync(
                 new TeamKeyChoiceCriteria { TeamName = "7" }
                 );
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var choice = okObjectResult.Value as List<KeyNameOptionDto>;
-            Assert.NotNull(choice);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var choice = Assert.IsAssignableFrom<List<KeyNameOptionDto>>(okObjectResult.Value);
 
             // The choice must have 5 items.
             Assert.Equal(5, choice.Count);

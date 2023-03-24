@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Complex
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
     [Route(Routes.Complex)]
     public class Update : EndpointBaseAsync
         .WithRequest<TeamDto>
-        .WithActionResult<TeamDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The updated team.</returns>
         [HttpPut]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Updates the specified team.",
             Description = "Updates the specified team.<br>" +
@@ -50,22 +48,22 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             OperationId = "Team.Update",
             Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<TeamDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] TeamDto dto,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<TeamDto>.RetryOnDeadlock(async () =>
+                return Ok(await Helper.RetryOnDeadlock(async () =>
                 {
                     var team = await Team.Build(Csla.Factory, Csla.ChildFactory, dto);
                     if (team.IsSavable)
                     {
                         team = await team.SaveAsync();
                     }
-                    return Ok(team.ToDto());
-                });
+                    return team.ToDto();
+                }));
             }
             catch (Exception ex)
             {

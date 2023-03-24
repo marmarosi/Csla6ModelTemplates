@@ -2,11 +2,9 @@ using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Selection.WithId;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Selection.WithId;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Selection
 {
@@ -16,7 +14,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
     [Route(Routes.Selection)]
     public class WithId : EndpointBaseAsync
         .WithRequest<TeamIdChoiceCriteria>
-        .WithActionResult<IList<IdNameOptionDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -42,7 +40,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The ID-name choice of the teams.</returns>
         [HttpGet("with-id")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the ID-name choice of the teams.",
             Description = "Gets the ID-name choice of the teams.<br>" +
@@ -53,7 +51,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
             OperationId = "TeamIdChoice.List",
             Tags = new[] { "Selection" })
         ]
-        public override async Task<ActionResult<IList<IdNameOptionDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] TeamIdChoiceCriteria criteria,
             CancellationToken cancellationToken = default
             )

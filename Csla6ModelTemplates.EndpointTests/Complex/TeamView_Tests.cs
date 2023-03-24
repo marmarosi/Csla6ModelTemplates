@@ -11,20 +11,17 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task GetTeamView_ReturnsAView()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<View>();
             var sut = new View(logger, setup.Csla);
 
-            // Act
-            ActionResult<TeamViewDto> actionResult = await sut.HandleAsync("1r9oGj1x3lk");
+            // ********** Act
+            var actionResult = await sut.HandleAsync("1r9oGj1x3lk");
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var team = okObjectResult.Value as TeamViewDto;
-            Assert.NotNull(team);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<TeamViewDto>(okObjectResult.Value);
 
             // The code and name must end with 17.
             Assert.Equal("T-0017", team.TeamCode);

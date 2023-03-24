@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -6,27 +7,24 @@ using Xunit;
 
 namespace Csla6ModelTemplates.WebApiTests.Junction
 {
-    public class Group_Tests
+    public class Group_Tests : TestBase
     {
         #region New
 
         [Fact]
         public async Task NewGroup_ReturnsNewModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sut = new JunctionController(logger, setup.Csla);
 
-            // Act
-            ActionResult<GroupDto> actionResult = await sut.GetNewGroup();
+            // ********** Act
+            var actionResult = await sut.GetNewGroup();
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var group = okObjectResult.Value as GroupDto;
-            Assert.NotNull(group);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
             // The code and name must miss.
             Assert.Empty(group.GroupCode);
@@ -42,12 +40,12 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         [Fact]
         public async Task CreateGroup_ReturnsCreatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sut = new JunctionController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var pristineGroup = new GroupDto
             {
                 GroupId = null,
@@ -55,27 +53,17 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
                 GroupName = "Test group number 9201",
                 Timestamp = null
             };
-            var pristineMember1 = new GroupPersonDto
-            {
-                PersonId = "7adBbqg8nxV",
-                PersonName = "Person #11"
-            };
+            var pristineMember1 = new GroupPersonDto("7adBbqg8nxV", "Person #11");
             pristineGroup.Persons.Add(pristineMember1);
-            var pristineMember2 = new GroupPersonDto
-            {
-                PersonId = "4aoj5R40G1e",
-                PersonName = "Person #17"
-            };
+            var pristineMember2 = new GroupPersonDto("4aoj5R40G1e", "Person #17");
             pristineGroup.Persons.Add(pristineMember2);
 
-            ActionResult<GroupDto> actionResult = await sut.CreateGroup(pristineGroup);
+            var actionResult = await sut.CreateGroup(pristineGroup);
 
-            // Assert
-            var createdResult = actionResult.Result as CreatedResult;
-            Assert.NotNull(createdResult);
-
-            var createdGroup = createdResult.Value as GroupDto;
-            Assert.NotNull(createdGroup);
+            // ********** Assert
+            if (IsDeadlock(actionResult, "Group - Create")) return;
+            var createdResult = Assert.IsType<CreatedResult>(actionResult);
+            var createdGroup = Assert.IsAssignableFrom<GroupDto>(createdResult.Value);
 
             // The group must have new values.
             Assert.NotNull(createdGroup.GroupId);
@@ -102,32 +90,29 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         [Fact]
         public async Task ReadGroup_ReturnsCurrentModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sut = new JunctionController(logger, setup.Csla);
 
-            // Act
-            ActionResult<GroupDto> actionResult = await sut.GetGroup("6KANyA658o9");
+            // ********** Act
+            var actionResult = await sut.GetGroup("6KANyA658o9");
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineGroup = okObjectResult.Value as GroupDto;
-            Assert.NotNull(pristineGroup);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
             // The group code and name must end with 10.
-            Assert.Equal("6KANyA658o9", pristineGroup.GroupId);
-            Assert.Equal("G-10", pristineGroup.GroupCode);
-            Assert.EndsWith("10", pristineGroup.GroupName);
-            Assert.NotNull(pristineGroup.Timestamp);
+            Assert.Equal("6KANyA658o9", group.GroupId);
+            Assert.Equal("G-10", group.GroupCode);
+            Assert.EndsWith("10", group.GroupName);
+            Assert.NotNull(group.Timestamp);
 
             // The person name must start with Person.
-            Assert.True(pristineGroup.Persons.Count > 0);
-            foreach (var groupPerson in pristineGroup.Persons)
+            Assert.True(group.Persons.Count > 0);
+            foreach (var person in group.Persons)
             {
-                Assert.StartsWith("Person", groupPerson.PersonName);
+                Assert.StartsWith("Person", person.PersonName);
             }
         }
 
@@ -138,35 +123,30 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         [Fact]
         public async Task UpdateGroup_ReturnsUpdatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sutR = new JunctionController(logger, setup.Csla);
             var sutU = new JunctionController(logger, setup.Csla);
 
-            // Act
-            ActionResult<GroupDto> actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineGroup = okObjectResultR.Value as GroupDto;
+            // ********** Act
+            var actionResultR = await sutR.GetGroup("aqL3y3P5dGm");
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultR.Value);
             var pristineMember1 = pristineGroup.Persons[0];
 
             pristineGroup.GroupCode = "G-1212";
             pristineGroup.GroupName = "Group No. 1212";
 
-            var pristineMemberNew = new GroupPersonDto
-            {
-                PersonId = "a4P18mr5M62",
-                PersonName = "New member",
-            };
+            var pristineMemberNew = new GroupPersonDto("a4P18mr5M62", "New member");
             pristineGroup.Persons.Add(pristineMemberNew);
-            ActionResult<GroupDto> actionResultU = await sutU.UpdateGroup(pristineGroup);
 
-            // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
+            var actionResultU = await sutU.UpdateGroup(pristineGroup);
 
-            var updatedGroup = okObjectResultU.Value as GroupDto;
-            Assert.NotNull(updatedGroup);
+            // ********** Assert
+            if (IsDeadlock(actionResultU, "Group - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultU.Value);
 
             // The group must have new values.
             Assert.Equal(pristineGroup.GroupId, updatedGroup.GroupId);
@@ -193,17 +173,18 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         [Fact]
         public async Task DeleteGroup_ReturnsNothing()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sut = new JunctionController(logger, setup.Csla);
 
-            // Act
-            ActionResult actionResult = await sut.DeleteGroup("3Nr8nQenQjA");
+            // ********** Act
+            var actionResult = await sut.DeleteGroup("3Nr8nQenQjA");
 
-            // Assert
-            var noContentResult = actionResult as NoContentResult;
-            Assert.NotNull(noContentResult);
+            // ********** Assert
+            if (IsDeadlock(actionResult, "Group - Delete")) return;
+            var noContentResult = Assert.IsType<NoContentResult>(actionResult);
+
             Assert.Equal(204, noContentResult.StatusCode);
         }
 

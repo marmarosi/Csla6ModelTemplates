@@ -1,10 +1,8 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Complex
 {
@@ -39,8 +37,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="id">The identifier of the team.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         [HttpDelete("{id}")]
-        [Produces(MediaTypeNames.Application.Json)]
-        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [SwaggerOperation(
             Summary = "Deletes the specified team.",
             Description = "Deletes the specified team.<br>" +
@@ -57,11 +54,11 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         {
             try
             {
-                return await Run.RetryOnDeadlock(async () =>
+                await Helper.RetryOnDeadlock(async () =>
                 {
                     await Team.Delete(Csla.Factory, id);
-                    return NoContent();
                 });
+                return NoContent();
             }
             catch (Exception ex)
             {

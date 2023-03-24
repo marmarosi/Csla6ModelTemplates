@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Complex.Set;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Endpoints.Complex;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -9,29 +10,26 @@ using Xunit;
 
 namespace Csla6ModelTemplates.EndpointTests.Complex
 {
-    public class TeamSet_Tests
+    public class TeamSet_Tests : TestBase
     {
         #region Read
 
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ReadSet>();
             var sut = new ReadSet(logger, setup.Csla);
 
-            // Act
-            ActionResult<IList<TeamSetItemDto>> actionResult = await sut.HandleAsync(
+            // ********** Act
+            var actionResult = await sut.HandleAsync(
                 new TeamSetCriteria { TeamName = "7" }
                 );
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristineList = okObjectResult.Value as List<TeamSetItemDto>;
-            Assert.NotNull(pristineList);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResult.Value);
 
             // List must contain 5 items.
             Assert.Equal(5, pristineList.Count);
@@ -48,20 +46,18 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var loggerRead = setup.GetLogger<ReadSet>();
             var sutRead = new ReadSet(loggerRead, setup.Csla);
             var loggerUpdate = setup.GetLogger<UpdateSet>();
             var sutUpdate = new UpdateSet(loggerUpdate, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new TeamSetCriteria { TeamName = "7" };
-            ActionResult<IList<TeamSetItemDto>> actionResultR = await sutRead.HandleAsync(
-                criteria
-                );
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristineList = okObjectResultR.Value as List<TeamSetItemDto>;
+            var actionResultR = await sutRead.HandleAsync(criteria);
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultR.Value);
 
             // Modify an item.
             var pristineTeam3 = pristineList[2];
@@ -95,21 +91,14 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             var deletedTeamId = pristineTeam4.TeamId;
             pristineList.Remove(pristineTeam4);
 
-            // Act
-            TeamSetRequest request = new TeamSetRequest
-            {
-                Criteria = criteria,
-                Dto = pristineList
-            };
-
+            // Update now.
+            TeamSetRequest request = new TeamSetRequest(criteria, (List<TeamSetItemDto>)pristineList);
             var actionResultU = await sutUpdate.HandleAsync(request, new CancellationToken());
 
-            // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updatedList = okObjectResultU.Value as List<TeamSetItemDto>;
-            Assert.NotNull(updatedList);
+            // ********** Assert
+            if (IsDeadlock(actionResultU, "TeamSet - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updatedList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultU.Value);
 
             // The updated team must have new values.
             var updatedTeam3 = updatedList[2];

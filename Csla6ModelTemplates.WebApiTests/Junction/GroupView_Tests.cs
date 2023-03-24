@@ -11,20 +11,17 @@ namespace Csla6ModelTemplates.WebApiTests.Junction
         [Fact]
         public async Task GetGroupView_ReturnsAView()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<JunctionController>();
             var sut = new JunctionController(logger, setup.Csla);
 
-            // Act
-            ActionResult<GroupViewDto> actionResult = await sut.GetGroupView("oQLOyK85x6g");
+            // ********** Act
+            var actionResult = await sut.GetGroupView("oQLOyK85x6g");
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var group = okObjectResult.Value as GroupViewDto;
-            Assert.NotNull(group);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var group = Assert.IsAssignableFrom<GroupViewDto>(okObjectResult.Value);
 
             // The code and name must end with 17.
             Assert.Equal("G-08", group.GroupCode);

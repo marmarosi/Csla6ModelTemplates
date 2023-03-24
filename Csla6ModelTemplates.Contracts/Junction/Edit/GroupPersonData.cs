@@ -23,5 +23,17 @@
     public class GroupPersonDto : GroupPersonData
     {
         public string PersonId { get; set; }
+
+        public GroupPersonDto()
+        { }
+
+        public GroupPersonDto(
+            string personId,
+            string personName
+            )
+        {
+            PersonId = personId;
+            PersonName = personName;
+        }
     }
 }

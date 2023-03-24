@@ -12,21 +12,18 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         [Fact]
         public async Task GetTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
             var sut = new ComplexController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             TeamListCriteria criteria = new TeamListCriteria { TeamName = "6" };
-            ActionResult<List<TeamListItemDto>> actionResult = await sut.GetTeamList(criteria);
+            var actionResult = await sut.GetTeamList(criteria);
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var list = okObjectResult.Value as List<TeamListItemDto>;
-            Assert.NotNull(list);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IList<TeamListItemDto>>(okObjectResult.Value);
 
             // The choice must have 5 items.
             Assert.Equal(5, list.Count);

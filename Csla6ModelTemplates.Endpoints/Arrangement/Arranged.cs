@@ -5,7 +5,6 @@ using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Full;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Arrangement
 {
@@ -13,9 +12,9 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
     /// Gets the specified page of sorted teams.
     /// </summary>
     [Route(Routes.Arrangement)]
-    public class Full : EndpointBaseAsync
+    public class Arranged : EndpointBaseAsync
         .WithRequest<ArrangedTeamListCriteria>
-        .WithActionResult<IPaginatedList<ArrangedTeamListItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -25,8 +24,8 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         /// </summary>
         /// <param name="logger">The application logging service.</param>
         /// <param name="csla">The CSLA helper service.</param>
-        public Full(
-            ILogger<Full> logger,
+        public Arranged(
+            ILogger<Arranged> logger,
             ICslaService csla
             )
         {
@@ -41,7 +40,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested page of the sorted team list.</returns>
         [HttpGet("full")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(PaginatedList<ArrangedTeamListItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified page of sorted teams.",
             Description = "Gets the specified page of sorted teams.<br>" +
@@ -56,7 +55,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
             OperationId = "ArrangedTeam.List",
             Tags = new[] { "Arrangement" })
         ]
-        public override async Task<ActionResult<IPaginatedList<ArrangedTeamListItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] ArrangedTeamListCriteria criteria,
             CancellationToken cancellationToken = default
             )

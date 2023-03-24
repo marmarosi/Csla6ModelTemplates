@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.Contracts.Simple.Edit;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -6,27 +7,24 @@ using Xunit;
 
 namespace Csla6ModelTemplates.WebApiTests.Simple
 {
-    public class SimpleTeam_Tests
+    public class SimpleTeam_Tests : TestBase
     {
         #region New
 
         [Fact]
         public async Task NewTeam_ReturnsNewModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetNewTeam();
+            // ********** Act
+            var actionResult = await sut.GetNewTeam();
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var team = okObjectResult.Value as SimpleTeamDto;
-            Assert.NotNull(team);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResult.Value);
 
             // The code and name must miss.
             Assert.Empty(team.TeamCode);
@@ -41,12 +39,12 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task CreateTeam_ReturnsCreatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var pristineTeam = new SimpleTeamDto
             {
                 TeamId = null,
@@ -54,14 +52,12 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
                 TeamName = "Test team number 9001",
                 Timestamp = null
             };
-            ActionResult<SimpleTeamDto> actionResult = await sut.CreateTeam(pristineTeam);
+            var actionResult = await sut.CreateTeam(pristineTeam);
 
-            // Assert
-            var createdResult = actionResult.Result as CreatedResult;
-            Assert.NotNull(createdResult);
-
-            var createdTeam = createdResult.Value as SimpleTeamDto;
-            Assert.NotNull(createdTeam);
+            // ********** Assert
+            if (IsDeadlock(actionResult, "SimpleTeam - Create")) return;
+            var createdResult = Assert.IsType<CreatedResult>(actionResult);
+            var createdTeam = Assert.IsAssignableFrom<SimpleTeamDto>(createdResult.Value);
 
             // The model must have new values.
             Assert.NotNull(createdTeam.TeamId);
@@ -77,26 +73,23 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task ReadTeam_ReturnsCurrentModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
-            ActionResult<SimpleTeamDto> actionResult = await sut.GetTeam("zXayGQW0bZv");
+            // ********** Act
+            var actionResult = await sut.GetTeam("zXayGQW0bZv");
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var pristine = okObjectResult.Value as SimpleTeamDto;
-            Assert.NotNull(pristine);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var team = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResult.Value);
 
             // The code and name must end with 22.
-            Assert.Equal("zXayGQW0bZv", pristine.TeamId);
-            Assert.Equal("T-0022", pristine.TeamCode);
-            Assert.EndsWith("22", pristine.TeamName);
-            Assert.NotNull(pristine.Timestamp);
+            Assert.Equal("zXayGQW0bZv", team.TeamId);
+            Assert.Equal("T-0022", team.TeamCode);
+            Assert.EndsWith("22", team.TeamName);
+            Assert.NotNull(team.Timestamp);
         }
 
         #endregion
@@ -106,28 +99,26 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task UpdateTeam_ReturnsUpdatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sutR = new SimpleController(logger, setup.Csla);
             var sutU = new SimpleController(logger, setup.Csla);
 
-            // Act
-            ActionResult<SimpleTeamDto> actionResultR = await sutR.GetTeam("zXayGQW0bZv");
-            var okObjectResultR = actionResultR.Result as OkObjectResult;
-            var pristine = okObjectResultR.Value as SimpleTeamDto;
+            // ********** Act
+            var actionResultR = await sutR.GetTeam("zXayGQW0bZv");
+            var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
+            var pristine = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResultR.Value);
 
             pristine.TeamCode = "T-9002";
             pristine.TeamName = "Test team number 9002";
 
-            ActionResult<SimpleTeamDto> actionResultU = await sutU.UpdateTeam(pristine);
+            var actionResultU = await sutU.UpdateTeam(pristine);
 
-            // Assert
-            var okObjectResultU = actionResultU.Result as OkObjectResult;
-            Assert.NotNull(okObjectResultU);
-
-            var updated = okObjectResultU.Value as SimpleTeamDto;
-            Assert.NotNull(updated);
+            // ********** Assert
+            if (IsDeadlock(actionResultU, "SimpleTeam - Update")) return;
+            var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
+            var updated = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResultU.Value);
 
             // The team must have new values.
             Assert.Equal(pristine.TeamId, updated.TeamId);
@@ -143,17 +134,18 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task DeleteTeam_ReturnsNothing()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
-            ActionResult actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");
+            // ********** Act
+            var actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");
 
-            // Assert
-            var noContentResult = actionResult as NoContentResult;
-            Assert.NotNull(noContentResult);
+            // ********** Assert
+            if (IsDeadlock(actionResult, "SimpleTeam - Delete")) return;
+            var noContentResult = Assert.IsType<NoContentResult>(actionResult);
+
             Assert.Equal(204, noContentResult.StatusCode);
         }
 

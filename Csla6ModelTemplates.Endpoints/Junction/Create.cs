@@ -1,11 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Junction
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
     [Route(Routes.Junction)]
     public class Create : EndpointBaseAsync
         .WithRequest<GroupDto>
-        .WithActionResult<GroupDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,8 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The created group.</returns>
         [HttpPost]
-        [Produces(MediaTypeNames.Application.Json)]
-        [SwaggerResponse(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(GroupDto), StatusCodes.Status201Created)]
         [SwaggerOperation(
             Summary = "Creates a new group.",
             Description = "Creates a new group.<br>" +
@@ -51,22 +48,22 @@ namespace Csla6ModelTemplates.Endpoints.Junction
             OperationId = "Group.Create",
             Tags = new[] { "Junction" })
         ]
-        public override async Task<ActionResult<GroupDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] GroupDto dto,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<GroupDto>.RetryOnDeadlock(async () =>
+                return Created(Helper.Uri(Request), await Helper.RetryOnDeadlock(async () =>
                 {
                     Group group = await Group.Build(Csla.Factory, Csla.ChildFactory, dto);
                     if (group.IsValid)
                     {
                         group = await group.SaveAsync();
                     }
-                    return Created(Helper.Uri(Request), group.ToDto());
-                });
+                    return group.ToDto();
+                }));
             }
             catch (Exception ex)
             {

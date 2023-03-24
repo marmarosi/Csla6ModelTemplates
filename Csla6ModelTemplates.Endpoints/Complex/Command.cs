@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Complex.Command;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.Command;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Complex
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
     [Route(Routes.Complex)]
     public class Command : EndpointBaseAsync
         .WithRequest<CountTeamsCriteria>
-        .WithActionResult<List<CountTeamsResultDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>True when the team was renamed; otherwise false.</returns>
         [HttpPatch]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<CountTeamsResultDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Counts the teams grouped by the number of their items.",
             Description = "Counts the teams grouped by the number of their items.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             OperationId = "SimpleTeam.Rename",
             Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<List<CountTeamsResultDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] CountTeamsCriteria criteria,
             CancellationToken cancellationToken = default
             )

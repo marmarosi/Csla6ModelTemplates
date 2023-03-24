@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Complex.View;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.View;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Complex
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
     [Route(Routes.Complex)]
     public class View : EndpointBaseAsync
         .WithRequest<string>
-        .WithActionResult<TeamViewDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested team view.</returns>
         [HttpGet("{id}/view")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(TeamViewDto), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified team details to display.",
             Description = "Gets the specified team details to display.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             OperationId = "Team.View",
             Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<TeamViewDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             string id,
             CancellationToken cancellationToken = default
             )

@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Complex.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Complex
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
     [Route(Routes.Complex)]
     public class UpdateSet : EndpointBaseAsync
         .WithRequest<TeamSetRequest>
-        .WithActionResult<IList<TeamSetItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -44,7 +42,7 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The updated team.</returns>
         [HttpPut("set")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IList<TeamSetItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Updates the specified team set.",
             Description = "Updates the specified team set<br>" +
@@ -56,22 +54,22 @@ namespace Csla6ModelTemplates.Endpoints.Complex
             OperationId = "TeamSet.Update",
             Tags = new[] { "Complex" })
         ]
-        public override async Task<ActionResult<IList<TeamSetItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromRoute] TeamSetRequest request,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<IList<TeamSetItemDto>>.RetryOnDeadlock(async () =>
+                return Ok(await Helper.RetryOnDeadlock(async () =>
                 {
                     var teams = await TeamSet.Build(Csla.Factory, Csla.ChildFactory, request.Criteria, request.Dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
                     }
-                    return Ok(teams.ToDto());
-                });
+                    return teams.ToDto();
+                }));
             }
             catch (Exception ex)
             {
@@ -88,11 +86,25 @@ namespace Csla6ModelTemplates.Endpoints.Complex
         /// <summary>
         /// The criteria of the team set.
         /// </summary>
-        [FromQuery] public TeamSetCriteria Criteria { get; set; }
+        public TeamSetCriteria Criteria { get; set; }
 
         /// <summary>
         /// The data transer objects of the team set.
         /// </summary>
-        [FromBody] public List<TeamSetItemDto> Dto { get; set; }
+        public List<TeamSetItemDto> Dto { get; set; }
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="criteria">The criteria of the team set.</param>
+        /// <param name="dto">The data transer objects of the team set.</param>
+        public TeamSetRequest(
+            TeamSetCriteria criteria,
+            List<TeamSetItemDto> dto
+            )
+        {
+            Criteria = criteria;
+            Dto = dto;
+        }
     }
 }

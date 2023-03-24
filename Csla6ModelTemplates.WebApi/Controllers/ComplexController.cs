@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested team list.</returns>
         [HttpGet]
         [ProducesResponseType(typeof(List<TeamListItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<TeamListItemDto>>> GetTeamList(
+        public async Task<IActionResult> GetTeamList(
             [FromQuery] TeamListCriteria criteria
             )
         {
@@ -71,7 +71,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The requested team view.</returns>
         [HttpGet("{id}/view")]
         [ProducesResponseType(typeof(TeamViewDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TeamViewDto>> GetTeamView(
+        public async Task<IActionResult> GetTeamView(
             string id
             )
         {
@@ -96,37 +96,11 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The new team.</returns>
         [HttpGet("new")]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TeamDto>> GetNewTeam()
+        public async Task<IActionResult> GetNewTeam()
         {
             try
             {
                 var team = await Team.New(Factory);
-                return Ok(team.ToDto());
-            }
-            catch (Exception ex)
-            {
-                return HandleError(ex);
-            }
-        }
-
-        #endregion
-
-        #region Read
-
-        /// <summary>
-        /// Gets the specified team to edit.
-        /// </summary>
-        /// <param name="id">The identifier of the team.</param>
-        /// <returns>The requested team.</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TeamDto>> GetTeam(
-            string id
-            )
-        {
-            try
-            {
-                var team = await Team.Get(Factory, id);
                 return Ok(team.ToDto());
             }
             catch (Exception ex)
@@ -146,21 +120,47 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The created team.</returns>
         [HttpPost]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status201Created)]
-        public async Task<ActionResult<TeamDto>> CreateTeam(
+        public async Task<IActionResult> CreateTeam(
             [FromBody] TeamDto dto
             )
         {
             try
             {
-                return await Call<TeamDto>.RetryOnDeadlock(async () =>
+                return Created(Uri, await RetryOnDeadlock(async () =>
                 {
                     var team = await Team.Build(Factory, ChildFactory, dto);
                     if (team.IsValid)
                     {
                         team = await team.SaveAsync();
                     }
-                    return Created(Uri, team.ToDto());
-                });
+                    return team.ToDto();
+                }));
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Read
+
+        /// <summary>
+        /// Gets the specified team to edit.
+        /// </summary>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTeam(
+            string id
+            )
+        {
+            try
+            {
+                var team = await Team.Get(Factory, id);
+                return Ok(team.ToDto());
             }
             catch (Exception ex)
             {
@@ -179,21 +179,21 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The updated team.</returns>
         [HttpPut]
         [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<TeamDto>> UpdateTeam(
+        public async Task<IActionResult> UpdateTeam(
             [FromBody] TeamDto dto
             )
         {
             try
             {
-                return await Call<TeamDto>.RetryOnDeadlock(async () =>
+                return Ok(await RetryOnDeadlock(async () =>
                 {
                     var team = await Team.Build(Factory, ChildFactory, dto);
                     if (team.IsSavable)
                     {
                         team = await team.SaveAsync();
                     }
-                    return Ok(team.ToDto());
-                });
+                    return team.ToDto();
+                }));
             }
             catch (Exception ex)
             {
@@ -211,17 +211,17 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <param name="id">The identifier of the team.</param>
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteTeam(
+        public async Task<IActionResult> DeleteTeam(
             string id
             )
         {
             try
             {
-                return await Run.RetryOnDeadlock(async () =>
+                await RetryOnDeadlock(async () =>
                 {
                     await Team.Delete(Factory, id);
-                    return NoContent();
                 });
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -239,8 +239,8 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <param name="criteria">The criteria of the team set.</param>
         /// <returns>The requested team set.</returns>
         [HttpGet("set")]
-        [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<TeamSetItemDto>>> GetTeamSet(
+        [ProducesResponseType(typeof(IList<TeamSetItemDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTeamSet(
             [FromQuery] TeamSetCriteria criteria
             )
         {
@@ -266,23 +266,23 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <param name="dto">The data transer objects of the team set.</param>
         /// <returns>The updated team set.</returns>
         [HttpPut("set")]
-        [ProducesResponseType(typeof(List<TeamSetItemDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<TeamSetItemDto>>> UpdateTeamSet(
+        [ProducesResponseType(typeof(IList<TeamSetItemDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpdateTeamSet(
             [FromQuery] TeamSetCriteria criteria,
             [FromBody] List<TeamSetItemDto> dto
             )
         {
             try
             {
-                return await Call<List<TeamSetItemDto>>.RetryOnDeadlock(async () =>
+                return Ok(await RetryOnDeadlock(async () =>
                 {
                     var teams = await TeamSet.Build(Factory, ChildFactory, criteria, dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
                     }
-                    return Ok(teams.ToDto());
-                });
+                    return teams.ToDto();
+                }));
             }
             catch (Exception ex)
             {
@@ -301,7 +301,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// <returns>The list of the team counts.</returns>
         [HttpPatch]
         [ProducesResponseType(typeof(List<CountTeamsResultDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<CountTeamsResultDto>>> CountTeamsCommand(
+        public async Task<IActionResult> CountTeamsCommand(
             [FromBody] CountTeamsCriteria criteria
             )
         {

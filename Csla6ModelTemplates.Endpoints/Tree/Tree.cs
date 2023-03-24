@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Tree.View;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Tree.View;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Tree
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
     [Route(Routes.Tree)]
     public class Tree : EndpointBaseAsync
         .WithRequest<string>
-        .WithActionResult<FolderNodeDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested folder tree.</returns>
         [HttpGet("{id}")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified folder tree.",
             Description = "Gets the specified folder tree.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
             OperationId = "FolderTree.View",
             Tags = new[] { "Tree" })
         ]
-        public override async Task<ActionResult<FolderNodeDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             string id,
             CancellationToken cancellationToken = default
             )

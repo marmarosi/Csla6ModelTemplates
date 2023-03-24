@@ -12,26 +12,23 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
         [Fact]
         public async Task GetPaginatedTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ArrangementController>();
             var sut = new ArrangementController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             PaginatedTeamListCriteria criteria = new PaginatedTeamListCriteria
             {
                 TeamName = "1",
                 PageIndex = 1,
                 PageSize = 10
             };
-            ActionResult<PaginatedList<PaginatedTeamListItemDto>> actionResult = await sut.GetPaginatedTeamList(criteria);
+            var actionResult = await sut.GetPaginatedTeamList(criteria);
 
-            // Assert
-            OkObjectResult okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            IPaginatedList<PaginatedTeamListItemDto> list = okObjectResult.Value as IPaginatedList<PaginatedTeamListItemDto>;
-            Assert.NotNull(list);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var list = Assert.IsAssignableFrom<IPaginatedList<PaginatedTeamListItemDto>>(okObjectResult.Value);
 
             // The list must have 4 items and 14 total items.
             Assert.Equal(4, list.Data.Count);

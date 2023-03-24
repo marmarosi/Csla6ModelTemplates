@@ -30,23 +30,20 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
-        #region View
+        #region Choice
 
         /// <summary>
-        /// Gets the specified folder tree.
+        /// Gets the ID-name choice of the trees.
         /// </summary>
-        /// <param name="id">The identifier of the root folder.</param>
-        /// <returns>The requested folder tree.</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<FolderNodeDto>> GetFolderTree(
-            string id
-            )
+        /// <returns>The ID-name choice of the trees.</returns>
+        [HttpGet("choice")]
+        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRootFolderChoice()
         {
             try
             {
-                var tree = await FolderTree.Get(Factory, id);
-                return Ok(tree.ToDto<FolderNodeDto>());
+                var choice = await RootFolderChoice.Get(Factory);
+                return Ok(choice.ToDto<IdNameOptionDto>());
             }
             catch (Exception ex)
             {
@@ -56,20 +53,23 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
-        #region Choice
+        #region View
 
         /// <summary>
-        /// Gets the ID-name choice of the trees.
+        /// Gets the specified folder tree.
         /// </summary>
-        /// <returns>The ID-name choice of the trees.</returns>
-        [HttpGet("choice")]
-        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<List<IdNameOptionDto>>> GetRootFolderChoice()
+        /// <param name="id">The identifier of the root folder.</param>
+        /// <returns>The requested folder tree.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(List<FolderNodeDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetFolderTree(
+            string id
+            )
         {
             try
             {
-                var choice = await RootFolderChoice.Get(Factory);
-                return Ok(choice.ToDto<IdNameOptionDto>());
+                var tree = await FolderTree.Get(Factory, id);
+                return Ok(tree.ToDto<FolderNodeDto>());
             }
             catch (Exception ex)
             {

@@ -12,20 +12,17 @@ namespace Csla6ModelTemplates.WebApiTests.Tree
         [Fact]
         public async Task GetTeamChoiceWithId_ReturnsAChoice()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<TreeController>();
             var sut = new TreeController(logger, setup.Csla);
 
-            // Act
-            ActionResult<List<IdNameOptionDto>> actionResult = await sut.GetRootFolderChoice();
+            // ********** Act
+            var actionResult = await sut.GetRootFolderChoice();
 
-            // Assert
-            var okObjectResult = actionResult.Result as OkObjectResult;
-            Assert.NotNull(okObjectResult);
-
-            var choice = okObjectResult.Value as IList<IdNameOptionDto>;
-            Assert.NotNull(choice);
+            // ********** Assert
+            var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
+            var choice = Assert.IsAssignableFrom<IList<IdNameOptionDto>>(okObjectResult.Value);
 
             // The choice must have 3 items.
             Assert.Equal(3, choice.Count);

@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class Create : EndpointBaseAsync
         .WithRequest<SimpleTeamDto>
-        .WithActionResult<SimpleTeamDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,8 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The created team.</returns>
         [HttpPost]
-        [Produces(MediaTypeNames.Application.Json)]
-        [SwaggerResponse(StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status201Created)]
         [SwaggerOperation(
             Summary = "Creates a new team.",
             Description = "Creates a new team.<br>" +
@@ -51,22 +48,22 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeam.Create",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<SimpleTeamDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] SimpleTeamDto dto,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<SimpleTeamDto>.RetryOnDeadlock(async () =>
+                return Created(Helper.Uri(Request), await Helper.RetryOnDeadlock(async () =>
                 {
                     var team = await SimpleTeam.Build(Csla.Factory, Csla.ChildFactory, dto);
                     if (team.IsValid)
                     {
                         team = await team.SaveAsync();
                     }
-                    return Created(Helper.Uri(Request), team.ToDto());
-                });
+                    return team.ToDto();
+                }));
             }
             catch (Exception ex)
             {
