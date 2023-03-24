@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         /// Initializes a new instance.
         /// </summary>
         /// <param name="model">The name of the business object model.</param>
-        /// <param name="property">The name of the proerty with optiona prefix.</param>
+        /// <param name="property">The name of the proerty with optional prefix.</param>
         /// <param name="description">The message text.</param>
         /// <param name="severity">The rule severity, defaults to error.</param>
         public ValidationException(

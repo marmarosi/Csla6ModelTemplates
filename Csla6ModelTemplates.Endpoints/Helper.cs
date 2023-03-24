@@ -9,6 +9,8 @@ namespace Csla6ModelTemplates.Endpoints
     /// </summary>
     public static class Helper
     {
+        #region Properties
+
         private const int MAX_RETRIES = 1;
         private const int MIN_DELAY_MS = 500;
         private const int MAX_DELAY_MS = 1000;
@@ -22,6 +24,8 @@ namespace Csla6ModelTemplates.Endpoints
         {
             return request == null ? "" : request.Path.ToString();
         }
+
+        #endregion
 
         #region RetryOnDeadlock
 
@@ -108,8 +112,27 @@ namespace Csla6ModelTemplates.Endpoints
             )
         {
             // Check validation exception.
-            if (exception is ValidationException)
-                return endpoint.ValidationProblem();
+            if (exception is ValidationException validation)
+            {
+                var messages = validation.Messages
+                    .Select(m => new
+                    {
+                        Property = $"{m.Model}.{m.Property}",
+                        m.Description
+                    })
+                    .GroupBy(
+                        o => o.Property,
+                        (key, grp) => new
+                        {
+                            Property = key,
+                            Descriptions = grp.Select(g => g.Description).ToArray()
+                        }
+                    )
+                    .ToDictionary(o => o.Property, o => o.Descriptions);
+
+                var descriptor = new ValidationProblemDetails(messages);
+                return endpoint.ValidationProblem(descriptor);
+            }
 
             // Check deadlock exception.
             DeadlockException deadlock = deadLock.CheckException(exception);

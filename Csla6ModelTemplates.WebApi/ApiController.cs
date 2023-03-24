@@ -10,6 +10,8 @@ namespace Csla6ModelTemplates.WebApi
     /// </summary>
     public class ApiController : ControllerBase
     {
+        #region Properties
+
         private const int MAX_RETRIES = 1;
         private const int MIN_DELAY_MS = 500;
         private const int MAX_DELAY_MS = 1000;
@@ -27,6 +29,10 @@ namespace Csla6ModelTemplates.WebApi
             get { return Request == null ? "" : Request.Path.ToString(); }
         }
 
+        #endregion
+
+        #region Constructor
+
         /// <summary>
         /// Creates a new instance of the controller.
         /// </summary>
@@ -42,6 +48,8 @@ namespace Csla6ModelTemplates.WebApi
             ChildFactory = csla.ChildFactory;
             DeadLock = csla.DeadLock;
         }
+
+        #endregion
 
         #region RetryOnDeadlock
 
@@ -122,8 +130,27 @@ namespace Csla6ModelTemplates.WebApi
             )
         {
             // Check validation exception.
-            if (exception is ValidationException vException)
-                return ValidationProblem();
+            if (exception is ValidationException validation)
+            {
+                var messages = validation.Messages
+                    .Select(m => new
+                    {
+                        Property = $"{m.Model}.{m.Property}",
+                        m.Description
+                    })
+                    .GroupBy(
+                        o => o.Property,
+                        (key, grp) => new
+                        {
+                            Property = key,
+                            Descriptions = grp.Select(g => g.Description).ToArray()
+                        }
+                    )
+                    .ToDictionary(o => o.Property, o => o.Descriptions);
+
+                var descriptor = new ValidationProblemDetails(messages);
+                return ValidationProblem(descriptor);
+            }
 
             // Check deadlock exception.
             DeadlockException deadlock = DeadLock.CheckException(exception);
