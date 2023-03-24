@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Tree.Choice;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Tree
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
     [Route(Routes.Tree)]
     public class Choice : EndpointBaseAsync
         .WithoutRequest
-        .WithActionResult<IList<IdNameOptionDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -40,7 +38,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The ID-name choice of the trees.</returns>
         [HttpGet("choice")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the ID-name choice of the trees.",
             Description = "Gets the ID-name choice of the teams.<br>" +
@@ -48,7 +46,7 @@ namespace Csla6ModelTemplates.Endpoints.Tree
             OperationId = "FolderTree.Choice",
             Tags = new[] { "Tree" })
         ]
-        public override async Task<ActionResult<IList<IdNameOptionDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             CancellationToken cancellationToken = default
             )
         {

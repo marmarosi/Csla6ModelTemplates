@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.List;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class List : EndpointBaseAsync
         .WithRequest<SimpleTeamListCriteria>
-        .WithActionResult<IList<SimpleTeamListItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A list of teams.</returns>
         [HttpGet]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IList<SimpleTeamListItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets a list of teams.",
             Description = "Gets a list of teams.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeam.List",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamListItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] SimpleTeamListCriteria criteria,
             CancellationToken cancellationToken = default
             )

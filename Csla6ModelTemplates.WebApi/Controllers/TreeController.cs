@@ -30,6 +30,29 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
+        #region Choice
+
+        /// <summary>
+        /// Gets the ID-name choice of the trees.
+        /// </summary>
+        /// <returns>The ID-name choice of the trees.</returns>
+        [HttpGet("choice")]
+        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRootFolderChoice()
+        {
+            try
+            {
+                var choice = await RootFolderChoice.Get(Factory);
+                return Ok(choice.ToDto<IdNameOptionDto>());
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
         #region View
 
         /// <summary>
@@ -47,29 +70,6 @@ namespace Csla6ModelTemplates.WebApi.Controllers
             {
                 var tree = await FolderTree.Get(Factory, id);
                 return Ok(tree.ToDto<FolderNodeDto>());
-            }
-            catch (Exception ex)
-            {
-                return HandleError(ex);
-            }
-        }
-
-        #endregion
-
-        #region Choice
-
-        /// <summary>
-        /// Gets the ID-name choice of the trees.
-        /// </summary>
-        /// <returns>The ID-name choice of the trees.</returns>
-        [HttpGet("choice")]
-        [ProducesResponseType(typeof(List<IdNameOptionDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetRootFolderChoice()
-        {
-            try
-            {
-                var choice = await RootFolderChoice.Get(Factory);
-                return Ok(choice.ToDto<IdNameOptionDto>());
             }
             catch (Exception ex)
             {

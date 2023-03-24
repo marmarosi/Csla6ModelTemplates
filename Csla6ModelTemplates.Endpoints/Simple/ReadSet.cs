@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class ReadSet : EndpointBaseAsync
         .WithRequest<SimpleTeamSetCriteria>
-        .WithActionResult<IList<SimpleTeamSetItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested team set.</returns>
         [HttpGet("set")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IList<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified team set to edit.",
             Description = "Gets the specified team set to edit.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeamSet.Read",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamSetItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] SimpleTeamSetCriteria criteria,
             CancellationToken cancellationToken = default
             )

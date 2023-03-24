@@ -51,7 +51,7 @@ namespace Csla6ModelTemplates.WebApi
         /// <param name="businessMethod">The function to execute.</param>
         /// <param name="maxRetries">The number of attempts, defaults to 3.</param>
         /// <returns>The result of the action.</returns>
-        public async static Task RetryOnDeadlock(
+        public static async Task RetryOnDeadlock(
             Func<Task> businessMethod,
             int maxRetries = MAX_RETRIES
             )
@@ -83,7 +83,7 @@ namespace Csla6ModelTemplates.WebApi
         /// <param name="businessMethod">The function to execute.</param>
         /// <param name="maxRetries">The number of attempts, defaults to 3.</param>
         /// <returns>The result of the action.</returns>
-        public async Task<object> RetryOnDeadlock(
+        public static async Task<object> RetryOnDeadlock(
             Func<Task<object>> businessMethod,
             int maxRetries = MAX_RETRIES
             )

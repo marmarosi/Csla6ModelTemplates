@@ -2,11 +2,9 @@ using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Selection.WithCode;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Selection.WithCode;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Selection
 {
@@ -16,7 +14,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
     [Route(Routes.Selection)]
     public class WithCode : EndpointBaseAsync
         .WithRequest<TeamCodeChoiceCriteria>
-        .WithActionResult<IList<CodeNameOptionDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -42,7 +40,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The key-name choice of the teams.</returns>
         [HttpGet("with-code")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<CodeNameOptionDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the code-name choice of the teams.",
             Description = "Gets the code-name choice of the teams.<br>" +
@@ -53,7 +51,7 @@ namespace Csla6ModelTemplates.Endpoints.Selection
             OperationId = "ChoiceWithCode.List",
             Tags = new[] { "Selection" })
         ]
-        public override async Task<ActionResult<IList<CodeNameOptionDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] TeamCodeChoiceCriteria criteria,
             CancellationToken cancellationToken = default
             )

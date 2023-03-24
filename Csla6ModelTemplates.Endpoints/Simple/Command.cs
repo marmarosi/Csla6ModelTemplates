@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.Command;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Command;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class Command : EndpointBaseAsync
         .WithRequest<RenameTeamDto>
-        .WithActionResult<bool>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>True when the team was renamed; otherwise false.</returns>
         [HttpPatch]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(bool), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Renames the specified team.",
             Description = "Renames the specified team.<br>" +
@@ -50,18 +48,18 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeam.Rename",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<bool>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromBody] RenameTeamDto dto,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Run.RetryOnDeadlock(async () =>
+                return Ok(await Helper.RetryOnDeadlock(async () =>
                 {
                     var command = await RenameTeam.Execute(Csla.Factory, dto);
-                    return Ok(command.Result);
-                });
+                    return command.Result;
+                }));
             }
             catch (Exception ex)
             {

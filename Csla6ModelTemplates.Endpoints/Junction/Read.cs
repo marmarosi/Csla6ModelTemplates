@@ -1,11 +1,9 @@
 ﻿using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Junction
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
     [Route(Routes.Junction)]
     public class Read : EndpointBaseAsync
         .WithRequest<string>
-        .WithActionResult<GroupDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested group.</returns>
         [HttpGet("{id}")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(GroupDto), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified group to edit.",
             Description = "Gets the specified group to edit.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Junction
             OperationId = "Group.Read",
             Tags = new[] { "Junction" })
         ]
-        public override async Task<ActionResult<GroupDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             string id,
             CancellationToken cancellationToken = default
             )

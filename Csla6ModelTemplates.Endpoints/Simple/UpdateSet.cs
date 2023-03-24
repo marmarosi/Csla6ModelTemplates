@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Set;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class UpdateSet : EndpointBaseAsync
         .WithRequest<SimpleTeamSetRequest>
-        .WithActionResult<IList<SimpleTeamSetItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -44,7 +42,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The updated team.</returns>
         [HttpPut("set")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(IList<SimpleTeamSetItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Updates the specified team set.",
             Description = "Updates the specified team set<br>" +
@@ -56,22 +54,22 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeamSet.Update",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<IList<SimpleTeamSetItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromRoute] SimpleTeamSetRequest request,
             CancellationToken cancellationToken = default
             )
         {
             try
             {
-                return await Call<IList<SimpleTeamSetItemDto>>.RetryOnDeadlock(async () =>
+                return Ok(await Helper.RetryOnDeadlock(async () =>
                 {
                     var teams = await SimpleTeamSet.Build(Csla.Factory, Csla.ChildFactory, request.Criteria, request.Dto);
                     if (teams.IsSavable)
                     {
                         teams = await teams.SaveAsync();
                     }
-                    return Ok(teams.ToDto());
-                });
+                    return teams.ToDto();
+                }));
             }
             catch (Exception ex)
             {

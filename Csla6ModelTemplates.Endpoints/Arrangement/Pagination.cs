@@ -5,7 +5,6 @@ using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Pagination;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Arrangement
 {
@@ -15,7 +14,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
     [Route(Routes.Arrangement)]
     public class Pagination : EndpointBaseAsync
         .WithRequest<PaginatedTeamListCriteria>
-        .WithActionResult<IPaginatedList<PaginatedTeamListItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +40,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested page of the team list.</returns>
         [HttpGet("paginated")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(PaginatedList<PaginatedTeamListItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified page of teams.",
             Description = "Gets the specified page of teams.<br>" +
@@ -54,7 +53,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
             OperationId = "PaginatedTeam.List",
             Tags = new[] { "Arrangement" })
         ]
-        public override async Task<ActionResult<IPaginatedList<PaginatedTeamListItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] PaginatedTeamListCriteria criteria,
             CancellationToken cancellationToken = default
             )

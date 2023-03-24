@@ -4,7 +4,6 @@ using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Models.Arrangement.Sorting;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Arrangement
 {
@@ -14,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
     [Route(Routes.Arrangement)]
     public class Sorting : EndpointBaseAsync
         .WithRequest<SortedTeamListCriteria>
-        .WithActionResult<IList<SortedTeamListItemDto>>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -40,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested team list.</returns>
         [HttpGet("sorted")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(List<SortedTeamListItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified teams sorted.",
             Description = "Gets the specified teams sorted.<br>" +
@@ -53,7 +52,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
             OperationId = "SortedTeam.List",
             Tags = new[] { "Arrangement" })
         ]
-        public override async Task<ActionResult<IList<SortedTeamListItemDto>>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             [FromQuery] SortedTeamListCriteria criteria,
             CancellationToken cancellationToken = default
             )

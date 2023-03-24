@@ -79,32 +79,6 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
-        #region Read
-
-        /// <summary>
-        /// Gets the specified group to edit.
-        /// </summary>
-        /// <param name="id">The identifier of the group.</param>
-        /// <returns>The requested group.</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(GroupDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetGroup(
-            string id
-            )
-        {
-            try
-            {
-                Group group = await Group.Get(Factory, id);
-                return Ok(group.ToDto());
-            }
-            catch (Exception ex)
-            {
-                return HandleError(ex);
-            }
-        }
-
-        #endregion
-
         #region Create
 
         /// <summary>
@@ -129,6 +103,32 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                     }
                     return group.ToDto();
                 }));
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Read
+
+        /// <summary>
+        /// Gets the specified group to edit.
+        /// </summary>
+        /// <param name="id">The identifier of the group.</param>
+        /// <returns>The requested group.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(GroupDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetGroup(
+            string id
+            )
+        {
+            try
+            {
+                Group group = await Group.Get(Factory, id);
+                return Ok(group.ToDto());
             }
             catch (Exception ex)
             {

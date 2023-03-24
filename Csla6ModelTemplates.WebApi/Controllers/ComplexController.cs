@@ -111,32 +111,6 @@ namespace Csla6ModelTemplates.WebApi.Controllers
 
         #endregion
 
-        #region Read
-
-        /// <summary>
-        /// Gets the specified team to edit.
-        /// </summary>
-        /// <param name="id">The identifier of the team.</param>
-        /// <returns>The requested team.</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTeam(
-            string id
-            )
-        {
-            try
-            {
-                var team = await Team.Get(Factory, id);
-                return Ok(team.ToDto());
-            }
-            catch (Exception ex)
-            {
-                return HandleError(ex);
-            }
-        }
-
-        #endregion
-
         #region Create
 
         /// <summary>
@@ -161,6 +135,32 @@ namespace Csla6ModelTemplates.WebApi.Controllers
                     }
                     return team.ToDto();
                 }));
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        #endregion
+
+        #region Read
+
+        /// <summary>
+        /// Gets the specified team to edit.
+        /// </summary>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(TeamDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetTeam(
+            string id
+            )
+        {
+            try
+            {
+                var team = await Team.Get(Factory, id);
+                return Ok(team.ToDto());
             }
             catch (Exception ex)
             {

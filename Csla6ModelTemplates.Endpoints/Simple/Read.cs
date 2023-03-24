@@ -1,11 +1,9 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Endpoints.Arrangement;
 using Csla6ModelTemplates.Models.Simple.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Net.Mime;
 
 namespace Csla6ModelTemplates.Endpoints.Simple
 {
@@ -15,7 +13,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
     [Route(Routes.Simple)]
     public class Read : EndpointBaseAsync
         .WithRequest<string>
-        .WithActionResult<SimpleTeamDto>
+        .WithActionResult
     {
         internal ILogger Logger { get; private set; }
         internal ICslaService Csla { get; private set; }
@@ -41,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested team.</returns>
         [HttpGet("{id}")]
-        [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(SimpleTeamDto), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified team to edit.",
             Description = "Gets the specified team details to edit.<br>" +
@@ -52,7 +50,7 @@ namespace Csla6ModelTemplates.Endpoints.Simple
             OperationId = "SimpleTeam.Read",
             Tags = new[] { "Simple" })
         ]
-        public override async Task<ActionResult<SimpleTeamDto>> HandleAsync(
+        public override async Task<ActionResult> HandleAsync(
             string id,
             CancellationToken cancellationToken = default
             )
