@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
         [Fact]
         public async Task GetArrangedTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ArrangementController>();
             var sut = new ArrangementController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             ArrangedTeamListCriteria criteria = new ArrangedTeamListCriteria
             {
                 TeamName = "1",
@@ -28,7 +28,7 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
             };
             var actionResult = await sut.GetArrangedTeamList(criteria);
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IPaginatedList<ArrangedTeamListItemDto>>(okObjectResult.Value);
 

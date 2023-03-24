@@ -15,15 +15,15 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task NewGroup_ReturnsNewModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<New>();
             var sut = new New(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync();
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
@@ -41,12 +41,12 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task CreateGroup_ReturnsCreatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Create>();
             var sut = new Create(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var pristineGroup = new GroupDto
             {
                 GroupId = null,
@@ -61,7 +61,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
 
             var actionResult = await sut.HandleAsync(pristineGroup, new CancellationToken());
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "Group - Create")) return;
             var createdResult = Assert.IsType<CreatedResult>(actionResult);
             var createdGroup = Assert.IsAssignableFrom<GroupDto>(createdResult.Value);
@@ -91,15 +91,15 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task ReadGroup_ReturnsCurrentModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Read>();
             var sut = new Read(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("6KANyA658o9");
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var group = Assert.IsAssignableFrom<GroupDto>(okObjectResult.Value);
 
@@ -124,14 +124,14 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task UpdateGroup_ReturnsUpdatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var loggerR = setup.GetLogger<Read>();
             var loggerU = setup.GetLogger<Update>();
             var sutR = new Read(loggerR, setup.Csla);
             var sutU = new Update(loggerU, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResultR = await sutR.HandleAsync("aqL3y3P5dGm");
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
             var pristineGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultR.Value);
@@ -145,7 +145,7 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
 
             var actionResultU = await sutU.HandleAsync(pristineGroup, new CancellationToken());
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "Group - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedGroup = Assert.IsAssignableFrom<GroupDto>(okObjectResultU.Value);
@@ -175,15 +175,15 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task DeleteGroup_ReturnsNothing()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Delete>();
             var sut = new Delete(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("3Nr8nQenQjA");
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "Group - Delete")) return;
             var noContentResult = Assert.IsType<NoContentResult>(actionResult);
 

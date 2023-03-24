@@ -16,17 +16,17 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ReadSet>();
             var sut = new ReadSet(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new SimpleTeamSetCriteria { TeamName = "8" }
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResult.Value);
 
@@ -41,14 +41,14 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var loggerR = setup.GetLogger<ReadSet>();
             var loggerU = setup.GetLogger<UpdateSet>();
             var sutR = new ReadSet(loggerR, setup.Csla);
             var sutU = new UpdateSet(loggerU, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
             var actionResultR = await sutR.HandleAsync(criteria);
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
@@ -74,11 +74,11 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             var deletedId = pristine3.TeamId;
             pristineList.Remove(pristine3);
 
-            // Act
+            // ********** Act
             var request = new SimpleTeamSetRequest(criteria, (List<SimpleTeamSetItemDto>)pristineList);
             var actionResultU = await sutU.HandleAsync(request);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "SimpleTeamSet - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultU.Value);

@@ -11,15 +11,15 @@ namespace Csla6ModelTemplates.EndpointTests.Junction
         [Fact]
         public async Task GetGroupView_ReturnsAView()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<View>();
             var sut = new View(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("oQLOyK85x6g");
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var group = Assert.IsAssignableFrom<GroupViewDto>(okObjectResult.Value);
 

@@ -13,17 +13,17 @@ namespace Csla6ModelTemplates.EndpointTests.Selection
         [Fact]
         public async Task GetTeamChoiceWithCode_ReturnsAChoice()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<WithCode>();
             var sut = new WithCode(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new TeamCodeChoiceCriteria { TeamName = "9" }
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var choice = Assert.IsAssignableFrom<IList<CodeNameOptionDto>>(okObjectResult.Value);
 

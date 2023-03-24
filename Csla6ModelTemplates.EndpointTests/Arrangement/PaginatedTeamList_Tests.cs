@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
         [Fact]
         public async Task GetPaginatedTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Pagination>();
             var sut = new Pagination(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new PaginatedTeamListCriteria
                 {
@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
                     PageSize = 10
                 });
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IPaginatedList<PaginatedTeamListItemDto>>(okObjectResult.Value);
 

@@ -12,15 +12,15 @@ namespace Csla6ModelTemplates.EndpointTests.Tree
         [Fact]
         public async Task GetFolderTree_ReturnsATree()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<M.Tree>();
             var sut = new M.Tree(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("7x95p9vYaZz");
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var tree = Assert.IsAssignableFrom<IList<FolderNodeDto>>(okObjectResult.Value);
 

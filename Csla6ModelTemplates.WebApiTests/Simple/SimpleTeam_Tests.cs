@@ -14,15 +14,15 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task NewTeam_ReturnsNewModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.GetNewTeam();
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var team = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResult.Value);
 
@@ -39,12 +39,12 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task CreateTeam_ReturnsCreatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var pristineTeam = new SimpleTeamDto
             {
                 TeamId = null,
@@ -54,7 +54,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             };
             var actionResult = await sut.CreateTeam(pristineTeam);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "SimpleTeam - Create")) return;
             var createdResult = Assert.IsType<CreatedResult>(actionResult);
             var createdTeam = Assert.IsAssignableFrom<SimpleTeamDto>(createdResult.Value);
@@ -73,15 +73,15 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task ReadTeam_ReturnsCurrentModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.GetTeam("zXayGQW0bZv");
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var team = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResult.Value);
 
@@ -99,13 +99,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task UpdateTeam_ReturnsUpdatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sutR = new SimpleController(logger, setup.Csla);
             var sutU = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResultR = await sutR.GetTeam("zXayGQW0bZv");
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
             var pristine = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResultR.Value);
@@ -115,7 +115,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
 
             var actionResultU = await sutU.UpdateTeam(pristine);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "SimpleTeam - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updated = Assert.IsAssignableFrom<SimpleTeamDto>(okObjectResultU.Value);
@@ -134,15 +134,15 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task DeleteTeam_ReturnsNothing()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.DeleteTeam("rWqG7KpG5Qo");
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "SimpleTeam - Delete")) return;
             var noContentResult = Assert.IsType<NoContentResult>(actionResult);
 

@@ -17,17 +17,17 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ReadSet>();
             var sut = new ReadSet(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new TeamSetCriteria { TeamName = "7" }
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResult.Value);
 
@@ -46,14 +46,14 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var loggerRead = setup.GetLogger<ReadSet>();
             var sutRead = new ReadSet(loggerRead, setup.Csla);
             var loggerUpdate = setup.GetLogger<UpdateSet>();
             var sutUpdate = new UpdateSet(loggerUpdate, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new TeamSetCriteria { TeamName = "7" };
             var actionResultR = await sutRead.HandleAsync(criteria);
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
@@ -95,7 +95,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             TeamSetRequest request = new TeamSetRequest(criteria, (List<TeamSetItemDto>)pristineList);
             var actionResultU = await sutUpdate.HandleAsync(request, new CancellationToken());
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "TeamSet - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultU.Value);

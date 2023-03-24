@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task RenameTeam_ReturnsTrue()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var dto = new RenameTeamDto
             {
                 TeamId = "oZkzGJ6G794",
@@ -25,7 +25,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
             };
             var actionResult = await sut.RenameTeamCommand(dto);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "RenameTeam - Execute")) return;
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var success = Assert.IsAssignableFrom<bool>(okObjectResult.Value);

@@ -16,16 +16,16 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
             var sut = new ComplexController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             TeamSetCriteria criteria = new TeamSetCriteria { TeamName = "7" };
             var actionResult = await sut.GetTeamSet(criteria);
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var pristineList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResult.Value);
 
@@ -44,12 +44,12 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
             var sut = new ComplexController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new TeamSetCriteria { TeamName = "7" };
             var actionResultR = await sut.GetTeamSet(criteria);
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
@@ -93,7 +93,7 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
                 (List<TeamSetItemDto>)pristineList
                 );
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "TeamSet - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedList = Assert.IsAssignableFrom<IList<TeamSetItemDto>>(okObjectResultU.Value);

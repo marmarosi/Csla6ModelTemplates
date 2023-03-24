@@ -15,15 +15,15 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task NewTeam_ReturnsNewModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<New>();
             var sut = new New(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync();
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var team = Assert.IsAssignableFrom<TeamDto>(okObjectResult.Value);
 
@@ -41,12 +41,12 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task CreateTeam_ReturnsCreatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Create>();
             var sut = new Create(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var pristineTeam = new TeamDto
             {
                 TeamId = null,
@@ -73,7 +73,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
 
             var actionResult = await sut.HandleAsync(pristineTeam);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "Team - Create")) return;
             var createdResult = Assert.IsType<CreatedResult>(actionResult);
             var createdTeam = Assert.IsAssignableFrom<TeamDto>(createdResult.Value);
@@ -107,15 +107,15 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task ReadTeam_ReturnsCurrentModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Read>();
             var sut = new Read(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("LBgyGEK0PN2");
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var team = Assert.IsAssignableFrom<TeamDto>(okObjectResult.Value);
 
@@ -142,14 +142,14 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task UpdateTeam_ReturnsUpdatedModel()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var loggerR = setup.GetLogger<Read>();
             var loggerU = setup.GetLogger<Update>();
             var sutR = new Read(loggerR, setup.Csla);
             var sutU = new Update(loggerU, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResultR = await sutR.HandleAsync("JZY3GdKxyOj");
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
             var pristineTeam = Assert.IsAssignableFrom<TeamDto>(okObjectResultR.Value);
@@ -171,7 +171,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
 
             var actionResultU = await sutU.HandleAsync(pristineTeam, new CancellationToken());
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "Team - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedTeam = Assert.IsAssignableFrom<TeamDto>(okObjectResultU.Value);
@@ -201,15 +201,15 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task DeleteTeam_ReturnsNothing()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Delete>();
             var sut = new Delete(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync("qNwO0mkG3rB");
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "Team - Delete")) return;
             var noContentResult = Assert.IsType<NoContentResult>(actionResult);
 

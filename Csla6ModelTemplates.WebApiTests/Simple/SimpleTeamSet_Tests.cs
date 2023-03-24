@@ -16,16 +16,16 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task ReadTeamSet_ReturnsCurrentModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sut = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             SimpleTeamSetCriteria criteria = new SimpleTeamSetCriteria { TeamName = "8" };
             var actionResult = await sut.GetTeamSet(criteria);
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var pristineList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResult.Value);
 
@@ -40,13 +40,13 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
         [Fact]
         public async Task UpdateTeamSet_ReturnsUpdatedModels()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SimpleController>();
             var sutR = new SimpleController(logger, setup.Csla);
             var sutU = new SimpleController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var criteria = new SimpleTeamSetCriteria { TeamName = "8" };
             var actionResultR = await sutR.GetTeamSet(criteria);
             var okObjectResultR = Assert.IsType<OkObjectResult>(actionResultR);
@@ -77,7 +77,7 @@ namespace Csla6ModelTemplates.WebApiTests.Simple
                 (List<SimpleTeamSetItemDto>)pristineList
                 );
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResultU, "SimpleTeamSet - Update")) return;
             var okObjectResultU = Assert.IsType<OkObjectResult>(actionResultU);
             var updatedList = Assert.IsAssignableFrom<IList<SimpleTeamSetItemDto>>(okObjectResultU.Value);

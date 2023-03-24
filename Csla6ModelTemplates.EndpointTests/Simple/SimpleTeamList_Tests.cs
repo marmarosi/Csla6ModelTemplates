@@ -12,17 +12,17 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
         [Fact]
         public async Task GetTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<List>();
             var sut = new List(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new SimpleTeamListCriteria { TeamName = "9" }
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IList<SimpleTeamListItemDto>>(okObjectResult.Value);
 

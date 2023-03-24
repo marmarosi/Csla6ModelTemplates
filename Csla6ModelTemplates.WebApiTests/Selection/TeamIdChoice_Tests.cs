@@ -13,17 +13,17 @@ namespace Csla6ModelTemplates.WebApiTests.Selection
         [Fact]
         public async Task GetTeamChoiceWithId_ReturnsAChoice()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<SelectionController>();
             var sut = new SelectionController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.GetTeamChoiceWithId(
                 new TeamIdChoiceCriteria { TeamName = "0" }
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var choice = Assert.IsAssignableFrom<IList<IdNameOptionDto>>(okObjectResult.Value);
 

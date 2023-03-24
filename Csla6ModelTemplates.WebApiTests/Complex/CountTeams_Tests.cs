@@ -13,17 +13,17 @@ namespace Csla6ModelTemplates.WebApiTests.Complex
         [Fact]
         public async Task CountTeams_ReturnsList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ComplexController>();
             var sut = new ComplexController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.CountTeamsCommand(
                 new CountTeamsCriteria()
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IList<CountTeamsResultDto>>(okObjectResult.Value);
 

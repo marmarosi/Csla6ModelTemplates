@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
         [Fact]
         public async Task GetPaginatedTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             TestSetup setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<ArrangementController>();
             var sut = new ArrangementController(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             PaginatedTeamListCriteria criteria = new PaginatedTeamListCriteria
             {
                 TeamName = "1",
@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.WebApiTests.Arrangement
             };
             var actionResult = await sut.GetPaginatedTeamList(criteria);
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IPaginatedList<PaginatedTeamListItemDto>>(okObjectResult.Value);
 

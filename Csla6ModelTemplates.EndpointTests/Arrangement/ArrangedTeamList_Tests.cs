@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
         [Fact]
         public async Task ArrangedTeamList_ReturnsAList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Arranged>();
             var sut = new Arranged(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new ArrangedTeamListCriteria
                 {
@@ -28,7 +28,7 @@ namespace Csla6ModelTemplates.EndpointTests.Arrangement
                     SortDirection = SortDirection.Descending
                 });
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IPaginatedList<ArrangedTeamListItemDto>>(okObjectResult.Value);
 

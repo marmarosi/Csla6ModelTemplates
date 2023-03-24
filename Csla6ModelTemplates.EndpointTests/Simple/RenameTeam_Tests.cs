@@ -12,12 +12,12 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
         [Fact]
         public async Task RenameTeam_ReturnsTrue()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Command>();
             var sut = new Command(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var dto = new RenameTeamDto
             {
                 TeamId = "oZkzGJ6G794",
@@ -25,7 +25,7 @@ namespace Csla6ModelTemplates.EndpointTests.Simple
             };
             var actionResult = await sut.HandleAsync(dto);
 
-            // Assert
+            // ********** Assert
             if (IsDeadlock(actionResult, "RenameTeam - Execute")) return;
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var success = Assert.IsAssignableFrom<bool>(okObjectResult.Value);

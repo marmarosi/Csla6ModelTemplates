@@ -12,17 +12,17 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
         [Fact]
         public async Task CountTeams_ReturnsList()
         {
-            // Arrange
+            // ********** Arrange
             var setup = TestSetup.GetInstance();
             var logger = setup.GetLogger<Command>();
             var sut = new Command(logger, setup.Csla);
 
-            // Act
+            // ********** Act
             var actionResult = await sut.HandleAsync(
                 new CountTeamsCriteria()
                 );
 
-            // Assert
+            // ********** Assert
             var okObjectResult = Assert.IsType<OkObjectResult>(actionResult);
             var list = Assert.IsAssignableFrom<IList<CountTeamsResultDto>>(okObjectResult.Value);
 
