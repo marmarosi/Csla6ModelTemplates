@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.View
             )
         {
             // Get the specified team.
-            TeamViewDao team = DbContext.Teams
+            var team = DbContext.Teams
                 .Include(e => e.Players)
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
@@ -59,10 +59,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.View
                     .ToList()
                 })
                 .AsNoTracking()
-                .FirstOrDefault();
-
-            if (team == null)
-                throw new DataNotFoundException(DalText.Team_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Team_NotFound);
 
             return team;
         }

@@ -35,7 +35,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
             )
         {
             // Get the specified team set.
-            List<SimpleTeamSetItemDao> list = DbContext.Teams
+            var list = DbContext.Teams
                 .Where(e =>
                     criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName)
                 )

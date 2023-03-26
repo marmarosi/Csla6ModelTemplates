@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
             )
         {
             // Check unique team code.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamCode == dao.TeamCode
                 )
@@ -53,6 +53,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
                 TeamName = dao.TeamName
             };
             DbContext.Teams.Add(team);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new InsertFailedException(DalText.SimpleTeamSetItem_InsertFailed.With(team.TeamCode));
@@ -75,13 +76,12 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
             )
         {
             // Get the specified team.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == dao.TeamKey
                 )
-                .FirstOrDefault();
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFound.With(dao.TeamCode));
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFound.With(dao.TeamCode));
             if (team.Timestamp != dao.Timestamp)
                 throw new ConcurrencyException(DalText.SimpleTeamSetItem_Concurrency.With(dao.TeamCode));
 
@@ -125,14 +125,13 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
             int count = 0;
 
             // Get the specified team.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
                  )
                 .AsNoTracking()
-                .FirstOrDefault();
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFoundKey);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeamSetItem_NotFoundKey);
 
             // Check references.
             //int dependents = 0;
@@ -154,6 +153,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Set
 
             // Delete the team.
             DbContext.Teams.Remove(team);
+
             count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.SimpleTeamSetItem_DeleteFailed.With(team.TeamCode));

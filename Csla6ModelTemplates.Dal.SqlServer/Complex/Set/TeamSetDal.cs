@@ -35,7 +35,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Set
             TeamSetCriteria criteria
             )
         {
-            List<TeamSetItemDao> list = DbContext.Teams
+            var list = DbContext.Teams
                 .Include(e => e.Players)
                 .Where(e =>
                     criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName)

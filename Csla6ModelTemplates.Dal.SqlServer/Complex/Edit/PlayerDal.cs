@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Edit
             )
         {
             // Check unique player code.
-            Player player = DbContext.Players
+            var player = DbContext.Players
                 .Where(e =>
                     e.TeamKey == dao.TeamKey &&
                     e.PlayerCode == dao.PlayerCode
@@ -55,6 +55,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Edit
                 PlayerName = dao.PlayerName
             };
             DbContext.Players.Add(player);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new InsertFailedException(DalText.Player_InsertFailed.With(player.PlayerCode));
@@ -76,13 +77,12 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Edit
             )
         {
             // Get the specified player.
-            Player player = DbContext.Players
+            var player = DbContext.Players
                 .Where(e =>
                     e.PlayerKey == dao.PlayerKey
                 )
-                .FirstOrDefault();
-            if (player == null)
-                throw new DataNotFoundException(DalText.Player_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Player_NotFound);
 
             // Check unique player code.
             if (player.PlayerCode != dao.PlayerCode)
@@ -124,17 +124,17 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Edit
             int count = 0;
 
             // Get the specified player.
-            Player player = DbContext.Players
+            var player = DbContext.Players
                 .Where(e =>
                     e.PlayerKey == criteria.PlayerKey
                  )
                 .AsNoTracking()
-                .FirstOrDefault();
-            if (player == null)
-                throw new DataNotFoundException(DalText.Player_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Player_NotFound);
 
             // Delete the player.
             DbContext.Players.Remove(player);
+
             count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.Player_DeleteFailed.With(player.PlayerCode));

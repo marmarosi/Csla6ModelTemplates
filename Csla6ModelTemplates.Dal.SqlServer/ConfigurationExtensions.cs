@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Dal;
+using Csla6ModelTemplates.Dal;
 using Csla6ModelTemplates.Dal.SqlServer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Data.SqlClient;
@@ -14,8 +14,7 @@ namespace Csla6ModelTemplates.Configuration
     public static class ConfigurationExtensions
     {
         /// <summary>
-        /// Add the services for ProjectTracker.Dal that
-        /// use Entity Framework
+        /// Add the services to Entity Framewprk to use SQL Server.
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="configuration">Teh application configuration.</param>
@@ -28,11 +27,11 @@ namespace Csla6ModelTemplates.Configuration
             // Configure database.
             if (configuration == null)
                 services.AddDbContext<SqlServerContext>(options => options
-                    .UseSqlServer("name=ConnectionStrings:SQLServer")
+                    .UseSqlServer($"name=ConnectionStrings:{DAL.SQLServer}")
                     );
             else
                 services.AddDbContext<SqlServerContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString("SQLServer"))
+                    options.UseSqlServer(configuration.GetConnectionString(DAL.SQLServer))
                 );
 
             // Configure data access layer.
@@ -64,7 +63,7 @@ namespace Csla6ModelTemplates.Configuration
         /// <param name="app">The application builder.</param>
         /// <param name="isDevelopment">Indicates whether the hosting environment is development..</param>
         /// <param name="contentRootPath">The root path of the web site.</param>
-        public static void RunSeeders(
+        public static void RunSqlServerSeeders(
             this IApplicationBuilder app,
             bool isDevelopment,
             string contentRootPath

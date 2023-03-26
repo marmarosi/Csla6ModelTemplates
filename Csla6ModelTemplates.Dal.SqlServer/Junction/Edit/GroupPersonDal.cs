@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
+using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.Dal.Exceptions;
 using Csla6ModelTemplates.Dal.SqlServer.Entities;
 using Csla6ModelTemplates.Resources;
@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
             )
         {
             // Check unique group-person.
-            GroupPerson groupPerson = DbContext.GroupPersons
+            var groupPerson = DbContext.GroupPersons
                 .Where(e =>
                     e.GroupKey == dao.GroupKey &&
                     e.PersonKey == dao.PersonKey
@@ -49,16 +49,15 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
                 throw new DataExistException(DalText.GroupPerson_Exists.With(dao.PersonName));
 
             // Create the new group-person.
-            Person person = DbContext.Persons.Find(dao.PersonKey);
-            if (person == null)
-                throw new DataExistException(DalText.GroupPerson_NotFound.With(dao.PersonName));
-
+            Person person = DbContext.Persons.Find(dao.PersonKey)
+                ?? throw new DataExistException(DalText.GroupPerson_NotFound.With(dao.PersonName));
             groupPerson = new GroupPerson
             {
                 GroupKey = dao.GroupKey,
                 PersonKey = dao.PersonKey
             };
             DbContext.GroupPersons.Add(groupPerson);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new InsertFailedException(DalText.GroupPerson_InsertFailed.With(dao.PersonName));
@@ -86,12 +85,12 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
                     e.PersonKey == dao.PersonKey
                     )
                 .AsNoTracking()
-                .FirstOrDefault();
-            if (groupPerson == null)
-                throw new DataNotFoundException(DalText.GroupPerson_NotFound.With(dao.PersonName));
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.GroupPerson_NotFound.With(dao.PersonName));
 
             // Delete the group-person.
             DbContext.GroupPersons.Remove(groupPerson);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.GroupPerson_DeleteFailed.With(dao.PersonName));

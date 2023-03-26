@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Selection.WithId;
+using Csla6ModelTemplates.Contracts.Selection.WithId;
 using Csla6ModelTemplates.Dal.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +36,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Selection.WithId
             TeamIdChoiceCriteria criteria
             )
         {
-            List<IdNameOptionDao> choice = DbContext.Teams
+            var choice = DbContext.Teams
                 .Where(e => criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName))
                 .Select(e => new IdNameOptionDao
                 {

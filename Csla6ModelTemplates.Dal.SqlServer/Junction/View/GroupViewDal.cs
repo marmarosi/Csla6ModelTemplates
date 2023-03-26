@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Junction.View;
+using Csla6ModelTemplates.Contracts.Junction.View;
 using Csla6ModelTemplates.Dal.Exceptions;
 using Csla6ModelTemplates.Resources;
 using Microsoft.EntityFrameworkCore;
@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.View
             )
         {
             // Get the specified group.
-            GroupViewDao group = DbContext.Groups
+            var group = DbContext.Groups
                 .Include(e => e.Persons)
                 .Where(e =>
                     e.GroupKey == criteria.GroupKey
@@ -57,10 +57,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.View
                         .ToList()
                 })
                 .AsNoTracking()
-                .FirstOrDefault();
-
-            if (group == null)
-                throw new DataNotFoundException(DalText.Group_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Group_NotFound);
 
             return group;
         }

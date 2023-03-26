@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Command
                 .AsNoTracking()
                 .ToList();
 
-            List<CountTeamsResultDao> list = counts
+            var list = counts
                 .GroupBy(
                     e => e.Count,
                     (key, grp) => new CountTeamsResultDao
@@ -58,6 +58,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Complex.Command
 
             if (list.Count == 0)
                 throw new CommandFailedException(DalText.CountTeams_CountFailed);
+
             return list;
         }
 

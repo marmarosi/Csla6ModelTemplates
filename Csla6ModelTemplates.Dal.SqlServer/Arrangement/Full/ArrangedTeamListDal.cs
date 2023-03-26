@@ -58,7 +58,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Arrangement.Full
                         ? sorted.OrderBy(e => e.TeamCode)
                         : sorted.OrderByDescending(e => e.TeamCode);
                     break;
-                case ArrangedTeamListSortBy.TeamName:
+                // case ArrangedTeamListSortBy.TeamName:
                 default:
                     sorted = criteria.SortDirection == SortDirection.Ascending
                         ? sorted.OrderBy(e => e.TeamName)
@@ -67,7 +67,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Arrangement.Full
             }
 
             // Get the requested page.
-            List<ArrangedTeamListItemDao> list = sorted
+            var list = sorted
                 .Skip(criteria.PageIndex * criteria.PageSize)
                 .Take(criteria.PageSize)
                 .AsNoTracking()

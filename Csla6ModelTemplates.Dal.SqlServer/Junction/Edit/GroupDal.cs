@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
+using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.Dal.Exceptions;
 using Csla6ModelTemplates.Dal.SqlServer.Entities;
 using Csla6ModelTemplates.Resources;
@@ -39,7 +39,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
             )
         {
             // Get the specified group.
-            GroupDao group = DbContext.Groups
+            var group = DbContext.Groups
                 .Where(e =>
                     e.GroupKey == criteria.GroupKey
                  )
@@ -56,10 +56,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
                     }).ToList(),
                     Timestamp = e.Timestamp
                 })
-                .FirstOrDefault();
-
-            if (group == null)
-                throw new DataNotFoundException(DalText.Group_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Group_NotFound);
 
             return group;
         }
@@ -77,7 +75,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
             )
         {
             // Check unique group code.
-            Group group = DbContext.Groups
+            var group = DbContext.Groups
                 .Where(e =>
                     e.GroupCode == dao.GroupCode
                 )
@@ -92,6 +90,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
                 GroupName = dao.GroupName
             };
             DbContext.Groups.Add(group);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new InsertFailedException(DalText.Group_InsertFailed);
@@ -114,13 +113,12 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
             )
         {
             // Get the specified group.
-            Group group = DbContext.Groups
+            var group = DbContext.Groups
                 .Where(e =>
                     e.GroupKey == dao.GroupKey
                 )
-                .FirstOrDefault();
-            if (group == null)
-                throw new DataNotFoundException(DalText.Group_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Group_NotFound);
             if (group.Timestamp != dao.Timestamp)
                 throw new ConcurrencyException(DalText.Group_Concurrency);
 
@@ -163,15 +161,13 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
             )
         {
             // Get the specified group.
-            Group group = DbContext.Groups
+            var group = DbContext.Groups
                 .Where(e =>
                     e.GroupKey == criteria.GroupKey
                  )
                 .AsNoTracking()
-                .FirstOrDefault();
-
-            if (group == null)
-                throw new DataNotFoundException(DalText.Group_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.Group_NotFound);
 
             // Check or delete references
             //int dependents = 0;
@@ -182,6 +178,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Junction.Edit
 
             // Delete the group.
             DbContext.Groups.Remove(group);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.Group_DeleteFailed);

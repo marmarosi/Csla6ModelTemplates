@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Selection.WithKey;
+using Csla6ModelTemplates.Contracts.Selection.WithKey;
 using Csla6ModelTemplates.Dal.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +36,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Selection.WithKey
             TeamKeyChoiceCriteria criteria
             )
         {
-            List<KeyNameOptionDao> choice = DbContext.Teams
+            var choice = DbContext.Teams
                 .Where(e => criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName))
                 .Select(e => new KeyNameOptionDao
                 {

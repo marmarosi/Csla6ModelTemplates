@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Tree.View;
+using Csla6ModelTemplates.Contracts.Tree.View;
 using Microsoft.EntityFrameworkCore;
 
 namespace Csla6ModelTemplates.Dal.SqlServer.Tree.View
@@ -37,7 +37,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Tree.View
             FolderTreeCriteria criteria
             )
         {
-            List<FolderNodeDao> tree = new List<FolderNodeDao>();
+            var tree = new List<FolderNodeDao>();
 
             // Get all subfolders of the root foolder.
             AllFolders = DbContext.Folders
@@ -68,7 +68,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Tree.View
             )
         {
             // Get the folders of the level.
-            List<FolderNodeDao> folders = AllFolders
+            var folders = AllFolders
                 .Where(o => o.ParentKey == parentKey)
                 .OrderBy(o => o.FolderOrder)
                 .ToList();

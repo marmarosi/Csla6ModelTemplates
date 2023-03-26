@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Contracts.Tree.Choice;
+using Csla6ModelTemplates.Contracts.Tree.Choice;
 using Csla6ModelTemplates.Dal.Contracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,7 +36,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Tree.Choice
             RootFolderChoiceCriteria criteria
             )
         {
-            List<IdNameOptionDao> choice = DbContext.Folders
+            var choice = DbContext.Folders
                 .Where(e => e.ParentKey == null)
                 .Select(e => new IdNameOptionDao
                 {

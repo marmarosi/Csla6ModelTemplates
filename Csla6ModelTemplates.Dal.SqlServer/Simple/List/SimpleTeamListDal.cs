@@ -35,7 +35,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.List
             SimpleTeamListCriteria criteria
             )
         {
-            List<SimpleTeamListItemDao> list = DbContext.Teams
+            var list = DbContext.Teams
                 .Where(e =>
                     criteria.TeamName == null || e.TeamName.Contains(criteria.TeamName)
                 )

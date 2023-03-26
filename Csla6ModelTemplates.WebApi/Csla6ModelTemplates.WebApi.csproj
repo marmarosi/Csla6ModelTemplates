@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.PostgreSql\Csla6ModelTemplates.Dal.PostgreSql.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.SqlServer\Csla6ModelTemplates.Dal.SqlServer.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Models\Csla6ModelTemplates.Models.csproj" />
   </ItemGroup>

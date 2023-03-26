@@ -38,7 +38,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
             )
         {
             // Get the specified team.
-            SimpleTeamViewDao team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
                  )
@@ -49,10 +49,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.View
                     TeamName = e.TeamName
                 })
                 .AsNoTracking()
-                .FirstOrDefault();
-
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
 
             return team;
         }

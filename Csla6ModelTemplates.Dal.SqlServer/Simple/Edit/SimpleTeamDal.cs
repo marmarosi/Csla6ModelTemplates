@@ -39,7 +39,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             )
         {
             // Get the specified team.
-            SimpleTeamDao team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
                  )
@@ -50,10 +50,8 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
                     TeamName = e.TeamName,
                     Timestamp = e.Timestamp
                 })
-                .FirstOrDefault();
-
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
 
             return team;
         }
@@ -71,7 +69,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             )
         {
             // Check unique team code.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamCode == dao.TeamCode
                 )
@@ -86,6 +84,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
                 TeamName = dao.TeamName
             };
             DbContext.Teams.Add(team);
+
             int count = DbContext.SaveChanges();
             if (count == 0)
                 throw new InsertFailedException(DalText.SimpleTeam_InsertFailed);
@@ -108,13 +107,12 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             )
         {
             // Get the specified team.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == dao.TeamKey
                 )
-                .FirstOrDefault();
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
             if (team.Timestamp != dao.Timestamp)
                 throw new ConcurrencyException(DalText.SimpleTeam_Concurrency);
 
@@ -155,15 +153,13 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
             int count = 0;
 
             // Get the specified team.
-            Team team = DbContext.Teams
+            var team = DbContext.Teams
                 .Where(e =>
                     e.TeamKey == criteria.TeamKey
                  )
                 .AsNoTracking()
-                .FirstOrDefault();
-
-            if (team == null)
-                throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
+                .FirstOrDefault()
+                ?? throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
 
             // Check references.
             //int dependents = 0;
@@ -185,6 +181,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Edit
 
             // Delete the team.
             DbContext.Teams.Remove(team);
+
             count = DbContext.SaveChanges();
             if (count == 0)
                 throw new DeleteFailedException(DalText.SimpleTeam_DeleteFailed);

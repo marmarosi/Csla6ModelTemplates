@@ -65,7 +65,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Arrangement.Sorting
             }
 
             // Return the result.
-            List<SortedTeamListItemDao> list = query
+            var list = query
                 .AsNoTracking()
                 .ToList();
 

@@ -43,7 +43,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Arrangement.Pagination
                 );
 
             // Get the requested page.
-            List<PaginatedTeamListItemDao> list = query
+            var list = query
                 .Select(e => new PaginatedTeamListItemDao
                 {
                     TeamKey = e.TeamKey,
