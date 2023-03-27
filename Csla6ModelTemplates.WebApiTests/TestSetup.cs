@@ -6,7 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using System;
 using System.IO;
+using System.Reflection;
 using Xunit;
 
 [assembly: CollectionBehavior(MaxParallelThreads = 1)]
@@ -29,10 +31,12 @@ namespace Csla6ModelTemplates.WebApiTests
         private TestSetup()
         {
             // Set configuration.
+            var webRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var basePath = Path.Join(webRootPath, "../../..");
+            var sharedSettings = Path.Join(basePath, "../Shared/SharedSettings.json");
+
             var builder = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("SharedSettings.json", true, true)
-                .AddJsonFile("appsettings.json", true, true) // use appsettings.json in current folder
+                .AddJsonFile(sharedSettings, true, true)
                 .AddEnvironmentVariables();
             IConfiguration configuration = builder.Build();
 

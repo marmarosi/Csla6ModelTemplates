@@ -9,7 +9,23 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Host.ConfigureAppConfiguration((ctx, configBuilder) =>
+{
+    var enviroment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+    var webRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+    var basePath = Path.Join(webRootPath, "../../..");
+    var sharedSettings = Path.Join(basePath, "../Shared/SharedSettings.json");
+
+    //configBuilder.SetBasePath(basePath);
+    configBuilder.AddJsonFile(sharedSettings, false, true);
+    configBuilder.AddJsonFile("appsettings.json", false, true);
+    configBuilder.AddJsonFile($"appsettings.{enviroment}.json", true, true);
+    //configBuilder.AddJsonFile($"appsettings.{Environment.MachineName}.json", true, true);
+
+    configBuilder.AddEnvironmentVariables();
+});
+
+// ********** Add services to the container.
 
 builder.Services.AddCors(options => {
     options.AddPolicy(
@@ -47,8 +63,8 @@ builder.Services.AddSwaggerGen(o =>
 // Configure data access layer.
 IDeadLockDetector detector = new DeadLockDetector();
 builder.Services.AddSingleton(detector);
-builder.Services.AddPostgreSqlDal(detector);
-// builder.Services.AddSqlServerDal(detector);
+//builder.Services.AddPostgreSqlDal(detector);
+builder.Services.AddSqlServerDal(detector);
 builder.Services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
 
 // If using Kestrel:
@@ -77,10 +93,12 @@ builder.Services.AddScoped<ICslaService, CslaService>();
 
 builder.Services.AddControllers();
 
+// ********** Add middlewares to the request life cycle.
+
 var app = builder.Build();
 
-app.RunPostgreSqlSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
-// app.RunSqlServerSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
+//app.RunPostgreSqlSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
+app.RunSqlServerSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

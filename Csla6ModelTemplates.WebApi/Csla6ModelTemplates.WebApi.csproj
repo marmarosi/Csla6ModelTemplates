@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\Shared\SharedSettings.json" Link="SharedSettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Csla" Version="6.2.2" />
     <PackageReference Include="Csla.AspNetCore" Version="6.2.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
