@@ -1,4 +1,4 @@
-﻿using Csla.Configuration;
+using Csla.Configuration;
 using Csla6ModelTemplates.Configuration;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
@@ -43,7 +43,9 @@ namespace Csla6ModelTemplates.EndpointTests
             // Configure data access layer.
             IDeadLockDetector detector = new DeadLockDetector();
             services.AddSingleton(detector);
-            services.AddSqlServerDal(detector, configuration);
+            services.AddMySqlDal(detector, configuration);
+            //services.AddPostgreSqlDal(detector, configuration);
+            //services.AddSqlServerDal(detector, configuration);
             services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
 
             // Configure CSLA.

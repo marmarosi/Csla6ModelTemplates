@@ -43,7 +43,9 @@ namespace Csla6ModelTemplates.WebApiTests
             // Configure data access layer.
             IDeadLockDetector detector = new DeadLockDetector();
             services.AddSingleton(detector);
-            services.AddSqlServerDal(detector, configuration);
+            services.AddMySqlDal(detector, configuration);
+            //services.AddPostgreSqlDal(detector, configuration);
+            //services.AddSqlServerDal(detector, configuration);
             services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
 
             // Configure CSLA.
