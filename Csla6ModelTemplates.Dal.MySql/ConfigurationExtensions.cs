@@ -1,10 +1,10 @@
 using Csla6ModelTemplates.Dal;
-using Csla6ModelTemplates.Dal.SqlServer;
+using Csla6ModelTemplates.Dal.MySql;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
 
 namespace Csla6ModelTemplates.Configuration
 {
@@ -14,28 +14,29 @@ namespace Csla6ModelTemplates.Configuration
     public static class ConfigurationExtensions
     {
         /// <summary>
-        /// Add the services to Entity Framewprk to use SQL Server.
+        /// Add the services to Entity Framewprk to use MySQL.
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="configuration">Teh application configuration.</param>
-        public static void AddSqlServerDal(
+        public static void AddMySqlDal(
             this IServiceCollection services,
             IDeadLockDetector detector = null,
             IConfiguration configuration = null
             )
         {
             // Configure database.
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
             if (configuration == null)
-                services.AddDbContext<SqlServerContext>(options => options
-                    .UseSqlServer($"name=ConnectionStrings:{DAL.SQLServer}")
+                services.AddDbContext<MySqlContext>(options => options
+                    .UseMySql($"name=ConnectionStrings:{DAL.MySQL}", serverVersion)
                     );
             else
-                services.AddDbContext<SqlServerContext>(options =>
-                    options.UseSqlServer(configuration.GetConnectionString(DAL.SQLServer))
+                services.AddDbContext<MySqlContext>(options =>
+                    options.UseMySql(configuration.GetConnectionString(DAL.MySQL), serverVersion)
                     );
 
             // Configure data access layer.
-            foreach (var dalType in SqlServerDalIndex.Items)
+            foreach (var dalType in MySqlDalIndex.Items)
                 services.AddTransient(dalType.Key, dalType.Value);
 
             // Configure dead lock checking.
@@ -54,7 +55,7 @@ namespace Csla6ModelTemplates.Configuration
             Exception ex
             )
         {
-            return ex is SqlException && (ex as SqlException).Number == 1205;
+            return ex is MySqlException && (ex as MySqlException).Number == 1213;
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace Csla6ModelTemplates.Configuration
         /// <param name="app">The application builder.</param>
         /// <param name="isDevelopment">Indicates whether the hosting environment is development..</param>
         /// <param name="contentRootPath">The root path of the web site.</param>
-        public static void RunSqlServerSeeders(
+        public static void RunMySqlSeeders(
             this IApplicationBuilder app,
             bool isDevelopment,
             string contentRootPath
@@ -72,9 +73,9 @@ namespace Csla6ModelTemplates.Configuration
             using (var scope = app.ApplicationServices.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<SqlServerContext>();
+                var context = services.GetRequiredService<MySqlContext>();
 
-                SqlServerSeeder.Run(context, isDevelopment, contentRootPath);
+                MySqlSeeder.Run(context, isDevelopment, contentRootPath);
             }
         }
     }

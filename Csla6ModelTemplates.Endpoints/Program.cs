@@ -61,8 +61,9 @@ builder.Services.AddSwaggerGen(o =>
 // Configure data access layer.
 IDeadLockDetector detector = new DeadLockDetector();
 builder.Services.AddSingleton(detector);
+builder.Services.AddMySqlDal(detector);
 //builder.Services.AddPostgreSqlDal(detector);
-builder.Services.AddSqlServerDal(detector);
+//builder.Services.AddSqlServerDal(detector);
 builder.Services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
 
 // If using Kestrel:
@@ -95,8 +96,9 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.RunMySqlSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
 //app.RunPostgreSqlSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
-app.RunSqlServerSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
+//app.RunSqlServerSeeders(app.Environment.IsDevelopment(), app.Environment.ContentRootPath);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

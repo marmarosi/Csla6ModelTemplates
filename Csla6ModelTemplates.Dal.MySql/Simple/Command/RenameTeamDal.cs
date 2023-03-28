@@ -1,14 +1,14 @@
-using Csla6ModelTemplates.Contracts.Simple.Command;
+﻿using Csla6ModelTemplates.Contracts.Simple.Command;
 using Csla6ModelTemplates.Dal.Exceptions;
 using Csla6ModelTemplates.Resources;
 
-namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Command
+namespace Csla6ModelTemplates.Dal.MySql.Simple.Command
 {
     /// <summary>
     /// Implements the data access functions of the rename team command.
     /// </summary>
     [DalImplementation]
-    public class RenameTeamDal : DalBase<SqlServerContext>, IRenameTeamDal
+    public class RenameTeamDal : DalBase<MySqlContext>, IRenameTeamDal
     {
         #region Constructor
 
@@ -17,7 +17,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Simple.Command
         /// </summary>
         /// <param name="context">The database context.</param>
         public RenameTeamDal(
-            SqlServerContext dbContext
+            MySqlContext dbContext
             )
         {
             DbContext = dbContext;

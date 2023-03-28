@@ -32,7 +32,7 @@ namespace Csla6ModelTemplates.Configuration
             else
                 services.AddDbContext<PostgreSqlContext>(options =>
                     options.UseNpgsql(configuration.GetConnectionString(DAL.PostgreSQL))
-                );
+                    );
 
             // Configure data access layer.
             foreach (var dalType in PostgreSqlDalIndex.Items)
