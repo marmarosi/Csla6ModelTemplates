@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 
 namespace Csla6ModelTemplates.Configuration
 {
@@ -25,13 +25,14 @@ namespace Csla6ModelTemplates.Configuration
             )
         {
             // Configure database.
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
             if (configuration == null)
                 services.AddDbContext<MySqlContext>(options => options
-                    .UseMySQL($"name=ConnectionStrings:{DAL.MySQL}")
+                    .UseMySql($"name=ConnectionStrings:{DAL.MySQL}", serverVersion)
                     );
             else
                 services.AddDbContext<MySqlContext>(options =>
-                    options.UseMySQL(configuration.GetConnectionString(DAL.MySQL))
+                    options.UseMySql(configuration.GetConnectionString(DAL.MySQL), serverVersion)
                     );
 
             // Configure data access layer.
