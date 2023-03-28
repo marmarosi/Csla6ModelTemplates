@@ -56,6 +56,7 @@ namespace Csla6ModelTemplates.Dal.MySql.Junction.Edit
                     }).ToList(),
                     Timestamp = e.Timestamp
                 })
+                .AsNoTracking()
                 .FirstOrDefault()
                 ?? throw new DataNotFoundException(DalText.Group_NotFound);
 

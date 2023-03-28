@@ -61,7 +61,8 @@ namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
                         .ToList(),
                     Timestamp = e.Timestamp
                 })
-                .FirstOrDefault() 
+                .AsNoTracking()
+                .FirstOrDefault()
                 ?? throw new DataNotFoundException(DalText.Team_NotFound);
 
             return team;

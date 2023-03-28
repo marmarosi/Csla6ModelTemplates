@@ -58,6 +58,7 @@ namespace Csla6ModelTemplates.Dal.MySql.Complex.Set
                     Timestamp = e.Timestamp
                 })
                 .OrderBy(o => o.TeamName)
+                .AsNoTracking()
                 .ToList();
 
             return list;

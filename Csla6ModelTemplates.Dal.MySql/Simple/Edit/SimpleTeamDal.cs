@@ -50,6 +50,7 @@ namespace Csla6ModelTemplates.Dal.MySql.Simple.Edit
                     TeamName = e.TeamName,
                     Timestamp = e.Timestamp
                 })
+                .AsNoTracking()
                 .FirstOrDefault()
                 ?? throw new DataNotFoundException(DalText.SimpleTeam_NotFound);
 

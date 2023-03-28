@@ -1,4 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Simple.Set;
+using Microsoft.EntityFrameworkCore;
 
 namespace Csla6ModelTemplates.Dal.MySql.Simple.Set
 {
@@ -47,6 +48,7 @@ namespace Csla6ModelTemplates.Dal.MySql.Simple.Set
                     Timestamp = e.Timestamp
                 })
                 .OrderBy(o => o.TeamName)
+                .AsNoTracking()
                 .ToList();
 
             return list;
