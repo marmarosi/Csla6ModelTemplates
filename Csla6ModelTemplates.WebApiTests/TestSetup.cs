@@ -1,14 +1,9 @@
 using Csla.Configuration;
-using Csla6ModelTemplates.Configuration;
 using Csla6ModelTemplates.CslaExtensions;
-using Csla6ModelTemplates.Dal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.IO;
-using System.Reflection;
 using Xunit;
 
 [assembly: CollectionBehavior(MaxParallelThreads = 1)]
@@ -31,22 +26,11 @@ namespace Csla6ModelTemplates.WebApiTests
         private TestSetup()
         {
             // Set configuration.
-            var webRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var basePath = Path.Join(webRootPath, "../../..");
-            var sharedSettings = Path.Join(basePath, "../Shared/SharedSettings.json");
-
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile(sharedSettings, true, true)
-                .AddEnvironmentVariables();
-            IConfiguration configuration = builder.Build();
+            IConfiguration configuration = ConfigurationCreator.Create();
+            services.AddSingleton(configuration);
 
             // Configure data access layer.
-            IDeadLockDetector detector = new DeadLockDetector();
-            services.AddSingleton(detector);
-            services.AddMySqlDal(detector, configuration);
-            //services.AddPostgreSqlDal(detector, configuration);
-            //services.AddSqlServerDal(detector, configuration);
-            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
+            services.AddDataAccessLayers(configuration);
 
             // Configure CSLA.
             services.AddCsla();

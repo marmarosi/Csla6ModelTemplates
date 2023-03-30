@@ -31,22 +31,25 @@ namespace Csla6ModelTemplates.EndpointTests
         private TestSetup()
         {
             // Set configuration.
-            var webRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var basePath = Path.Join(webRootPath, "../../..");
-            var sharedSettings = Path.Join(basePath, "../Shared/SharedSettings.json");
+            IConfiguration configuration = ConfigurationCreator.Create();
+            services.AddSingleton(configuration);
+            //var webRootPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //var basePath = Path.Join(webRootPath, "../../..");
+            //var sharedSettings = Path.Join(basePath, "../Shared/SharedSettings.json");
 
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile(sharedSettings, true, true)
-                .AddEnvironmentVariables();
-            IConfiguration configuration = builder.Build();
+            //var builder = new ConfigurationBuilder()
+            //    .AddJsonFile(sharedSettings, true, true)
+            //    .AddEnvironmentVariables();
+            //IConfiguration configuration = builder.Build();
 
             // Configure data access layer.
-            IDeadLockDetector detector = new DeadLockDetector();
-            services.AddSingleton(detector);
-            services.AddMySqlDal(detector, configuration);
-            //services.AddPostgreSqlDal(detector, configuration);
-            //services.AddSqlServerDal(detector, configuration);
-            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
+            services.AddDataAccessLayers(configuration);
+            //IDeadLockDetector detector = new DeadLockDetector();
+            //services.AddSingleton(detector);
+            //services.AddMySqlDal(detector, configuration);
+            ////services.AddPostgreSqlDal(detector, configuration);
+            ////services.AddSqlServerDal(detector, configuration);
+            //services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
 
             // Configure CSLA.
             services.AddCsla();

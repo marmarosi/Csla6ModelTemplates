@@ -9,7 +9,7 @@ using MySqlConnector;
 namespace Csla6ModelTemplates.Configuration
 {
     /// <summary>
-    /// Configuration extension methods
+    /// Provide methods to configure MySQL databases.
     /// </summary>
     public static class ConfigurationExtensions
     {
@@ -59,7 +59,7 @@ namespace Csla6ModelTemplates.Configuration
         }
 
         /// <summary>
-        /// Runs seeders of persistent storages.
+        /// Runs MySQL seeders.
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="isDevelopment">Indicates whether the hosting environment is development..</param>
@@ -72,8 +72,7 @@ namespace Csla6ModelTemplates.Configuration
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<MySqlContext>();
+                var context = scope.ServiceProvider.GetRequiredService<MySqlContext>();
 
                 MySqlSeeder.Run(context, isDevelopment, contentRootPath);
             }

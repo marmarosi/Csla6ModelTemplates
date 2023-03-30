@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace Csla6ModelTemplates.Configuration
 {
     /// <summary>
-    /// Configuration extension methods
+    /// Provide methods to configure SQL Server databases.
     /// </summary>
     public static class ConfigurationExtensions
     {
@@ -58,7 +58,7 @@ namespace Csla6ModelTemplates.Configuration
         }
 
         /// <summary>
-        /// Runs seeders of persistent storages.
+        /// Runs SQL Server seeders.
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="isDevelopment">Indicates whether the hosting environment is development..</param>
@@ -71,8 +71,7 @@ namespace Csla6ModelTemplates.Configuration
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<SqlServerContext>();
+                var context = scope.ServiceProvider.GetRequiredService<SqlServerContext>();
 
                 SqlServerSeeder.Run(context, isDevelopment, contentRootPath);
             }
