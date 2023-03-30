@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.Configuration;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
 
@@ -33,6 +33,7 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
                         services.AddMySqlDal(detector);
                         break;
                     case DAL.Oracle:
+                        services.AddOracleDal(detector);
                         break;
                     case DAL.PostgreSQL:
                         services.AddPostgreSqlDal(detector);
@@ -67,6 +68,7 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
                         app.RunMySqlSeeders(isDevelopment, contentRootPath);
                         break;
                     case DAL.Oracle:
+                        app.RunOracleSeeders(isDevelopment, contentRootPath);
                         break;
                     case DAL.PostgreSQL:
                         app.RunPostgreSqlSeeders(isDevelopment, contentRootPath);

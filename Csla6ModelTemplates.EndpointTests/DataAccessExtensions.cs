@@ -1,4 +1,4 @@
-﻿using Csla6ModelTemplates.Configuration;
+using Csla6ModelTemplates.Configuration;
 using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +35,7 @@ namespace Csla6ModelTemplates.EndpointTests
                         services.AddMySqlDal(detector);
                         break;
                     case DAL.Oracle:
+                        services.AddOracleDal(detector);
                         break;
                     case DAL.PostgreSQL:
                         services.AddPostgreSqlDal(detector);
