@@ -7,7 +7,7 @@ namespace Csla6ModelTemplates.Dal.MySql
     /// </summary>
     public static class MySqlSeeder
     {
-        private static Random random = new Random(DateTime.Now.Millisecond);
+        private static readonly Random random = new(DateTime.Now.Millisecond);
 
         /// <summary>
         /// Initializes the database schema and fills it with demo data.

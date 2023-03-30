@@ -40,7 +40,7 @@ namespace Csla6ModelTemplates.Configuration
 
             // Configure dead lock checking.
             detector.RegisterCheckMethod(
-                DAL.SQLServer,
+                DAL.PostgreSQL,
                 typeof(ConfigurationExtensions).GetMethod("IsDeadlock")
                 );
         }

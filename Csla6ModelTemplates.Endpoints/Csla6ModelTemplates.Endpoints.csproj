@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Csla6ModelTemplates.CslaExtensions\Csla6ModelTemplates.CslaExtensions.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.MySql\Csla6ModelTemplates.Dal.MySql.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Oracle\Csla6ModelTemplates.Dal.Oracle.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.PostgreSql\Csla6ModelTemplates.Dal.PostgreSql.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.SqlServer\Csla6ModelTemplates.Dal.SqlServer.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Models\Csla6ModelTemplates.Models.csproj" />

@@ -1,11 +1,11 @@
-using Csla6ModelTemplates.Dal.SqlServer.Entities;
+using Csla6ModelTemplates.Dal.Oracle.Entities;
 
-namespace Csla6ModelTemplates.Dal.SqlServer
+namespace Csla6ModelTemplates.Dal.Oracle
 {
     /// <summary>
     /// Database seeder.
     /// </summary>
-    public static class SqlServerSeeder
+    public static class OracleSeeder
     {
         private static readonly Random random = new(DateTime.Now.Millisecond);
 
@@ -16,7 +16,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
         /// <param name="isDevelopment">Indicates whether the app is running in development mode.</param>
         /// <param name="contentRootPath">The root path of the web site.</param>
         public static void Run(
-            SqlServerContext context,
+            OracleContext context,
             bool isDevelopment,
             string contentRootPath
             )
@@ -124,7 +124,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
         #region Folder helpers
 
         private static void CreateFolderLevel(
-            SqlServerContext context,
+            OracleContext context,
             int level,
             long? parentKey,
             long? rootKey,
