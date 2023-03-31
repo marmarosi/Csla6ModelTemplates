@@ -41,6 +41,7 @@ namespace Csla6ModelTemplates.EndpointTests
                         services.AddPostgreSqlDal(detector);
                         break;
                     case DAL.SQLite:
+                        services.AddSqliteDal(detector);
                         break;
                     case DAL.SQLServer:
                         services.AddSqlServerDal(detector);

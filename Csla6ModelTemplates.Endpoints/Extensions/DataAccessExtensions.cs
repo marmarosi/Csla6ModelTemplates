@@ -39,6 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
                         services.AddPostgreSqlDal(detector);
                         break;
                     case DAL.SQLite:
+                        services.AddSqliteDal(detector);
                         break;
                     case DAL.SQLServer:
                         services.AddSqlServerDal(detector);
@@ -74,6 +75,7 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
                         app.RunPostgreSqlSeeders(isDevelopment, contentRootPath);
                         break;
                     case DAL.SQLite:
+                        app.RunSqliteSeeders(isDevelopment, contentRootPath);
                         break;
                     case DAL.SQLServer:
                         app.RunSqlServerSeeders(isDevelopment, contentRootPath);
