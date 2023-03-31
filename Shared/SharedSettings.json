@@ -6,5 +6,5 @@
     "SQLite": "Data Source=sqlite.db;",
     "SQLServer": "Server=(localdb)\\mssqllocaldb;Database=CSLA_Models;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
-  "ActiveDals": [ "SQLServer" ]
+  "ActiveDals": [ "SQLite" ]
 }

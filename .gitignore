@@ -350,3 +350,5 @@ MigrationBackup/
 .ionide/
 /Csla6ModelTemplates.WebApi/Csla6ModelTemplates.WebApi.xml
 /Csla6ModelTemplates.Endpoints/Csla6ModelTemplates.Endpoints.xml
+/Csla6ModelTemplates.WebApi/sqlite.db
+/Csla6ModelTemplates.Endpoints/sqlite.db
