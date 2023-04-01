@@ -31,6 +31,9 @@ namespace Csla6ModelTemplates.WebApiTests
             {
                 switch (dalName)
                 {
+                    case DAL.Firebird:
+                        services.AddFirebirdDal(detector);
+                        break;
                     case DAL.MySQL:
                         services.AddMySqlDal(detector);
                         break;
