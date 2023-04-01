@@ -1,4 +1,4 @@
-﻿namespace Csla6ModelTemplates.Dal
+namespace Csla6ModelTemplates.Dal
 {
     /// <summary>
     /// Represents the properties of the database transactions.
@@ -8,7 +8,7 @@
         /// <summary>
         /// Indicates whether the transaction is executed in an integration test.
         /// </summary>
-        public bool IsTest { get; set; }
+        public bool IsUnderTest { get; set; }
 
         /// <summary>
         /// Creates a new instance.
@@ -18,12 +18,12 @@
         /// <summary>
         /// Creates a new instance.
         /// </summary>
-        /// <param name="isTesting">True when the transaction runs in an integration test; otherwise false.</param>
+        /// <param name="isUnderTest">True when the transaction runs in an integration test; otherwise false.</param>
         public TransactionOptions(
-            bool isTesting
+            bool isUnderTest
             )
         {
-            IsTest = isTesting;
+            IsUnderTest = isUnderTest;
         }
     }
 }

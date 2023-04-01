@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.PostgreSql
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public PostgreSqlContext(
             DbContextOptions<PostgreSqlContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.PostgreSql
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion

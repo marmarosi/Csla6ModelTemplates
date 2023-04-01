@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public SqlServerContext(
             DbContextOptions<SqlServerContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.SqlServer
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion

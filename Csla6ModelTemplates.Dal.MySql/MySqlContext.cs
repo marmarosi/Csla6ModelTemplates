@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.MySql
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public MySqlContext(
             DbContextOptions<MySqlContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.MySql
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion

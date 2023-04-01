@@ -4,8 +4,8 @@
     "MySQL": "server=127.0.0.1;uid=cslamodel;pwd=CSLA+Secret;database=CSLA_Models",
     "Oracle": "Data Source=localhost:1521/XE;User Id=C##CSLAMODEL;Password=CSLA7Secret;",
     "PostgreSQL": "Host=localhost;Database=CSLA_Models;Username=cslamodel;Password=CSLA+Secret",
-    "SQLite": "Data Source=sqlite.db;",
+    "SQLite": "Data Source=D:\\SQLite\\CSLA_Models.db;",
     "SQLServer": "Server=(localdb)\\mssqllocaldb;Database=CSLA_Models;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
-  "ActiveDals": [ "Firebird" ]
+  "ActiveDals": [ "SQLServer" ]
 }

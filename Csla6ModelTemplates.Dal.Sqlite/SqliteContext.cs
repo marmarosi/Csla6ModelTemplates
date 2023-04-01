@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.Sqlite
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public SqliteContext(
             DbContextOptions<SqliteContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.Sqlite
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion

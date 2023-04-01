@@ -51,7 +51,7 @@ namespace Csla6ModelTemplates.EndpointTests
                         break;
                 }
             }
-            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
+            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
         }
     }
 }

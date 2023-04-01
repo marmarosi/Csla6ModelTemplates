@@ -51,7 +51,7 @@ namespace Csla6ModelTemplates.WebApiTests
                         break;
                 }
             }
-            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(false));
+            services.AddSingleton(typeof(ITransactionOptions), new TransactionOptions(true));
         }
     }
 }

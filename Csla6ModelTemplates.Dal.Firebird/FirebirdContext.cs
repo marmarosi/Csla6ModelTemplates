@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.Firebird
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public FirebirdContext(
             DbContextOptions<FirebirdContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.Firebird
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion

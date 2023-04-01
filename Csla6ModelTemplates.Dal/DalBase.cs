@@ -30,7 +30,7 @@ namespace Csla6ModelTemplates.Dal
             IDbContextTransaction transaction
             )
         {
-            if (!DbContext.IsTest)
+            if (!DbContext.IsUnderTest)
                 transaction.Commit();
         }
     }

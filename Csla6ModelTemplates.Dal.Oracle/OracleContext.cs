@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.Oracle
     {
         #region Constructors
 
-        public bool IsTest { get; private set; }
+        public bool IsUnderTest { get; private set; }
 
         public OracleContext(
             DbContextOptions<OracleContext> options,
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.Oracle
             )
             : base(options)
         {
-            IsTest = transactionOptions?.IsTest ?? false;
+            IsUnderTest = transactionOptions?.IsUnderTest ?? false;
         }
 
         #endregion
