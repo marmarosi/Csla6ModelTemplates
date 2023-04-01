@@ -29,6 +29,9 @@ namespace Csla6ModelTemplates.WebApi.Extensions
             {
                 switch (dalName)
                 {
+                    case DAL.Firebird:
+                        services.AddFirebirdDal(detector);
+                        break;
                     case DAL.MySQL:
                         services.AddMySqlDal(detector);
                         break;
@@ -65,6 +68,9 @@ namespace Csla6ModelTemplates.WebApi.Extensions
             {
                 switch (dalName)
                 {
+                    case DAL.Firebird:
+                        app.RunFirebirdSeeders(isDevelopment, contentRootPath);
+                        break;
                     case DAL.MySQL:
                         app.RunMySqlSeeders(isDevelopment, contentRootPath);
                         break;
