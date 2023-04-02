@@ -5,6 +5,7 @@ namespace Csla6ModelTemplates.Dal
     /// </summary>
     public static class DAL
     {
+        public const string DB2 = "DB2";
         public const string Firebird = "Firebird";
         public const string MySQL = "MySQL";
         public const string Oracle = "Oracle";

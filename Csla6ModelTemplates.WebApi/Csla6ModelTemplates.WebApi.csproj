@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>disable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>Csla6ModelTemplates.WebApi.xml</DocumentationFile>
   </PropertyGroup>
@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Db2\Csla6ModelTemplates.Dal.Db2.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.Firebird\Csla6ModelTemplates.Dal.Firebird.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.MySql\Csla6ModelTemplates.Dal.MySql.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.Oracle\Csla6ModelTemplates.Dal.Oracle.csproj" />
