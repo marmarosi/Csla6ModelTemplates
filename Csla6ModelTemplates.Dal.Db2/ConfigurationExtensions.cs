@@ -1,24 +1,24 @@
 using Csla6ModelTemplates.Dal;
-using Csla6ModelTemplates.Dal.Oracle;
+using Csla6ModelTemplates.Dal.Db2;
+using IBM.Data.Db2;
+using IBM.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Oracle.ManagedDataAccess.Client;
 
 namespace Csla6ModelTemplates.Configuration
 {
     /// <summary>
-    /// Provide methods to configure Oracle databases.
+    /// Provide methods to configure DB2 databases.
     /// </summary>
     public static class ConfigurationExtensions
     {
         /// <summary>
-        /// Add the services to Entity Framewprk to use Oracle.
+        /// Add the services to Entity Framewprk to use DB2.
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="configuration">Teh application configuration.</param>
-        public static void AddOracleDal(
+        public static void AddDb2Dal(
             this IServiceCollection services,
             IDeadLockDetector detector = null,
             IConfiguration configuration = null
@@ -26,21 +26,21 @@ namespace Csla6ModelTemplates.Configuration
         {
             // Configure database.
             if (configuration == null)
-                services.AddDbContext<OracleContext>(options => options
-                    .UseOracle($"name=ConnectionStrings:{DAL.Oracle}")
+                services.AddDbContext<Db2Context>(options => options
+                    .UseDb2($"name=ConnectionStrings:{DAL.DB2}", null)
                     );
             else
-                services.AddDbContext<OracleContext>(options =>
-                    options.UseOracle(configuration.GetConnectionString(DAL.Oracle))
+                services.AddDbContext<Db2Context>(options =>
+                    options.UseDb2(configuration.GetConnectionString(DAL.DB2), null)
                     );
 
             // Configure data access layer.
-            foreach (var dalType in OracleDalIndex.Items)
+            foreach (var dalType in Db2DalIndex.Items)
                 services.AddTransient(dalType.Key, dalType.Value);
 
             // Configure dead lock checking.
             detector.RegisterCheckMethod(
-                DAL.Oracle,
+                DAL.DB2,
                 typeof(ConfigurationExtensions).GetMethod("IsDeadlock")
                 );
         }
@@ -54,37 +54,31 @@ namespace Csla6ModelTemplates.Configuration
             Exception ex
             )
         {
-            if (ex is OracleException)
+            if (ex is DB2Exception)
             {
-                switch ((ex as OracleException).Number)
+                switch ((ex as DB2Exception).ErrorCode)
                 {
-                    //case -2: /* Client Timeout */
-                    //case 701: /* Out of Memory */
-                    //case 1204: /* Lock Issue */
-                    //case 1205: /* Deadlock Victim */
-                    //case 1222: /* Lock Request Timeout */
-                    //case 8645: /* Timeout waiting for memory resource */
-                    //case 8651: /* Low memory condition */
-
-                    case 104:  /* Deadlock detected; all public servers blocked waiting for resources */
-                    case 1013: /* User requested cancel of current operation */
-                    case 2087: /* Object locked by another process in same transaction */
-                    case 60:   /* Deadlock detected while waiting for resource */
+                    /* The current unit of work was the victim in a deadlock, or experienced a timeout,
+                     * and had to be rolled back. */
+                    case -911:
+                    /* The application was the victim in a deadlock or experienced a timeout.
+                     * The reason code indicates whether a deadlock or timeout occurred. */
+                    case -913:
                         return true;
                     default:
-                        break;
+                        return false;
                 }
             }
             return false;
         }
 
         /// <summary>
-        /// Runs Oracle seeders.
+        /// Runs DB2 seeders.
         /// </summary>
         /// <param name="app">The application builder.</param>
         /// <param name="isDevelopment">Indicates whether the hosting environment is development.</param>
         /// <param name="contentRootPath">The root path of the web site.</param>
-        public static void RunOracleSeeders(
+        public static void RunDb2Seeders(
             this IApplicationBuilder app,
             bool isDevelopment,
             string contentRootPath
@@ -92,9 +86,9 @@ namespace Csla6ModelTemplates.Configuration
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<OracleContext>();
+                var context = scope.ServiceProvider.GetRequiredService<Db2Context>();
 
-                OracleSeeder.Run(context, isDevelopment, contentRootPath);
+                Db2Seeder.Run(context, isDevelopment, contentRootPath);
             }
         }
     }

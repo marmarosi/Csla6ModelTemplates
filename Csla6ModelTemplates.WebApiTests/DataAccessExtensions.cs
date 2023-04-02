@@ -31,6 +31,9 @@ namespace Csla6ModelTemplates.WebApiTests
             {
                 switch (dalName)
                 {
+                    case DAL.DB2:
+                        services.AddDb2Dal(detector);
+                        break;
                     case DAL.Firebird:
                         services.AddFirebirdDal(detector);
                         break;

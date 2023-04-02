@@ -1,5 +1,6 @@
 {
   "ConnectionStrings": {
+    "DB2": "Database=CSLA_Models;Server=localhost;UserID=cslamodel;Password=CSLA+Secret;PersistSecurityInfo=True",
     "Firebird": "User=cslamodel;Password=CSLA+Secret;Database=D:\\Firebird\\CSLA_Models.fdb;DataSource=localhost;Port=3050;Dialect=3;Charset=NONE;Role=;Connection lifetime=15;Pooling=true;MinPoolSize=0;MaxPoolSize=50;Packet Size=8192;ServerType=0;",
     "MySQL": "server=127.0.0.1;uid=cslamodel;pwd=CSLA+Secret;database=CSLA_Models",
     "Oracle": "Data Source=localhost:1521/XE;User Id=C##CSLAMODEL;Password=CSLA7Secret;",

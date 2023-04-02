@@ -61,7 +61,7 @@ namespace Csla6ModelTemplates.Configuration
         /// Runs SQLite seeders.
         /// </summary>
         /// <param name="app">The application builder.</param>
-        /// <param name="isDevelopment">Indicates whether the hosting environment is development..</param>
+        /// <param name="isDevelopment">Indicates whether the hosting environment is development.</param>
         /// <param name="contentRootPath">The root path of the web site.</param>
         public static void RunSqliteSeeders(
             this IApplicationBuilder app,

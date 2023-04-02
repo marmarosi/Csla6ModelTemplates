@@ -29,6 +29,9 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
             {
                 switch (dalName)
                 {
+                    case DAL.DB2:
+                        services.AddDb2Dal(detector);
+                        break;
                     case DAL.Firebird:
                         services.AddFirebirdDal(detector);
                         break;
@@ -68,6 +71,9 @@ namespace Csla6ModelTemplates.Endpoints.Extensions
             {
                 switch (dalName)
                 {
+                    case DAL.DB2:
+                        app.RunDb2Seeders(isDevelopment, contentRootPath);
+                        break;
                     case DAL.Firebird:
                         app.RunFirebirdSeeders(isDevelopment, contentRootPath);
                         break;
