@@ -8,5 +8,5 @@
     "SQLite": "Data Source=D:\\SQLite\\CSLA_Models.db;",
     "SQLServer": "Server=(localdb)\\mssqllocaldb;Database=CSLA_Models;Trusted_Connection=True;MultipleActiveResultSets=true"
   },
-  "ActiveDals": [ "DB2" ]
+  "ActiveDals": [ "SQLServer" ]
 }
