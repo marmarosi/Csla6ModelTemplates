@@ -39,7 +39,7 @@ namespace Csla6ModelTemplates.Endpoints.Arrangement
         /// <param name="criteria">The criteria of the team list.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The requested page of the sorted team list.</returns>
-        [HttpGet("full")]
+        [HttpGet("arranged")]
         [ProducesResponseType(typeof(PaginatedList<ArrangedTeamListItemDto>), StatusCodes.Status200OK)]
         [SwaggerOperation(
             Summary = "Gets the specified page of sorted teams.",

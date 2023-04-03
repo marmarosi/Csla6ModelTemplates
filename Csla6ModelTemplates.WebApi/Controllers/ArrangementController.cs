@@ -92,7 +92,7 @@ namespace Csla6ModelTemplates.WebApi.Controllers
         /// </summary>
         /// <param name="criteria">The criteria of the team list.</param>
         /// <returns>The requested page of the sorted team list.</returns>
-        [HttpGet("full")]
+        [HttpGet("arranged")]
         [ProducesResponseType(typeof(PaginatedList<ArrangedTeamListItemDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetArrangedTeamList(
             [FromQuery] ArrangedTeamListCriteria criteria
