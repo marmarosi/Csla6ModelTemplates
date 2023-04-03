@@ -1,17 +1,17 @@
-# CslaModelTemplates for Web APIs
+# CSLA version 6 Model Templates for Web APIs
 
 CSLA model templates to quickly setup new models, data access and contracts
-for .NET Core 3.1 applications. Provide data access templates for __DB2__, __Firebird__,
+for .NET Core 6 applications. Provide data access templates for __DB2__, __Firebird__,
 __MySQL__, __Oracle__, __PostgreSQL__, __SQLite__ and __SQL Server__ databases.
 
 Category | Models
 ---|---
-[Simple Models](#simple-models) | [SimpleList](#simplelist), [SimpleView](#simpleview), [Simple](#simple), [SimpleSet](#simpleset), [SimpleCommand](#simplecommand)
-[Pagination](#pagination) | [SortedList](#sortedlist), [PaginatedList](#paginatedlist), [PaginatedSortedList](#paginatedsortedlist)
-[Selection](#selection) | [SelectionWithKey](#selectionwithkey), [SelectionWithCode](#selectionwithcode), [SelectionWithId](#selectionwithid)
-[Complex Models](#complex-models) | [ComplexList](#complexlist), [ComplexView](#complexview), [Complex](#complex), [ComplexSet](#complexset), [ComplexCommand](#complexcommand)
+[Simple Models](#simple-models) | [Simple List](#simple-list), [Simple View](#simple-view), [Simple](#simple), [Simple Set](#simple-set), [Simple Command](#simple-command)
+[Arrangement](#arrangement) | [Sorted List](#sorted-list), [Paginated List](#paginated-list), [Arranged List](#arranged-list)
+[Selection](#selection) | [Selection With Key](#selection-with-key), [Selection With ID](#selection-with-id), [Selection With Code](#selection-with-code)
+[Complex Models](#complex-models) | [Complex List](#complex-list), [Complex View](#complex-view), [Complex](#complex), [Complex Set](#complex-set), [Complex Command](#complex-command)
 [Tree Model](#tree-model) | [Tree](#tree)
-[Junction Models](#junction-models) | [JunctionView](#junctionview), [Junction](#junction)
+[Junction Models](#junction-models) | [Junction View](#junction-view), [Junction](#junction)
 
 ## Simple Models
 
