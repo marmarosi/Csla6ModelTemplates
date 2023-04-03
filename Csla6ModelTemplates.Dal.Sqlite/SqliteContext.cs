@@ -10,8 +10,16 @@ namespace Csla6ModelTemplates.Dal.Sqlite
     {
         #region Constructors
 
+        /// <summary>
+        /// Indicates whether the transaction is executed in an integration test.
+        /// </summary>
         public bool IsUnderTest { get; private set; }
 
+        /// <summary>
+        /// Creates a new SQLite context instance.
+        /// </summary>
+        /// <param name="options">The options to be used by DbContext.</param>
+        /// <param name="transactionOptions">The transaction options.</param>
         public SqliteContext(
             DbContextOptions<SqliteContext> options,
             ITransactionOptions transactionOptions
@@ -25,7 +33,15 @@ namespace Csla6ModelTemplates.Dal.Sqlite
 
         #region Auto update timestamps
 
-        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        /// <summary>
+        /// Saves all changes made in this context to the database.
+        /// </summary>
+        /// <param name="acceptAllChangesOnSuccess">Indicates whether AcceptAllChanges() is called
+        /// after the changes have been sent successfully ti the database.</param>
+        /// <returns>The number of state entries written to the database.</returns>
+        public override int SaveChanges(
+            bool acceptAllChangesOnSuccess
+            )
         {
             var insertedEntries = this.ChangeTracker.Entries()
                                .Where(x => x.State == EntityState.Added)

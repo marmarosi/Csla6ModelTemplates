@@ -8,6 +8,14 @@
     <DocumentationFile>Csla6ModelTemplates.WebApi.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;MSB3270</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;MSB3270</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="..\Shared\SharedSettings.json" Link="SharedSettings.json" />
   </ItemGroup>

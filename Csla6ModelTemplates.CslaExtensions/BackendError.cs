@@ -1,6 +1,7 @@
 using Csla6ModelTemplates.Dal;
 using Csla6ModelTemplates.Resources;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace Csla6ModelTemplates.CslaExtensions
 {
@@ -8,7 +9,7 @@ namespace Csla6ModelTemplates.CslaExtensions
     /// Represents an error occurred on the backend.
     /// </summary>
     [Serializable]
-    public class BackendError : Exception
+    public class BackendError : ApplicationException
     {
         #region Properties
 
@@ -94,7 +95,21 @@ namespace Csla6ModelTemplates.CslaExtensions
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
+        /// <param name="info">The serialization info that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The streaming context that contains contextual information about the source or destination.</param>
+        protected BackendError(
+            SerializationInfo info,
+            StreamingContext context
+            )
+            : base(info, context)
+        { }
+
+        #endregion Constructors
+
+        #region Factory Methods
 
         public static BackendError Evaluate(
             Exception exception,
@@ -124,5 +139,7 @@ namespace Csla6ModelTemplates.CslaExtensions
             }
             return new BackendError(exception, summary);
         }
+
+        #endregion
     }
 }

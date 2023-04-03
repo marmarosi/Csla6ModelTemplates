@@ -42,7 +42,7 @@ namespace Csla6ModelTemplates.Configuration
             // Configure dead lock checking.
             detector.RegisterCheckMethod(
                 DAL.MySQL,
-                typeof(ConfigurationExtensions).GetMethod("IsDeadlock")
+                typeof(ConfigurationExtensions).GetMethod("IsMySqlDeadlock")
                 );
         }
 
@@ -51,7 +51,7 @@ namespace Csla6ModelTemplates.Configuration
         /// </summary>
         /// <param name="ex">The original exception thrown.</param>
         /// <returns>True when the reason is a deadlock; otherwise false;</returns>
-        public static bool IsDeadlock(
+        public static bool IsMySqlDeadlock(
             Exception ex
             )
         {

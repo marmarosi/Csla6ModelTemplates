@@ -41,7 +41,7 @@ namespace Csla6ModelTemplates.Configuration
             // Configure dead lock checking.
             detector.RegisterCheckMethod(
                 DAL.DB2,
-                typeof(ConfigurationExtensions).GetMethod("IsDeadlock")
+                typeof(ConfigurationExtensions).GetMethod("IsDb2Deadlock")
                 );
         }
 
@@ -50,7 +50,7 @@ namespace Csla6ModelTemplates.Configuration
         /// </summary>
         /// <param name="ex">The original exception thrown.</param>
         /// <returns>True when the reason is a deadlock; otherwise false;</returns>
-        public static bool IsDeadlock(
+        public static bool IsDb2Deadlock(
             Exception ex
             )
         {
