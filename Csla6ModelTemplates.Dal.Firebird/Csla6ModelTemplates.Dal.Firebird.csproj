@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Csla6ModelTemplates.Contracts\Csla6ModelTemplates.Contracts.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal\Csla6ModelTemplates.Dal.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal_Definition\Csla6ModelTemplates.Dal_Definition.csproj" />
   </ItemGroup>
 
 </Project>
