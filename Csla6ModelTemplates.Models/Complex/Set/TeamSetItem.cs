@@ -4,6 +4,7 @@ using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.CslaExtensions.Models;
 using Csla6ModelTemplates.CslaExtensions.Validations;
+using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Resources;
 
 namespace Csla6ModelTemplates.Models.Complex.Set

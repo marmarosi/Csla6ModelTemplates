@@ -1,4 +1,6 @@
-﻿namespace Csla6ModelTemplates.Contracts.Junction.Edit
+﻿using Csla6ModelTemplates.Dal.Contracts;
+
+namespace Csla6ModelTemplates.Contracts.Junction.Edit
 {
     /// <summary>
     /// Represents the criteria of the editable group object.

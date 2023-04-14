@@ -1,4 +1,6 @@
-﻿namespace Csla6ModelTemplates.Contracts.Junction.View
+﻿using Csla6ModelTemplates.Dal.Contracts;
+
+namespace Csla6ModelTemplates.Contracts.Junction.View
 {
     /// <summary>
     /// Represents the criteria of the read-only group object.

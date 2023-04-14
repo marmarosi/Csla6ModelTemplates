@@ -1,3 +1,5 @@
+using Csla6ModelTemplates.Dal.Contracts;
+
 namespace Csla6ModelTemplates.Contracts.Simple.Edit
 {
     /// <summary>

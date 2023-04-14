@@ -1,6 +1,6 @@
-using HashidsNet;
+﻿using HashidsNet;
 
-namespace Csla6ModelTemplates.Contracts
+namespace Csla6ModelTemplates.Dal.Contracts
 {
     /// <summary>
     /// Provides methods to obfuscate keys.

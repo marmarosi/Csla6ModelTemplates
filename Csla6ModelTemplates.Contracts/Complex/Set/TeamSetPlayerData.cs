@@ -1,3 +1,4 @@
+using Csla6ModelTemplates.Dal.Contracts;
 using System.Text.Json.Serialization;
 
 namespace Csla6ModelTemplates.Contracts.Complex.Set

@@ -1,6 +1,5 @@
 using Csla;
 using Csla.Data;
-using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models

@@ -3,6 +3,7 @@ using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
 using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Arrangement.Sorting
 {

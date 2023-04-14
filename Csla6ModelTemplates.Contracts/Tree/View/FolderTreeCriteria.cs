@@ -1,4 +1,6 @@
-﻿namespace Csla6ModelTemplates.Contracts.Tree.View
+﻿using Csla6ModelTemplates.Dal.Contracts;
+
+namespace Csla6ModelTemplates.Contracts.Tree.View
 {
     /// <summary>
     /// Represents the criteria of the read-only folder tree object.

@@ -2,6 +2,7 @@ using Csla;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.Command;
 using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Resources;
 
 namespace Csla6ModelTemplates.Models.Simple.Command
