@@ -1,7 +1,7 @@
 # CSLA version 6 Model Templates for Web APIs
 
-CSLA model templates to quickly setup new models, data access and contracts
-for .NET Core 6 applications. Provide data access templates for __DB2__, __Firebird__,
+Provides CSLA model templates to quickly setup new models, data access and contracts
+for .NET Core 6 REST APIs. Provide data access templates for __DB2__, __Firebird__,
 __MySQL__, __Oracle__, __PostgreSQL__, __SQLite__ and __SQL Server__ databases.
 
 Category | Models
@@ -15,7 +15,7 @@ Category | Models
 
 ## Simple Models
 
-![Simple model](/Simple.png "Simple model")
+![Simple model](https://raw.githubusercontent.com/marmarosi/Csla6ModelTemplates/main/Simple.png "Simple model")
 
 The simple models implement the use cases of a one-level entity.
 Root entity: Team.
@@ -189,7 +189,7 @@ Endpoint:
 
 ## Complex Models
 
-![Complex model](/Complex.png "Complex model")
+![Complex model](https://raw.githubusercontent.com/marmarosi/Csla6ModelTemplates/main/Complex.png "Complex model")
 
 The complex models implement the use cases of a multi-level entity.
 Root entity: Team, child entity: Player.
@@ -278,7 +278,7 @@ Endpoint:
 
 ## Tree Model
 
-![Tree model](/Tree.png "Tree model")
+![Tree model](https://raw.githubusercontent.com/marmarosi/Csla6ModelTemplates/main/Tree.png "Tree model")
 
 ### Tree
 
@@ -297,7 +297,7 @@ Endpoint:
 
 ## Junction Models
 
-![Junction model](/Junction.png "Junction model")
+![Junction model](https://raw.githubusercontent.com/marmarosi/Csla6ModelTemplates/main/Junction.png "Junction model")
 
 The junction models implement the use cases of two entities having a
 junction or bridging entity. Root entities: Group and Person, junction
