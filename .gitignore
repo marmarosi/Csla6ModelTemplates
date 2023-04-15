@@ -348,3 +348,12 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/Csla6ModelTemplates.WebApi/Csla6ModelTemplates.WebApi.xml
+/Csla6ModelTemplates.Endpoints/Csla6ModelTemplates.Endpoints.xml
+/Csla6ModelTemplates.WebApi/sqlite.db
+/Csla6ModelTemplates.Endpoints/sqlite.db
+/Csla6ModelTemplates.WebApi/sqlite.db-shm
+/Csla6ModelTemplates.WebApi/sqlite.db-wal
+/Csla6ModelTemplates.WebApiTests/sqlite.db
+/Csla6ModelTemplates.WebApiTests/sqlite.db-shm
+/Csla6ModelTemplates.WebApiTests/sqlite.db-wal

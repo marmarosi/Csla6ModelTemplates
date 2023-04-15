@@ -1,4 +1,4 @@
-using System;
+using System.Runtime.Serialization;
 
 namespace Csla6ModelTemplates.Dal.Exceptions
 {
@@ -8,6 +8,8 @@ namespace Csla6ModelTemplates.Dal.Exceptions
     [Serializable]
     public class InsertFailedException : DalException
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InsertFailedException"/> class.
         /// </summary>
@@ -29,5 +31,19 @@ namespace Csla6ModelTemplates.Dal.Exceptions
             )
             : base(message, innerException)
         { }
+
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
+        /// <param name="info">The serialization info that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The streaming context that contains contextual information about the source or destination.</param>
+        protected InsertFailedException(
+            SerializationInfo info,
+            StreamingContext context
+            )
+            : base(info, context)
+        { }
+
+        #endregion Constructors
     }
 }

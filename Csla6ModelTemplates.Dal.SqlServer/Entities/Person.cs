@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Csla6ModelTemplates.Dal.SqlServer.Entities
 {
     [Table("Persons")]
-    public class Person
+    public class Person : Timestamped
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -15,8 +15,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Entities
 
         [MaxLength(100)]
         public string PersonName { get; set; }
-
-        public DateTime Timestamp { get; set; }
 
         public ICollection<GroupPerson> Groups { get; set; }
     }

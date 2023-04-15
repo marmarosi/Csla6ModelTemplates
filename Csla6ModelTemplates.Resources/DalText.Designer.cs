@@ -241,6 +241,15 @@ namespace Csla6ModelTemplates.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleting the team payers has failed..
+        /// </summary>
+        public static string SimpleTeam_Delete_Players {
+            get {
+                return ResourceManager.GetString("SimpleTeam_Delete_Players", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting the team has failed..
         /// </summary>
         public static string SimpleTeam_DeleteFailed {
@@ -295,6 +304,15 @@ namespace Csla6ModelTemplates.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deleting the players of team with code {0} has failed..
+        /// </summary>
+        public static string SimpleTeamSetItem_Delete_Players {
+            get {
+                return ResourceManager.GetString("SimpleTeamSetItem_Delete_Players", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deleting the team with code {0} has failed..
         /// </summary>
         public static string SimpleTeamSetItem_DeleteFailed {
@@ -318,6 +336,15 @@ namespace Csla6ModelTemplates.Resources {
         public static string SimpleTeamSetItem_NotFound {
             get {
                 return ResourceManager.GetString("SimpleTeamSetItem_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested team has not been found..
+        /// </summary>
+        public static string SimpleTeamSetItem_NotFoundKey {
+            get {
+                return ResourceManager.GetString("SimpleTeamSetItem_NotFoundKey", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
 using Csla;
+using Csla.Data;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
@@ -11,18 +12,18 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     {
         #region Business Methods
 
-        public static readonly PropertyInfo<string> CodeProperty = RegisterProperty<string>(c => c.Code);
+        public static readonly PropertyInfo<string> CodeProperty = RegisterProperty<string>(nameof(Code));
         public string Code
         {
-            get { return GetProperty(CodeProperty); }
-            private set { LoadProperty(CodeProperty, value); }
+            get => GetProperty(CodeProperty);
+            private set => LoadProperty(CodeProperty, value);
         }
 
-        public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(c => c.Name);
+        public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(nameof(Name));
         public string Name
         {
-            get { return GetProperty(NameProperty); }
-            private set { LoadProperty(NameProperty, value); }
+            get => GetProperty(NameProperty);
+            private set => LoadProperty(NameProperty, value);
         }
 
         #endregion
@@ -32,18 +33,20 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         //protected override void AddBusinessRules()
         //{
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(SimpleTeamView),
+        //        typeof(CodeNameOption),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -60,8 +63,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             CodeNameOptionDao dao
             )
         {
-            Code = dao.Code;
-            Name = dao.Name;
+            // Set values from data access object.
+            DataMapper.Map(dao, this);
         }
 
         #endregion

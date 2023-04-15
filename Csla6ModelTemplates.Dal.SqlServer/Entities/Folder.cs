@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Csla6ModelTemplates.Dal.SqlServer.Entities
 {
     [Table("Folders")]
-    public class Folder
+    public class Folder : Timestamped
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -18,8 +18,6 @@ namespace Csla6ModelTemplates.Dal.SqlServer.Entities
 
         [MaxLength(100)]
         public string FolderName { get; set; }
-
-        public DateTime Timestamp { get; set; }
 
         [ForeignKey("ParentKey")]
         public Folder Parent { get; set; }

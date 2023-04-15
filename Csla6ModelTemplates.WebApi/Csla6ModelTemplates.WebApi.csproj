@@ -2,11 +2,24 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <Version>1.0.0</Version>
+    <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>Csla6ModelTemplates.WebApi.xml</DocumentationFile>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;MSB3270</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;MSB3270</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="..\Shared\SharedSettings.json" Link="SharedSettings.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Csla" Version="6.2.2" />
@@ -16,6 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Db2\Csla6ModelTemplates.Dal.Db2.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Firebird\Csla6ModelTemplates.Dal.Firebird.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.MySql\Csla6ModelTemplates.Dal.MySql.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Oracle\Csla6ModelTemplates.Dal.Oracle.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.PostgreSql\Csla6ModelTemplates.Dal.PostgreSql.csproj" />
+    <ProjectReference Include="..\Csla6ModelTemplates.Dal.Sqlite\Csla6ModelTemplates.Dal.Sqlite.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Dal.SqlServer\Csla6ModelTemplates.Dal.SqlServer.csproj" />
     <ProjectReference Include="..\Csla6ModelTemplates.Models\Csla6ModelTemplates.Models.csproj" />
   </ItemGroup>

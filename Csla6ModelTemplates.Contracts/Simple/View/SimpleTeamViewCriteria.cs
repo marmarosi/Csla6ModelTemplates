@@ -1,18 +1,27 @@
+using Csla6ModelTemplates.Dal.Contracts;
+
 namespace Csla6ModelTemplates.Contracts.Simple.View
 {
     /// <summary>
-    /// Represents the criteria of the read-only team object.
+    /// Represents the criteria of the read-only team model.
     /// </summary>
     [Serializable]
     public class SimpleTeamViewParams
     {
         public string TeamId { get; set; }
 
+        public SimpleTeamViewParams(
+            string teamId
+            )
+        {
+            TeamId = teamId;
+        }
+
         public SimpleTeamViewCriteria Decode()
         {
             return new SimpleTeamViewCriteria
             {
-                TeamKey = KeyHash.Decode(ID.Team, TeamId) ?? 0
+                TeamKey = KeyHash.Decode(ID.Team, TeamId)
             };
         }
     }
@@ -23,6 +32,6 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
     [Serializable]
     public class SimpleTeamViewCriteria
     {
-        public long TeamKey { get; set; }
+        public long? TeamKey { get; set; }
     }
 }

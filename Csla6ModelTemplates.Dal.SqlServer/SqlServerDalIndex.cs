@@ -2,11 +2,21 @@ using System.Reflection;
 
 namespace Csla6ModelTemplates.Dal.SqlServer
 {
-    public class SqlServerDalIndex : DalIndex
+    /// <summary>
+    /// Represents a list of SQL Server data access implementations.
+    /// </summary>
+    public static class SqlServerDalIndex
     {
-        public SqlServerDalIndex()
+        /// <summary>
+        /// Gets the list of data access implementations in the currwnt assembly.
+        /// </summary>
+        public static Dictionary<Type, Type> Items
         {
-            DalAssembly = Assembly.GetExecutingAssembly();
+            get
+            {
+                var dalindex = new DalIndex(Assembly.GetExecutingAssembly());
+                return dalindex.DalTypes;
+            }
         }
     }
 }

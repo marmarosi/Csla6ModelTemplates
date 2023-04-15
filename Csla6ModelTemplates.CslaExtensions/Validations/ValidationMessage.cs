@@ -1,5 +1,4 @@
 using Csla.Rules;
-using System;
 
 namespace Csla6ModelTemplates.CslaExtensions.Validations
 {
@@ -51,6 +50,26 @@ namespace Csla6ModelTemplates.CslaExtensions.Validations
             Property = propertyPrefix + brokenRule.Property;
             Description = brokenRule.Description;
             Severity = brokenRule.Severity;
+        }
+
+        /// <summary>
+        /// Creates a new instance.
+        /// </summary>
+        /// <param name="model">The name of the business object model.</param>
+        /// <param name="property">The name of the proerty with optiona prefix.</param>
+        /// <param name="description">The message text.</param>
+        /// <param name="severity">The rule severity, defaults to error.</param>
+        public ValidationMessage(
+            string model,
+            string property,
+            string description,
+            RuleSeverity severity = RuleSeverity.Error
+            )
+        {
+            Model = model;
+            Property = property;
+            Description = description;
+            Severity = severity;
         }
 
         #endregion

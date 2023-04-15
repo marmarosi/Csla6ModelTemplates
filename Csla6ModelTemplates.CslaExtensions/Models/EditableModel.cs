@@ -2,13 +2,9 @@ using Csla;
 using Csla.Core;
 using Csla.Rules;
 using Csla6ModelTemplates.CslaExtensions.Validations;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -136,6 +132,23 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
+        #region SetValuesOnBuild
+
+        /// <summary>
+        /// Updates an editable model and its children from the data transfer object.
+        /// </summary>
+        /// <param name="dto">The data transfer object.</param>
+        /// <param name="childFactory">The child data portal factory.</param>
+        public virtual void SetValuesOnBuild(
+            Dto dto,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region ToDto
 
         /// <summary>
@@ -157,22 +170,10 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                 var cslaProperty = cslaProperties.Find(pi => pi.Name == dtoProperty.Name);
                 if (cslaProperty != null)
                 {
-                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                    if (cslaProperty.Type.GetInterface(nameof(IEditableList<Dto, T>) + "`2") != null)
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else if (cslaProperty.Type.GetInterface(nameof(IEditableModel<Dto>) + "`1") != null)
-                    {
-                        var cslaBase = GetProperty(cslaProperty);
-                        object value = cslaProperty.Type
-                            .GetMethod("ToDto")
-                            .Invoke(cslaBase, null);
-                        dtoProperty.SetValue(dto, value);
-                    }
+                        SetDtoValue(dto, dtoProperty, cslaProperty);
                     else
                         dtoProperty.SetValue(dto, GetProperty(cslaProperty));
                 }
@@ -181,43 +182,18 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             return dto;
         }
 
-        #endregion
-
-        #region Update
-
-        /// <summary>
-        /// Updates an editable model from the data transfer object.
-        /// </summary>
-        /// <param name="dto">The data transfer object.</param>
-        public virtual async Task Update(
-            Dto dto
+        private void SetDtoValue(
+            Dto dto,
+            PropertyInfo dtoProperty,
+            IPropertyInfo cslaProperty
             )
         {
-            BusinessRules.CheckRules();
-            await Task.CompletedTask;
+            var cslaBase = GetProperty(cslaProperty);
+            object value = cslaProperty.Type
+                .GetMethod("ToDto")
+                .Invoke(cslaBase, null);
+            dtoProperty.SetValue(dto, value);
         }
-
-        #endregion
-
-        #region Create
-
-        /// <summary>
-        /// Creates an editable model instance from the data transfer object.
-        /// </summary>
-        /// <typeparam name="D">The type of the data transfer object.</typeparam>
-        /// <param name="parent">The parent collection.</param>
-        /// <param name="dto">The data transfer object.</param>
-        /// <returns>The new editable model instance.</returns>
-/*        public static async Task<T> Create(
-            IParent parent,
-            Dto dto
-            )
-        {
-            T item = await Task.Run(() => DataPortal.CreateChild<T>());
-            (item as EditableModel<T, Dto>).SetParent(parent);
-            await (item as EditableModel<T, Dto>).Update(dto);
-            return item;
-        }*/
 
         #endregion
     }

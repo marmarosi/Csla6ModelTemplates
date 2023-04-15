@@ -1,8 +1,4 @@
 using Csla;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Csla6ModelTemplates.CslaExtensions.Models
 {
@@ -12,8 +8,8 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     /// <typeparam name="T">The type of the business collection.</typeparam>
     /// <typeparam name="C">The type of the business objects in the collection.</typeparam>
     [Serializable]
-    public abstract class EditableList<T, C, Dto> : BusinessListBase<T, C>, IEditableList<Dto>
-        where T : BusinessListBase<T, C>, IEditableList<Dto>
+    public abstract class EditableList<T, C, Dto> : BusinessListBase<T, C>, IEditableList<Dto, C>
+        where T : BusinessListBase<T, C>, IEditableList<Dto, C>
         where C : EditableModel<C, Dto>
         where Dto: class
     {
@@ -40,93 +36,103 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         #endregion
 
-        #region Update (Key)
-
-        ///// <summary>
-        ///// Updates an editable collection from the data transfer objects.
-        ///// </summary>
-        ///// <typeparam name="D">The type of the data transfer objects.</typeparam>
-        ///// <param name="list">The list of data transfer objects.</param>
-        ///// <param name="keyName">The name of the key property.</param>
-        //public async Task Update(
-        //    List<Dto> list,
-        //    string keyName
-        //    )
-        //{
-        //    List<int> indeces = Enumerable.Range(0, list.Count).ToList();
-        //    for (int i = Items.Count - 1; i > -1; i--)
-        //    {
-        //        C item = Items[i];
-        //        long? keyValue = GetValue(item, keyName);
-        //        Predicate<Dto> match = (Dto o) => GetValue(o, keyName) == keyValue;
-        //        Dto dto = list.Find(match);
-
-        //        if (dto == null)
-        //            RemoveItem(i);
-        //        else
-        //        {
-        //            await item.Update(dto);
-        //            indeces.Remove(list.IndexOf(dto));
-        //        }
-        //    }
-        //    foreach (int index in indeces)
-        //        Items.Add(await (
-        //            typeof(EditableModel<C, Dto>)
-        //            .GetMethod("Create")
-        //            .MakeGenericMethod(typeof(Dto))
-        //            .Invoke(null, new object[] { this, list[index] })
-        //            as Task<C>));
-        //}
-
-        //private long? GetValue(
-        //    object something,
-        //    string propertyName
-        //    )
-        //{
-        //    return something.GetType()
-        //        .GetProperty(propertyName)
-        //        .GetValue(something) as long?;
-        //}
-
-        #endregion
-
-        #region Update (ID)
+        #region SetValuesByKey
 
         /// <summary>
         /// Updates an editable collection from the data transfer objects.
         /// </summary>
         /// <param name="list">The list of data transfer objects.</param>
-        /// <param name="idName">The name of the identifier property.</param>
-        public async Task Update(
+        /// <param name="keyName">The name of the key property.</param>
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        public void SetValuesByKey(
             List<Dto> list,
-            string idName
+            string keyName,
+            IChildDataPortalFactory childFactory
             )
         {
             List<int> indeces = Enumerable.Range(0, list.Count).ToList();
             for (int i = Items.Count - 1; i > -1; i--)
             {
                 C item = Items[i];
-                string idValue = GetValue(item, idName);
-                bool match(Dto o) => GetValue(o, idName) == idValue;
+                long? keyValue = GetKeyValue(item, keyName);
+                Predicate<Dto> match = (Dto o) => GetKeyValue(o, keyName) == keyValue;
                 Dto dto = list.Find(match);
 
                 if (dto == null)
                     RemoveItem(i);
                 else
                 {
-                    await item.Update(dto);
+                    item.SetValuesOnBuild(dto, childFactory);
                     indeces.Remove(list.IndexOf(dto));
                 }
             }
-            foreach (int index in indeces)
-                Items.Add(await (
-                    typeof(EditableModel<C, Dto>)
-                    .GetMethod("Create")
-                    .Invoke(null, new object[] { this, list[index] })
-                    as Task<C>));
+            if (indeces.Count > 0)
+            {
+                var portal = childFactory.GetPortal<C>();
+                foreach (int index in indeces)
+                {
+                    C item = portal.CreateChild();
+                    item.SetValuesOnBuild(list[index], childFactory);
+                    Items.Add(item);
+                }
+            }
         }
 
-        private string GetValue(
+        private long? GetKeyValue(
+            object something,
+            string propertyName
+            )
+        {
+            return something.GetType()
+                .GetProperty(propertyName)
+                .GetValue(something) as long?;
+        }
+
+        #endregion
+
+        #region SetValuesById
+
+        /// <summary>
+        /// Updates an editable collection from the data transfer objects.
+        /// </summary>
+        /// <param name="list">The list of data transfer objects.</param>
+        /// <param name="idName">The name of the identifier property.</param>
+        /// <param name="childFactory">The data portal factory of the items.</param>
+        public void SetValuesById(
+            List<Dto> list,
+            string idName,
+            IChildDataPortalFactory childFactory
+            )
+        {
+            List<int> indeces = Enumerable.Range(0, list.Count).ToList();
+            for (int i = Items.Count - 1; i > -1; i--)
+            {
+                C item = Items[i];
+                string idValue = GeIdtValue(item, idName);
+                bool match(Dto o) => GeIdtValue(o, idName) == idValue;
+                Dto dto = list.Find(match);
+
+                if (dto == null)
+                    RemoveItem(i);
+                else
+                {
+                    item.SetValuesOnBuild(dto, childFactory);
+                    indeces.Remove(list.IndexOf(dto));
+                }
+            }
+            if (indeces.Count > 0)
+            {
+                var portal = childFactory.GetPortal<C>();
+                foreach (int index in indeces)
+                {
+                    C item = portal.CreateChild();
+                    item.SetValuesOnBuild(list[index], childFactory);
+                    Items.Add(item);
+                }
+            }
+        }
+
+        private string GeIdtValue(
             object something,
             string propertyName
             )

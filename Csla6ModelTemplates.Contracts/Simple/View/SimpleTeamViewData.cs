@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
     }
 
     /// <summary>
-    /// Defines the data access object of the read-only team object.
+    /// Defines the data access object of the read-only team model.
     /// </summary>
     public class SimpleTeamViewDao : SimpleTeamViewData
     {
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Contracts.Simple.View
     }
 
     /// <summary>
-    /// Defines the data transfer object of the read-only team object.
+    /// Defines the data transfer object of the read-only team model.
     /// </summary>
     public class SimpleTeamViewDto : SimpleTeamViewData
     {

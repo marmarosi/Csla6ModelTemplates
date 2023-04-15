@@ -1,8 +1,9 @@
 using Csla;
-using Csla.Rules;
+using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.View;
 using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Simple.View
 {
@@ -21,10 +22,10 @@ namespace Csla6ModelTemplates.Models.Simple.View
             private set => LoadProperty(TeamKeyProperty, value);
         }
 
-        public static readonly PropertyInfo<string> TeamIdProperty = RegisterProperty<string>(nameof(TeamId), RelationshipTypes.PrivateField);
+        public static readonly PropertyInfo<long?> TeamIdProperty = RegisterProperty<long?>(nameof(TeamId), RelationshipTypes.PrivateField);
         public string TeamId
         {
-            get => GetProperty(TeamIdProperty, KeyHash.Encode(ID.Team, TeamKey));
+            get => KeyHash.Encode(ID.Team, TeamKey);
             private set => TeamKey = KeyHash.Decode(ID.Team, value);
         }
 
@@ -49,11 +50,13 @@ namespace Csla6ModelTemplates.Models.Simple.View
         //protected override void AddBusinessRules()
         //{
         //    // Add authorization rules.
-        //    BusinessRules.AddRule(new IsInRole(
-        //        AuthorizationActions.ReadProperty,
-        //        TeamNameProperty,
-        //        "Manager"
-        //        ));
+        //    BusinessRules.AddRule(
+        //        new IsInRole(
+        //            AuthorizationActions.ReadProperty,
+        //            TeamNameProperty,
+        //            "Manager"
+        //            )
+        //        );
         //}
 
         //private static void AddObjectAuthorizationRules()
@@ -70,6 +73,25 @@ namespace Csla6ModelTemplates.Models.Simple.View
 
         #endregion
 
+        #region Factory Methods
+
+        /// <summary>
+        /// Gets the specified team details to display.
+        /// </summary>
+        /// <param name="factory">The data portal factory.</param>
+        /// <param name="id">The identifier of the team.</param>
+        /// <returns>The requested team view.</returns>
+        public static async Task<SimpleTeamView> Get(
+            IDataPortalFactory factory,
+            string id
+            )
+        {
+            var criteria = new SimpleTeamViewParams(id);
+            return await factory.GetPortal<SimpleTeamView>().FetchAsync(criteria.Decode());
+        }
+
+        #endregion
+
         #region Data Access
 
         [Fetch]
@@ -78,9 +100,9 @@ namespace Csla6ModelTemplates.Models.Simple.View
             [Inject] ISimpleTeamViewDal dal
             )
         {
-            var dao = dal.GetView(criteria);
-            Csla.Data.DataMapper.Map(dao, this);
-            BusinessRules.CheckRules();
+            // Set values from data access object.
+            SimpleTeamViewDao dao = dal.Fetch(criteria);
+            DataMapper.Map(dao, this);
         }
 
         #endregion
