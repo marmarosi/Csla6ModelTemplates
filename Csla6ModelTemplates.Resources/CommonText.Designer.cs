@@ -115,15 +115,6 @@ namespace Csla6ModelTemplates.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} value must not be {1}..
-        /// </summary>
-        public static string NotZeroRule_MessageText {
-            get {
-                return ResourceManager.GetString("NotZeroRule_MessageText", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The provided PasswordHasherCompatibilityMode is invalid..
         /// </summary>
         public static string PasswordJumbler_InvalidCompatibilityMode {
@@ -138,15 +129,6 @@ namespace Csla6ModelTemplates.Resources {
         public static string PasswordJumbler_InvalidIterationCount {
             get {
                 return ResourceManager.GetString("PasswordJumbler_InvalidIterationCount", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ValidationResourceType attribute is missing from the business object..
-        /// </summary>
-        public static string Validation_MissingAttribute {
-            get {
-                return ResourceManager.GetString("Validation_MissingAttribute", resourceCulture);
             }
         }
     }

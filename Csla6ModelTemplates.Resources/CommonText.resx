@@ -135,9 +135,6 @@
   <data name="DalFactory_DalManager_WrongKey" xml:space="preserve">
     <value>'{0}' is invalid.DalManager type.</value>
   </data>
-  <data name="NotZeroRule_MessageText" xml:space="preserve">
-    <value>{0} value must not be {1}.</value>
-  </data>
   <data name="PasswordJumbler_InvalidCompatibilityMode" xml:space="preserve">
     <value>The provided PasswordHasherCompatibilityMode is invalid.</value>
     <comment>Error when the password hasher doesn't understand the format it's being asked to produce.</comment>
@@ -145,8 +142,5 @@
   <data name="PasswordJumbler_InvalidIterationCount" xml:space="preserve">
     <value>The iteration count must be a positive integer.</value>
     <comment>Error when the iteration count is &amp;lt; 1.</comment>
-  </data>
-  <data name="Validation_MissingAttribute" xml:space="preserve">
-    <value>ValidationResourceType attribute is missing from the business object.</value>
   </data>
 </root>
