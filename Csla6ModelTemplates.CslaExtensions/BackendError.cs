@@ -1,7 +1,6 @@
 using Csla6ModelTemplates.Dal;
-using Csla6ModelTemplates.Resources;
-using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace Csla6ModelTemplates.CslaExtensions
 {
@@ -116,20 +115,17 @@ namespace Csla6ModelTemplates.CslaExtensions
             out int statusCode
             )
         {
-            Exception ex = exception;
-            string prefix = ">>> Web API";
-            string summary = string.Empty;
+            var ex = exception;
+            var prefix = ">>> Web API";
+            var summary = new StringBuilder();
             statusCode = 500; // StatusCodes.Status500InternalServerError
 
             while (ex != null)
             {
-                string line = "{0} {1} * {2}".With(prefix, ex.GetType().Name, ex.Message);
+                string line = String.Format("{0} {1} * {2}", prefix, ex.GetType().Name, ex.Message);
                 if (ex.Source != null)
-                    line += " [ {0} ]".With(ex.Source);
-                Debug.WriteLine(line);
-
-                if (summary.Length > 0) summary += "\n";
-                summary += line;
+                    line += String.Format(" [ {0} ]", ex.Source);
+                summary.AppendLine(line);
 
                 if (ex is BackendException)
                     statusCode = (ex as BackendException).StatusCode;
@@ -137,7 +133,7 @@ namespace Csla6ModelTemplates.CslaExtensions
                 ex = ex.InnerException;
                 prefix = "        ";
             }
-            return new BackendError(exception, summary);
+            return new BackendError(exception, summary.ToString());
         }
 
         #endregion

@@ -1,4 +1,4 @@
-using Csla6ModelTemplates.Resources;
+using Csla6ModelTemplates.Dal;
 using System.ComponentModel.DataAnnotations;
 
 namespace Csla6ModelTemplates.CslaExtensions.Validations
@@ -29,7 +29,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Validations
                     false
                     );
                 if (attrs == null || attrs.Length == 0)
-                    throw new Exception(CommonText.Validation_MissingAttribute);
+                    throw new BackendException("ValidationResourceType attribute is missing from the business object.");
 
                 ValidationResourceTypeAttribute attr = attrs[0] as ValidationResourceTypeAttribute;
                 validation.ErrorMessageResourceType = attr.ResourceType;
@@ -37,11 +37,11 @@ namespace Csla6ModelTemplates.CslaExtensions.Validations
                 // Set the resource name.
                 if (string.IsNullOrWhiteSpace(validation.ErrorMessageResourceName))
                 {
-                    string format = "{0}_{1}_{2}";
                     string objectName = string.IsNullOrWhiteSpace(attr.ObjectName) ?
                         context.ObjectType.Name :
                         attr.ObjectName;
-                    validation.ErrorMessageResourceName = format.With(objectName, context.MemberName, ruleName);
+                    validation.ErrorMessageResourceName =
+                        String.Format("{0}_{1}_{2}", objectName, context.MemberName, ruleName);
                 }
             }
         }

@@ -1,6 +1,5 @@
 using Csla.Rules;
 using Csla.Rules.CommonRules;
-using Csla6ModelTemplates.Resources;
 
 namespace Csla6ModelTemplates.CslaExtensions.Validations
 {
@@ -56,7 +55,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Validations
         /// <value></value>
         protected override string GetMessage()
         {
-            return HasMessageDelegate ? base.MessageText : CommonText.NotZeroRule_MessageText;
+            return HasMessageDelegate ? base.MessageText : "{0} value must not be {1}.";
         }
 
         /// <summary>
