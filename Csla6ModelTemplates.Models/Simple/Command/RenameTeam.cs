@@ -1,7 +1,7 @@
 using Csla;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Simple.Command;
-using Csla6ModelTemplates.CslaExtensions.Validations;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Resources;
 
@@ -50,7 +50,7 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         private void Validate()
         {
             if (string.IsNullOrEmpty(TeamName))
-                throw new ValidationException(
+                throw new BrokenRulesException(
                     nameof(RenameTeam),
                     nameof(TeamName),
                     ValidationText.RenameTeam_TeamName_Required
