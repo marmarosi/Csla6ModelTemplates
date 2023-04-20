@@ -1,6 +1,6 @@
 using Csla;
 using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 
 namespace Csla6ModelTemplates.Models.Arrangement.Sorting
 {

@@ -1,7 +1,7 @@
 ﻿using Csla;
 using Csla6ModelTemplates.Dal;
 
-namespace Csla6ModelTemplates.CslaExtensions
+namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     /// <summary>
     /// Provides services for business objects.
@@ -33,7 +33,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         public CslaService(
             IDataPortalFactory factory,
             IChildDataPortalFactory childFactory,
-            IDeadLockDetector detector            )
+            IDeadLockDetector detector)
         {
             Factory = factory;
             ChildFactory = childFactory;

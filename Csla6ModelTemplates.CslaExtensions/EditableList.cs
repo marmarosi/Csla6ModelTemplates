@@ -1,6 +1,6 @@
 using Csla;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Wrapper for editable collections to hide server side properties.
@@ -11,7 +11,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     public abstract class EditableList<T, C, Dto> : BusinessListBase<T, C>, IEditableList<Dto, C>
         where T : BusinessListBase<T, C>, IEditableList<Dto, C>
         where C : EditableModel<C, Dto>
-        where Dto: class
+        where Dto : class
     {
         #region ToDto
 
@@ -55,7 +55,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             {
                 C item = Items[i];
                 long? keyValue = GetKeyValue(item, keyName);
-                Predicate<Dto> match = (Dto o) => GetKeyValue(o, keyName) == keyValue;
+                Predicate<Dto> match = (o) => GetKeyValue(o, keyName) == keyValue;
                 Dto dto = list.Find(match);
 
                 if (dto == null)

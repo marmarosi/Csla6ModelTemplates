@@ -1,4 +1,4 @@
-﻿namespace Csla6ModelTemplates.CslaExtensions
+﻿namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     /// <summary>
     /// Provides a method to get a random integer.
@@ -13,7 +13,7 @@
         /// <param name="minValue">The inclusive lower bound of the random integer returned.</param>
         /// <param name="maxValue">The exclusive upper bound of the random integer returned.</param>
         /// <returns>An integer greater or equal to minValue and less than maxValue.</returns>
-        public static int Next (
+        public static int Next(
             int minValue,
             int maxValue
             )

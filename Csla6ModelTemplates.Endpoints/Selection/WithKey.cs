@@ -1,6 +1,6 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Selection.WithKey;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Selection.WithKey;
 using Microsoft.AspNetCore.Mvc;

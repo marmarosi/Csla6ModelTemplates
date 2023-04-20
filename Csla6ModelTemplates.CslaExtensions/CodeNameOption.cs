@@ -2,21 +2,21 @@ using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Dal.Contracts;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
-    /// Represents a key-name option in a read-only choice object.
+    /// Represents a code-name option in a read-only choice object.
     /// </summary>
     [Serializable]
-    public class KeyNameOption : ReadOnlyModel<KeyNameOption>
+    public class CodeNameOption : ReadOnlyModel<CodeNameOption>
     {
         #region Business Methods
 
-        public static readonly PropertyInfo<long?> KeyProperty = RegisterProperty<long?>(nameof(Key));
-        public long? Key
+        public static readonly PropertyInfo<string> CodeProperty = RegisterProperty<string>(nameof(Code));
+        public string Code
         {
-            get => GetProperty(KeyProperty);
-            private set => LoadProperty(KeyProperty, value);
+            get => GetProperty(CodeProperty);
+            private set => LoadProperty(CodeProperty, value);
         }
 
         public static readonly PropertyInfo<string> NameProperty = RegisterProperty<string>(nameof(Name));
@@ -46,7 +46,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
         //{
         //    // Add authorization rules.
         //    BusinessRules.AddRule(
-        //        typeof(KeyNameOption),
+        //        typeof(CodeNameOption),
         //        new IsInRole(
         //            AuthorizationActions.GetObject,
         //            "Manager"
@@ -60,7 +60,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
 
         [FetchChild]
         private void Fetch(
-            KeyNameOptionDao dao
+            CodeNameOptionDao dao
             )
         {
             // Set values from data access object.

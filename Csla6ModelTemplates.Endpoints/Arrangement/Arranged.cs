@@ -1,6 +1,6 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Arrangement.Full;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Full;
 using Microsoft.AspNetCore.Mvc;

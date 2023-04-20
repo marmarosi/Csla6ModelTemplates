@@ -9,7 +9,7 @@ namespace Csla6ModelTemplates.CslaExtensions
     /// Represents an exception thrown by a business object for failed validations.
     /// </summary>
     [Serializable]
-    public class ValidationException : BackendException
+    public class BrokenRulesException : BackendException
     {
         #region Properties
 
@@ -26,7 +26,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         /// Initializes a new instance.
         /// </summary>
         /// <param name="messages">Information v the failed validations.</param>
-        public ValidationException(
+        public BrokenRulesException(
             List<ValidationMessage> messages
             )
             : base()
@@ -41,7 +41,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         /// <param name="property">The name of the proerty with optional prefix.</param>
         /// <param name="description">The message text.</param>
         /// <param name="severity">The rule severity, defaults to error.</param>
-        public ValidationException(
+        public BrokenRulesException(
             string model,
             string property,
             string description,
@@ -58,7 +58,7 @@ namespace Csla6ModelTemplates.CslaExtensions
         /// </summary>
         /// <param name="info">The serialization info that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The streaming context that contains contextual information about the source or destination.</param>
-        protected ValidationException(
+        protected BrokenRulesException(
             SerializationInfo info,
             StreamingContext context
             )

@@ -50,7 +50,7 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         private void Validate()
         {
             if (string.IsNullOrEmpty(TeamName))
-                throw new ValidationException(
+                throw new BrokenRulesException(
                     nameof(RenameTeam),
                     nameof(TeamName),
                     ValidationText.RenameTeam_TeamName_Required

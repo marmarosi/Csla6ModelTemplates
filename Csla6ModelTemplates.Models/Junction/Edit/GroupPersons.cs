@@ -1,6 +1,6 @@
 ﻿using Csla;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 
 namespace Csla6ModelTemplates.Models.Junction.Edit
 {

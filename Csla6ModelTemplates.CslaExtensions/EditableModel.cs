@@ -6,7 +6,7 @@ using System.Collections;
 using System.Reflection;
 using System.Text.Json.Serialization;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Wrapper for editable models to hide server side properties.
@@ -73,7 +73,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
                     {
                         List<ValidationMessage> messages = new List<ValidationMessage>();
                         CollectMessages(this, "", ref messages);
-                        throw new ValidationException(messages);
+                        throw new BrokenRulesException(messages);
                     }
                 }
                 else

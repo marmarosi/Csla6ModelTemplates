@@ -1,6 +1,6 @@
 using Csla6ModelTemplates.Dal;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Represents an exception thrown by a business object for failed business logic.

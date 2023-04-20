@@ -1,6 +1,6 @@
 using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Models.Arrangement.Sorting;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

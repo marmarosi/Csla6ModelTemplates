@@ -1,5 +1,5 @@
 using Csla6ModelTemplates.Contracts.Complex.Edit;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

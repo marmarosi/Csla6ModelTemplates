@@ -1,5 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Endpoints.Junction;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;

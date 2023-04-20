@@ -1,7 +1,7 @@
 ﻿using Csla6ModelTemplates.Dal;
 using System.Reflection;
 
-namespace Csla6ModelTemplates.CslaExtensions
+namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     /// <summary>
     /// Provides methods to identify database deadlocks.

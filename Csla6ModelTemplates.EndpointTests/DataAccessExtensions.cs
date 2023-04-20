@@ -1,5 +1,5 @@
 using Csla6ModelTemplates.Configuration;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Dal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

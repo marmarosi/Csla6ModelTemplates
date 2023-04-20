@@ -1,6 +1,6 @@
 ﻿using Csla;
 using Csla6ModelTemplates.Contracts.Selection.WithKey;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Selection.WithKey

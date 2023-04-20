@@ -1,7 +1,7 @@
 ﻿using Csla;
 using Csla6ModelTemplates.Dal;
 
-namespace Csla6ModelTemplates.CslaExtensions
+namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     /// <summary>
     /// Defines the CSLA helper service.
