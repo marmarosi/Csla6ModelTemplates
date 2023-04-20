@@ -1,5 +1,7 @@
 using Csla;
 using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
+using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Mvc;
 

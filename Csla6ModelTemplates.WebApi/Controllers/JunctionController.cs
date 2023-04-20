@@ -1,6 +1,6 @@
 ﻿using Csla6ModelTemplates.Contracts.Junction.Edit;
 using Csla6ModelTemplates.Contracts.Junction.View;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Csla6ModelTemplates.Models.Junction.View;
 using Microsoft.AspNetCore.Mvc;

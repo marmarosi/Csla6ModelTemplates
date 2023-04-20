@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Csla6ModelTemplates.CslaExtensions
+namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     /// <summary>
     /// Provides helper methods for integration tests.

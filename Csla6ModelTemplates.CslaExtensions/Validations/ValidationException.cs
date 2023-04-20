@@ -1,9 +1,8 @@
 using Csla.Rules;
-using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Dal;
 using System.Runtime.Serialization;
 
-namespace Csla6ModelTemplates.CslaExtensions
+namespace Csla6ModelTemplates.CslaExtensions.Validations
 {
     /// <summary>
     /// Represents an exception thrown by a business object for failed validations.

@@ -1,6 +1,6 @@
 using Csla;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Defines the helper functions of editable lists.

@@ -5,8 +5,9 @@ using Csla6ModelTemplates.CslaExtensions.Validations;
 using System.Collections;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using ValidationException = Csla6ModelTemplates.CslaExtensions.Validations.ValidationException;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Wrapper for editable models to hide server side properties.

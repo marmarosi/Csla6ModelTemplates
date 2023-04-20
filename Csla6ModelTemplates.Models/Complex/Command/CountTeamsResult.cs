@@ -1,7 +1,7 @@
 using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts.Complex.Command;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 
 namespace Csla6ModelTemplates.Models.Complex.Command
 {

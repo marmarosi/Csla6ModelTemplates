@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions.Utilities
 {
     public class Copy
     {
@@ -42,7 +42,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
             return this;
         }
 
-        public T ToNew<T>() where T: class
+        public T ToNew<T>() where T : class
         {
             var target = Activator.CreateInstance<T>();
             return (T)ToPropertiesOf(target);

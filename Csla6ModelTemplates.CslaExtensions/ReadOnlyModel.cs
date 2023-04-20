@@ -3,7 +3,7 @@ using Csla.Core;
 using Csla6ModelTemplates.Dal.Contracts;
 using System.Reflection;
 
-namespace Csla6ModelTemplates.CslaExtensions.Models
+namespace Csla6ModelTemplates.CslaExtensions
 {
     /// <summary>
     /// Wrapper for read-only model to hide server side properties.
@@ -11,7 +11,7 @@ namespace Csla6ModelTemplates.CslaExtensions.Models
     /// <typeparam name="T">The type of the business object.</typeparam>
     [Serializable]
     public abstract class ReadOnlyModel<T> : ReadOnlyBase<T>, IReadOnlyModel
-        where T: ReadOnlyBase<T>
+        where T : ReadOnlyBase<T>
     {
         /// <summary>
         /// Converts the business object to data transfer object.

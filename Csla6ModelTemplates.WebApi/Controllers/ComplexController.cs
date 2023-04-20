@@ -3,7 +3,7 @@ using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.Contracts.Complex.List;
 using Csla6ModelTemplates.Contracts.Complex.Set;
 using Csla6ModelTemplates.Contracts.Complex.View;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Models.Complex.Command;
 using Csla6ModelTemplates.Models.Complex.Edit;
 using Csla6ModelTemplates.Models.Complex.List;
