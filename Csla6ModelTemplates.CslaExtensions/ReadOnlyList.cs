@@ -1,6 +1,4 @@
 using Csla;
-using System;
-using System.Collections.Generic;
 
 namespace Csla6ModelTemplates.CslaExtensions
 {
