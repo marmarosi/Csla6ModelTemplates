@@ -64,7 +64,7 @@ namespace Csla6ModelTemplates.Models.Arrangement.Full
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
         /// <param name="criteria">The criteria of the read-only team.</param>
-        /// <returns>The requested read-only team instance.</returns>
+        /// <returns>The requested read-only team list.</returns>
         public static async Task<ArrangedTeamList> Get(
             IDataPortalFactory factory,
             ArrangedTeamListCriteria criteria

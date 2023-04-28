@@ -78,7 +78,7 @@ namespace Csla6ModelTemplates.Models.Simple.Command
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
         /// <param name="dto">The data transer object of the rename team command.</param>
-        /// <returns>True when the team was renamed; otherwise false.</returns>
+        /// <returns>The command instance.</returns>
         public static async Task<RenameTeam> Execute(
             IDataPortalFactory factory,
             RenameTeamDto dto

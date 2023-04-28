@@ -11,7 +11,7 @@ using Csla6ModelTemplates.Resources;
 namespace Csla6ModelTemplates.Models.Simple.Set
 {
     /// <summary>
-    /// Represents an editable child object.
+    /// Represents an editable team object.
     /// </summary>
     [Serializable]
     [ValidationResourceType(typeof(ValidationText), ObjectName = "SimpleTeamSetItem")]
