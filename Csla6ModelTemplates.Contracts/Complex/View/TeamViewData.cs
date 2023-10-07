@@ -15,7 +15,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     public class TeamViewDao : TeamViewData
     {
         public long? TeamKey { get; set; }
-        public List<PlayerViewDao> Players { get; set; }
+        public List<TeamViewPlayerDao> Players { get; set; }
     }
 
     /// <summary>
@@ -24,6 +24,6 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     public class TeamViewDto : TeamViewData
     {
         public string TeamId { get; set; }
-        public List<PlayerViewDto> Players { get; set; }
+        public List<TeamViewPlayerDto> Players { get; set; }
     }
 }

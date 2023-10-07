@@ -15,7 +15,7 @@
     public class GroupViewDao : GroupViewData
     {
         public long? GroupKey { get; set; }
-        public List<GroupPersonViewDao> Persons { get; set; }
+        public List<GroupViewPersonDao> Persons { get; set; }
     }
 
     /// <summary>
@@ -24,6 +24,6 @@
     public class GroupViewDto : GroupViewData
     {
         public string GroupId { get; set; }
-        public List<GroupPersonViewDto> Persons { get; set; }
+        public List<GroupViewPersonDto> Persons { get; set; }
     }
 }

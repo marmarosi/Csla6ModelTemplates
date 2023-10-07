@@ -3,7 +3,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     /// <summary>
     /// Defines the read-only player data.
     /// </summary>
-    public class PlayerViewData
+    public class TeamViewPlayerData
     {
         public string PlayerCode { get; set; }
         public string PlayerName { get; set; }
@@ -12,7 +12,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     /// <summary>
     /// Defines the data access object of the read-only player object.
     /// </summary>
-    public class PlayerViewDao : PlayerViewData
+    public class TeamViewPlayerDao : TeamViewPlayerData
     {
         public long? PlayerKey { get; set; }
     }
@@ -20,7 +20,7 @@ namespace Csla6ModelTemplates.Contracts.Complex.View
     /// <summary>
     /// Defines the data transfer object of the read-only player object.
     /// </summary>
-    public class PlayerViewDto : PlayerViewData
+    public class TeamViewPlayerDto : TeamViewPlayerData
     {
         public string PlayerId { get; set; }
     }

@@ -51,8 +51,8 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             set => SetProperty(TeamNameProperty, value);
         }
 
-        public static readonly PropertyInfo<Players> PlayersProperty = RegisterProperty<Players>(nameof(Players));
-        public Players Players
+        public static readonly PropertyInfo<TeamPlayers> PlayersProperty = RegisterProperty<TeamPlayers>(nameof(Players));
+        public TeamPlayers Players
         {
             get => GetProperty(PlayersProperty);
             private set => LoadProperty(PlayersProperty, value);
@@ -192,7 +192,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [Create]
         [RunLocal]
         private void Create(
-            [Inject] IChildDataPortal<Players> itemsPortal
+            [Inject] IChildDataPortal<TeamPlayers> itemsPortal
             )
         {
             // Load default values.
@@ -205,7 +205,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         private void Fetch(
             TeamCriteria criteria,
             [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemsPortal
+            [Inject] IChildDataPortal<TeamPlayers> itemsPortal
             )
         {
             // Load values from persistent storage.
@@ -266,7 +266,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [DeleteSelf]
         protected void DeleteSelf(
             [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemPortal
+            [Inject] IChildDataPortal<TeamPlayers> itemPortal
             )
         {
             using (BypassPropertyChecks)
@@ -277,7 +277,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         protected void Delete(
             TeamCriteria criteria,
             [Inject] ITeamDal dal,
-            [Inject] IChildDataPortal<Players> itemPortal
+            [Inject] IChildDataPortal<TeamPlayers> itemPortal
             )
         {
             // Delete values from persistent storage.

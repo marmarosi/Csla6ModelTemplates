@@ -11,7 +11,7 @@ namespace Csla6ModelTemplates.Models.Junction.View
     /// Represents an item in a read-only group-person collection.
     /// </summary>
     [Serializable]
-    public class GroupPersonView : ReadOnlyModel<GroupPersonView>
+    public class GroupViewPerson : ReadOnlyModel<GroupViewPerson>
     {
         #region Properties
 
@@ -70,7 +70,7 @@ namespace Csla6ModelTemplates.Models.Junction.View
 
         [FetchChild]
         private void Fetch(
-            GroupPersonViewDao dao
+            GroupViewPersonDao dao
             )
         {
             // Load values from persistent storage.

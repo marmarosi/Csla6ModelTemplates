@@ -54,7 +54,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
                 TeamName = "Test team number 9201",
                 Timestamp = null
             };
-            var pristinePlayer1 = new PlayerDto
+            var pristinePlayer1 = new TeamPlayerDto
             {
                 PlayerId = null,
                 TeamId = null,
@@ -62,7 +62,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
                 PlayerName = "Test player #1"
             };
             pristineTeam.Players.Add(pristinePlayer1);
-            var pristinePlayer2 = new PlayerDto
+            var pristinePlayer2 = new TeamPlayerDto
             {
                 PlayerId = null,
                 TeamId = null,
@@ -160,7 +160,7 @@ namespace Csla6ModelTemplates.EndpointTests.Complex
             pristinePlayer1.PlayerCode = "P-9202-1";
             pristinePlayer1.PlayerName = "Test player #9202.1";
 
-            var pristinePlayerNew = new PlayerDto
+            var pristinePlayerNew = new TeamPlayerDto
             {
                 PlayerId = null,
                 TeamId = null,

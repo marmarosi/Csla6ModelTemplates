@@ -6,10 +6,10 @@ __MySQL__, __Oracle__, __PostgreSQL__, __SQLite__ and __SQL Server__ databases.
 
 Category | Models
 ---|---
-[Simple Models](#simple-models) | [Simple List](#simple-list), [Simple View](#simple-view), [Simple](#simple), [Simple Set](#simple-set), [Simple Command](#simple-command)
+[Simple Models](#simple-models) | [Simple List](#simple-list), [Simple View](#simple-view), [Simple Edit](#simple-edit), [Simple Set](#simple-set), [Simple Command](#simple-command)
 [Arrangement](#arrangement) | [Sorted List](#sorted-list), [Paginated List](#paginated-list), [Arranged List](#arranged-list)
 [Selection](#selection) | [Selection With Key](#selection-with-key), [Selection With ID](#selection-with-id), [Selection With Code](#selection-with-code)
-[Complex Models](#complex-models) | [Complex List](#complex-list), [Complex View](#complex-view), [Complex](#complex), [Complex Set](#complex-set), [Complex Command](#complex-command)
+[Complex Models](#complex-models) | [Complex List](#complex-list), [Complex View](#complex-view), [Complex Edit](#complex-edit), [Complex Set](#complex-set), [Complex Command](#complex-command)
 [Tree Model](#tree-model) | [Tree](#tree)
 [Junction Models](#junction-models) | [Junction View](#junction-view), [Junction](#junction)
 
@@ -45,9 +45,9 @@ Endpoint:
 
 - [ ] GET ​/api​/simple​/:id/view --- *Gets the specified team details to display.**
 
-### Simple
+### Simple Edit
 
-The simple template implements an editable business object.
+The simple edit template implements an editable business object.
 
 Component | Description
 --------- | -----------
@@ -203,8 +203,8 @@ Component | Description
 --------- | -----------
 TeamList | read-only root collection
 TeamListItem | read-only child object
-PlayerInfos | read-only child collection
-PlayerInfo | read-only child object
+TeamListPlayers | read-only child collection
+TeamListPlayer | read-only child object
 
 Endpoint:
 
@@ -218,23 +218,23 @@ a read-only child collection.
 Component | Description
 --------- | -----------
 TeamView | read-only root object
-PlayerViews | read-only child collection
-PlayerView | read-only child object
+TeamViewPlayers | read-only child collection
+TeamViewPlayer | read-only child object
 
 Endpoint:
 
 - [ ] GET ​/api​/complex​/:id/view --- *Gets the specified team details to display.*
 
-### Complex
+### Complex Edit
 
-The complex template implements an editable business object with
+The complex edit template implements an editable business object with
 an editable child collection.
 
 Component | Description
 --------- | -----------
 Team | editable root object
-Players | editable child collection
-Player | editable child object
+TeamPlayers | editable child collection
+TeamPlayer | editable child object
 
 Endpoints:
 

@@ -11,7 +11,7 @@ namespace Csla6ModelTemplates.Models.Complex.View
     /// Represents an item in a read-only player collection.
     /// </summary>
     [Serializable]
-    public class PlayerView : ReadOnlyModel<PlayerView>
+    public class TeamViewPlayer : ReadOnlyModel<TeamViewPlayer>
     {
         #region Properties
 
@@ -77,7 +77,7 @@ namespace Csla6ModelTemplates.Models.Complex.View
 
         [FetchChild]
         private void Fetch(
-            PlayerViewDao dao
+            TeamViewPlayerDao dao
             )
         {
             // Load values from persistent storage.

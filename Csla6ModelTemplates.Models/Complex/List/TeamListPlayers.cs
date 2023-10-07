@@ -8,7 +8,7 @@ namespace Csla6ModelTemplates.Models.Complex.List
     /// Represents a read-only player info collection.
     /// </summary>
     [Serializable]
-    public class PlayerInfos : ReadOnlyList<PlayerInfos, PlayerInfo>
+    public class TeamListPlayers : ReadOnlyList<TeamListPlayers, TeamListPlayer>
     {
         #region Business Rules
 
@@ -30,8 +30,8 @@ namespace Csla6ModelTemplates.Models.Complex.List
 
         [FetchChild]
         private void Fetch(
-            List<PlayerInfoDao> list,
-            [Inject] IChildDataPortal<PlayerInfo> itemPortal
+            List<TeamListPlayerDao> list,
+            [Inject] IChildDataPortal<TeamListPlayer> itemPortal
             )
         {
             // Load values from persistent storage.

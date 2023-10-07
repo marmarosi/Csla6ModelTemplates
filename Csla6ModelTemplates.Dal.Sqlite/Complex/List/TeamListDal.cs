@@ -45,7 +45,7 @@ namespace Csla6ModelTemplates.Dal.Sqlite.Complex.List
                     TeamKey = e.TeamKey,
                     TeamCode = e.TeamCode,
                     TeamName = e.TeamName,
-                    Players = e.Players.Select(i => new PlayerInfoDao
+                    Players = e.Players.Select(i => new TeamListPlayerDao
                     {
                         PlayerKey = i.PlayerKey,
                         PlayerCode = i.PlayerCode,

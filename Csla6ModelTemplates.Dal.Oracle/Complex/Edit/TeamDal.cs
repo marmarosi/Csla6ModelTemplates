@@ -50,7 +50,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
                     TeamCode = e.TeamCode,
                     TeamName = e.TeamName,
                     Players = e.Players
-                        .Select(p => new PlayerDao
+                        .Select(p => new TeamPlayerDao
                         {
                             PlayerKey = p.PlayerKey,
                             TeamKey = p.TeamKey,

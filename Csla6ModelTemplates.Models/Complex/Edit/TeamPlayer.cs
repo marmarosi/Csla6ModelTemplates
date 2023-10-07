@@ -17,7 +17,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
     /// </summary>
     [Serializable]
     [ValidationResourceType(typeof(ValidationText), ObjectName = "Player")]
-    public class Player : EditableModel<Player, PlayerDto>
+    public class TeamPlayer : EditableModel<TeamPlayer, TeamPlayerDto>
     {
         #region Properties
 
@@ -123,7 +123,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
                 IRuleContext context
                 )
             {
-                Player target = (Player)context.Target;
+                TeamPlayer target = (TeamPlayer)context.Target;
                 if (target.Parent == null)
                     return;
 
@@ -144,7 +144,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         /// <param name="dto">The data transfer object.</param>
         /// <param name="childFactory">The child data portal factory.</param>
         public override void SetValuesOnBuild(
-            PlayerDto dto,
+            TeamPlayerDto dto,
             IChildDataPortalFactory childFactory
             )
         {
@@ -166,7 +166,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
 
         [FetchChild]
         private void Fetch(
-            PlayerDao dao
+            TeamPlayerDao dao
             )
         {
             // Load values from persistent storage.
@@ -177,14 +177,14 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [InsertChild]
         private void Insert(
             Team parent,
-            [Inject] IPlayerDal dal
+            [Inject] ITeamPlayerDal dal
             )
         {
             // Insert values into persistent storage.
             using (BypassPropertyChecks)
             {
                 TeamKey = parent.TeamKey;
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
+                var dao = Copy.PropertiesFrom(this).ToNew<TeamPlayerDao>();
                 dal.Insert(dao);
 
                 // Set new data.
@@ -196,13 +196,13 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [UpdateChild]
         private void Update(
             Team parent,
-            [Inject] IPlayerDal dal
+            [Inject] ITeamPlayerDal dal
             )
         {
             // Update values in persistent storage.
             using (BypassPropertyChecks)
             {
-                var dao = Copy.PropertiesFrom(this).ToNew<PlayerDao>();
+                var dao = Copy.PropertiesFrom(this).ToNew<TeamPlayerDao>();
                 dal.Update(dao);
 
                 // Set new data.
@@ -213,7 +213,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
         [DeleteSelfChild]
         private void Child_DeleteSelf(
             Team parent,
-            [Inject] IPlayerDal dal
+            [Inject] ITeamPlayerDal dal
             )
         {
             // Delete values from persistent storage.
@@ -221,7 +221,7 @@ namespace Csla6ModelTemplates.Models.Complex.Edit
             //Items.Clear();
             //FieldManager.UpdateChildren(this);
 
-            PlayerCriteria criteria = new PlayerCriteria(PlayerKey);
+            TeamPlayerCriteria criteria = new TeamPlayerCriteria(PlayerKey);
             dal.Delete(criteria);
         }
 

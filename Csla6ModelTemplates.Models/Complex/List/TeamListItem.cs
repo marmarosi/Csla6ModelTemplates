@@ -43,8 +43,8 @@ namespace Csla6ModelTemplates.Models.Complex.List
             private set => LoadProperty(TeamNameProperty, value);
         }
 
-        public static readonly PropertyInfo<PlayerInfos> PlayersProperty = RegisterProperty<PlayerInfos>(nameof(Players));
-        public PlayerInfos Players
+        public static readonly PropertyInfo<TeamListPlayers> PlayersProperty = RegisterProperty<TeamListPlayers>(nameof(Players));
+        public TeamListPlayers Players
         {
             get => ReadProperty(PlayersProperty);
             private set => LoadProperty(PlayersProperty, value);
@@ -85,7 +85,7 @@ namespace Csla6ModelTemplates.Models.Complex.List
         [FetchChild]
         private void Fetch(
             TeamListItemDao dao,
-            [Inject] IChildDataPortal<PlayerInfos> itemPortal
+            [Inject] IChildDataPortal<TeamListPlayers> itemPortal
             )
         {
             // Load values from persistent storage.

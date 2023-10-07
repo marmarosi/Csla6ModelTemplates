@@ -1,16 +1,16 @@
 using Csla6ModelTemplates.Contracts.Complex.Edit;
 using Csla6ModelTemplates.Dal.Exceptions;
-using Csla6ModelTemplates.Dal.PostgreSql.Entities;
+using Csla6ModelTemplates.Dal.Sqlite.Entities;
 using Csla6ModelTemplates.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
+namespace Csla6ModelTemplates.Dal.Sqlite.Complex.Edit
 {
     /// <summary>
     /// Implements the data access functions of the editable player object.
     /// </summary>
     [DalImplementation]
-    public class PlayerDal : DalBase<PostgreSqlContext>, IPlayerDal
+    public class TeamPlayerDal : DalBase<SqliteContext>, ITeamPlayerDal
     {
         #region Constructor
 
@@ -18,8 +18,8 @@ namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
         /// Instantiates the data access object.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public PlayerDal(
-            PostgreSqlContext dbContext
+        public TeamPlayerDal(
+            SqliteContext dbContext
             )
         {
             DbContext = dbContext;
@@ -34,7 +34,7 @@ namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
         /// </summary>
         /// <param name="dao">The data of the player.</param>
         public void Insert(
-            PlayerDao dao
+            TeamPlayerDao dao
             )
         {
             // Check unique player code.
@@ -73,7 +73,7 @@ namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
         /// </summary>
         /// <param name="dao">The data of the player.</param>
         public void Update(
-            PlayerDao dao
+            TeamPlayerDao dao
             )
         {
             // Get the specified player.
@@ -118,7 +118,7 @@ namespace Csla6ModelTemplates.Dal.PostgreSql.Complex.Edit
         /// </summary>
         /// <param name="criteria">The criteria of the player.</param>
         public void Delete(
-            PlayerCriteria criteria
+            TeamPlayerCriteria criteria
             )
         {
             int count = 0;

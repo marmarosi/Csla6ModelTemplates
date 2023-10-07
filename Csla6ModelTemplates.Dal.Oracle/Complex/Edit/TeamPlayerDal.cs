@@ -10,7 +10,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
     /// Implements the data access functions of the editable player object.
     /// </summary>
     [DalImplementation]
-    public class PlayerDal : DalBase<OracleContext>, IPlayerDal
+    public class TeamPlayerDal : DalBase<OracleContext>, ITeamPlayerDal
     {
         #region Constructor
 
@@ -18,7 +18,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
         /// Instantiates the data access object.
         /// </summary>
         /// <param name="context">The database context.</param>
-        public PlayerDal(
+        public TeamPlayerDal(
             OracleContext dbContext
             )
         {
@@ -34,7 +34,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
         /// </summary>
         /// <param name="dao">The data of the player.</param>
         public void Insert(
-            PlayerDao dao
+            TeamPlayerDao dao
             )
         {
             // Check unique player code.
@@ -73,7 +73,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
         /// </summary>
         /// <param name="dao">The data of the player.</param>
         public void Update(
-            PlayerDao dao
+            TeamPlayerDao dao
             )
         {
             // Get the specified player.
@@ -118,7 +118,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Complex.Edit
         /// </summary>
         /// <param name="criteria">The criteria of the player.</param>
         public void Delete(
-            PlayerCriteria criteria
+            TeamPlayerCriteria criteria
             )
         {
             int count = 0;

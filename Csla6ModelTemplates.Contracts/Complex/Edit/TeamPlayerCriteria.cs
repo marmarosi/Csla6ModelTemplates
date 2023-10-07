@@ -4,14 +4,14 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     /// Represents the criteria of the editable player object.
     /// </summary>
     [Serializable]
-    public class PlayerCriteria
+    public class TeamPlayerCriteria
     {
         public long? PlayerKey { get; set; }
 
-        public PlayerCriteria()
+        public TeamPlayerCriteria()
         { }
 
-        public PlayerCriteria(
+        public TeamPlayerCriteria(
             long? playerKey
             )
         {

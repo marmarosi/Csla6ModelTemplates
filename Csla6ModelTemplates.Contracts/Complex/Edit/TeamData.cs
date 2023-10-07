@@ -16,11 +16,11 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     public class TeamDao : TeamData
     {
         public long? TeamKey { get; set; }
-        public List<PlayerDao> Players { get; set; }
+        public List<TeamPlayerDao> Players { get; set; }
 
         public TeamDao()
         {
-            Players = new List<PlayerDao>();
+            Players = new List<TeamPlayerDao>();
         }
     }
 
@@ -30,11 +30,11 @@ namespace Csla6ModelTemplates.Contracts.Complex.Edit
     public class TeamDto : TeamData
     {
         public string TeamId { get; set; }
-        public List<PlayerDto> Players { get; set; }
+        public List<TeamPlayerDto> Players { get; set; }
 
         public TeamDto()
         {
-            Players = new List<PlayerDto>();
+            Players = new List<TeamPlayerDto>();
         }
     }
 }
