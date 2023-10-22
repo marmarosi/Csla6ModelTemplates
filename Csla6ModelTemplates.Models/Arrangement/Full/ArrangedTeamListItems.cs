@@ -1,11 +1,11 @@
 using Csla;
 using Csla6ModelTemplates.Contracts.Arrangement.Full;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 
 namespace Csla6ModelTemplates.Models.Arrangement.Full
 {
     /// <summary>
-    /// Represents a page of read-only sorted team collection.
+    /// Represents a page of read-only paginated sorted team collection.
     /// </summary>
     [Serializable]
     public class ArrangedTeamListItems : ReadOnlyList<ArrangedTeamListItems, ArrangedTeamListItem>

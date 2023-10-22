@@ -2,7 +2,7 @@
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Junction.View;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Junction.View
@@ -43,8 +43,8 @@ namespace Csla6ModelTemplates.Models.Junction.View
             private set => LoadProperty(GroupNameProperty, value);
         }
 
-        public static readonly PropertyInfo<GroupPersonViews> PersonsProperty = RegisterProperty<GroupPersonViews>(nameof(Persons));
-        public GroupPersonViews Persons
+        public static readonly PropertyInfo<GroupViewPersons> PersonsProperty = RegisterProperty<GroupViewPersons>(nameof(Persons));
+        public GroupViewPersons Persons
         {
             get => GetProperty(PersonsProperty);
             private set => LoadProperty(PersonsProperty, value);
@@ -105,7 +105,7 @@ namespace Csla6ModelTemplates.Models.Junction.View
         private void Fetch(
             GroupViewCriteria criteria,
             [Inject] IGroupViewDal dal,
-            [Inject] IChildDataPortal<GroupPersonViews> itemsPortal
+            [Inject] IChildDataPortal<GroupViewPersons> itemsPortal
             )
         {
             // Load values from persistent storage.

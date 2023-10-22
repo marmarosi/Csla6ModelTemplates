@@ -56,7 +56,7 @@ namespace Csla6ModelTemplates.Models.Complex.Command
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
         /// <param name="criteria">The criteria of the count teams by item count command.</param>
-        /// <returns>True when the team was renamed; otherwise false.</returns>
+        /// <returns>The command instance.</returns>
         public static async Task<CountTeams> Execute(
             IDataPortalFactory factory,
             CountTeamsCriteria criteria

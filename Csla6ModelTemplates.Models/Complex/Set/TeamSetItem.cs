@@ -2,7 +2,8 @@ using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Complex.Set;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.CslaExtensions.Validations;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Resources;
@@ -10,7 +11,7 @@ using Csla6ModelTemplates.Resources;
 namespace Csla6ModelTemplates.Models.Complex.Set
 {
     /// <summary>
-    /// Represents an editable child object.
+    /// Represents an editable team object.
     /// </summary>
     [Serializable]
     [ValidationResourceType(typeof(ValidationText), ObjectName = "TeamSetItem")]

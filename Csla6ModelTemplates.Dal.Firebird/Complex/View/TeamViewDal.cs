@@ -49,7 +49,7 @@ namespace Csla6ModelTemplates.Dal.Firebird.Complex.View
                     TeamCode = e.TeamCode,
                     TeamName = e.TeamName,
                     Players = e.Players
-                        .Select(p => new PlayerViewDao
+                        .Select(p => new TeamViewPlayerDao
                         {
                             PlayerKey = p.PlayerKey,
                             PlayerCode = p.PlayerCode,

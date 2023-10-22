@@ -1,6 +1,6 @@
 ﻿using Ardalis.ApiEndpoints;
 using Csla6ModelTemplates.Contracts.Junction.Edit;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Models.Junction.Edit;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;

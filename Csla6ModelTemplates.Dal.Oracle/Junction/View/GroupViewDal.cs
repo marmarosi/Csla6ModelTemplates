@@ -49,7 +49,7 @@ namespace Csla6ModelTemplates.Dal.Oracle.Junction.View
                     GroupCode = e.GroupCode,
                     GroupName = e.GroupName,
                     Persons = e.Persons
-                        .Select(m => new GroupPersonViewDao
+                        .Select(m => new GroupViewPersonDao
                         {
                             PersonKey = m.PersonKey,
                             PersonName = m.Person.PersonName

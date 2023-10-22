@@ -1,5 +1,5 @@
 ﻿using Csla.Configuration;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Csla6ModelTemplates.WebApi.Extensions

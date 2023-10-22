@@ -42,6 +42,5 @@ namespace Csla6ModelTemplates.Contracts.Complex.Set
                 __teamCode = __teamCode
             };
         }
-
     }
 }

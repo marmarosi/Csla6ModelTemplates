@@ -2,7 +2,7 @@ using Csla;
 using Csla.Data;
 using Csla6ModelTemplates.Contracts;
 using Csla6ModelTemplates.Contracts.Complex.View;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Complex.View
@@ -43,8 +43,8 @@ namespace Csla6ModelTemplates.Models.Complex.View
             private set => LoadProperty(TeamNameProperty, value);
         }
 
-        public static readonly PropertyInfo<PlayerViews> PlayersProperty = RegisterProperty<PlayerViews>(nameof(Players));
-        public PlayerViews Players
+        public static readonly PropertyInfo<TeamViewPlayers> PlayersProperty = RegisterProperty<TeamViewPlayers>(nameof(Players));
+        public TeamViewPlayers Players
         {
             get => GetProperty(PlayersProperty);
             private set => LoadProperty(PlayersProperty, value);
@@ -105,7 +105,7 @@ namespace Csla6ModelTemplates.Models.Complex.View
         private void Fetch(
             TeamViewCriteria criteria,
             [Inject] ITeamViewDal dal,
-            [Inject] IChildDataPortal<PlayerViews> itemsPortal
+            [Inject] IChildDataPortal<TeamViewPlayers> itemsPortal
             )
         {
             // Load values from persistent storage.

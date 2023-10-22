@@ -1,6 +1,6 @@
 using Csla;
 using Csla6ModelTemplates.Contracts.Arrangement.Pagination;
-using Csla6ModelTemplates.CslaExtensions.Models;
+using Csla6ModelTemplates.CslaExtensions;
 using Csla6ModelTemplates.Dal.Contracts;
 
 namespace Csla6ModelTemplates.Models.Arrangement.Pagination
@@ -63,8 +63,8 @@ namespace Csla6ModelTemplates.Models.Arrangement.Pagination
         /// Gets the specified read-only paginated team collection.
         /// </summary>
         /// <param name="factory">The data portal factory.</param>
-        /// <param name="criteria">The criteria of the read-only team.</param>
-        /// <returns>The requested read-only team instance.</returns>
+        /// <param name="criteria">The criteria of the read-only team list.</param>
+        /// <returns>The requested read-only team list.</returns>
         public static async Task<PaginatedTeamList> Get(
             IDataPortalFactory factory,
             PaginatedTeamListCriteria criteria

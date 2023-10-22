@@ -1,7 +1,7 @@
 namespace Csla6ModelTemplates.Contracts.Arrangement.Full
 {
     /// <summary>
-    /// Defines the  sorting options.
+    /// Defines the team sorting options.
     /// </summary>
     public static class ArrangedTeamListSortBy
     {

@@ -1,5 +1,5 @@
 ﻿using Csla6ModelTemplates.Contracts.Simple.Command;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Endpoints.Simple;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

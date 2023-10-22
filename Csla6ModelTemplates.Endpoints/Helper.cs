@@ -1,4 +1,5 @@
 using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Dal;
 using Microsoft.AspNetCore.Mvc;
 
@@ -112,9 +113,9 @@ namespace Csla6ModelTemplates.Endpoints
             )
         {
             // Check validation exception.
-            if (exception is ValidationException validation)
+            if (exception is BrokenRulesException brokenRules)
             {
-                var messages = validation.Messages
+                var messages = brokenRules.Messages
                     .Select(m => new
                     {
                         Property = $"{m.Model}.{m.Property}",
@@ -151,9 +152,7 @@ namespace Csla6ModelTemplates.Endpoints
 
             logger.LogError(exception, backend.Summary, null);
 
-            //result = new ObjectResult(backend);
-            //result.StatusCode = statusCode;
-            //return result;
+            // Report the issue.
             return endpoint.Problem(backend.Summary, null, statusCode, exception.Message, null);
         }
 

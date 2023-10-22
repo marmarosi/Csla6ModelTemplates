@@ -1,7 +1,7 @@
 using Csla6ModelTemplates.Contracts.Arrangement.Full;
 using Csla6ModelTemplates.Contracts.Arrangement.Pagination;
 using Csla6ModelTemplates.Contracts.Arrangement.Sorting;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Dal.Contracts;
 using Csla6ModelTemplates.Models.Arrangement.Full;
 using Csla6ModelTemplates.Models.Arrangement.Pagination;

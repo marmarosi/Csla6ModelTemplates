@@ -3,7 +3,7 @@ using Csla6ModelTemplates.Contracts.Simple.Edit;
 using Csla6ModelTemplates.Contracts.Simple.List;
 using Csla6ModelTemplates.Contracts.Simple.Set;
 using Csla6ModelTemplates.Contracts.Simple.View;
-using Csla6ModelTemplates.CslaExtensions;
+using Csla6ModelTemplates.CslaExtensions.Utilities;
 using Csla6ModelTemplates.Models.Simple.Command;
 using Csla6ModelTemplates.Models.Simple.Edit;
 using Csla6ModelTemplates.Models.Simple.List;
