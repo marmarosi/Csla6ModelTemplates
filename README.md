@@ -311,8 +311,8 @@ a read-only member collection.
 Component | Description
 --------- | -----------
 GroupView | read-only root object
-GroupPersonViews | read-only child collection
-GroupPersonView | read-only child object
+GroupViewPersons | read-only child collection
+GroupViewPerson | read-only child object
 
 Endpoint:
 
